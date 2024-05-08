@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+:root{
+  --bg-light-mode: #F5F5F5;
+  --bg-dark-mode: #131313;
+  --bg-eerie-black: #222222;
+  --bg-4A4A4A: #4A4A4A;
+}
+body{
+  font-family: Arial, Helvetica, sans-serif;
+}
+.bg-light-mode{
+  background-color: var(--bg-light-mode);
+  color: black
+}
+.bg-dark-mode{
+  background-color: var(--bg-dark-mode);
+  color: white
+}
+.bg-eerie-black{
+  background-color: var(--bg-eerie-black);
+}
+.brightness-90 {
+  filter: brightness(90%);
+}
+.bg-4A4A4A{
+  background-color: var(--bg-4A4A4A);
+}
+.bg-open-menu{
+  background-color: #82CFFF;
+}
+
