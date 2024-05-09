@@ -1,6 +1,10 @@
-const TrashCanIcon = () => {
+interface TrashCanInterface{
+    color: string
+}
+
+const TrashCanIcon = ({color} : TrashCanInterface) => {
     return (
-        <svg fill="#919191" opacity={50} width="20px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <svg fill={color} opacity={50} width="20px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
             <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
             <g id="SVGRepo_iconCarrier"> 

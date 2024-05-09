@@ -44,6 +44,7 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
         const formattedDate = date.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'});
         editTask(id, formattedDate);
         toggleVisibilityDatepicker();
+        event.target.value = '';
 
     }
     const toggleVisibilityDatepicker = () => {
@@ -60,7 +61,7 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
             </div>
             <input type="date" id="datepicker" onChange={() => onChangeDate(event, tasksId[index])} className={`text-black h-5 w-6 text-sm rounded-md ${toggleDatepicker ? "block" : "hidden"}`}></input>
             <div className="cursor-pointer" onClick={toggleVisibilityDatepicker}><EditIcon/></div>
-            <div className="cursor-pointer" onClick={() => deleteTask(tasksId[index])}><TrashCanIcon/></div>
+            <div className="cursor-pointer" onClick={() => deleteTask(tasksId[index])}><TrashCanIcon color={"#919191"}/></div>
         </div>
     );
 }

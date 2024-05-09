@@ -8,21 +8,15 @@ import ArrowLeftIcon from "@/icons/arrowLeftIcon";
 import ArrowRightIcon from "@/icons/arrowRightIcon";
 
 const List = () => {
-    const {tasks, addNewTask, changedDate, setChangedDate, getTasksForADay, getNoteForADay, groupItem} = useContext(TaskContext);
+    const {tasks, addNewTask, changedDate, setChangedDate, getTasksForADay, getNoteForADay, groupItem, showNote, setShowNote} = useContext(TaskContext);
     const changeDate = (num: number) => {
         var change = changedDate;
+        setShowNote(false)
         setChangedDate(change + num);
         getTasksForADay(change+num, groupItem);
         getNoteForADay(change+num, groupItem);
-    }
-    const lastEditableElementRef = useRef<HTMLParagraphElement>(null);
 
-    useEffect(() => {
-        // Focus on the last editable element after rendering
-        if (lastEditableElementRef.current) {
-            lastEditableElementRef.current.focus();
-        }
-    }, [tasks]);
+    }
     return (
         <div className="flex flex-col items-start">
             <div id="taskList" className="flex flex-col w-full">

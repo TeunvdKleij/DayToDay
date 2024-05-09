@@ -1,6 +1,7 @@
 import { TaskContext } from "@/providers/TaskProvider";
 import { useContext, useEffect, useRef, useState } from "react";
-
+import ReactQuill from "react-quill";
+import RichTextEditor from "./richTextEditor";
 
 
 const Note = () => {
@@ -31,6 +32,7 @@ const Note = () => {
 
     return (
         <div>
+            {/* <RichTextEditor/> */}
             <textarea onChange={changeTextArea} onBlur={onBlurChanges} className="bg-eerie-black w-full min-h-60" value={text} style={{height: height}}></textarea>
         </div> 
     );

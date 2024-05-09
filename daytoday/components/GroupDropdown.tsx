@@ -1,38 +1,59 @@
+import PlusIcon from "@/icons/plusicon";
+import TrashCanIcon from "@/icons/trashcanicon";
 import { TaskContext } from "@/providers/TaskProvider";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button } from "@nextui-org/react"
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button, DropdownSection } from "@nextui-org/react"
 import { group } from "console";
 import { useContext, useEffect, useState } from "react";
-
+import AddGroupModal from "./AddGroupModal";
+import RemoveGroupModal from "./RemoveGroupModal";
 interface DropdownInterface {
     toggleBlur: () => void
 }
 const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
-    const {dropdownItems, groupItem, setGroupItem, changedDate, getTasksForADay, getNoteForADay} = useContext(TaskContext);
-    useEffect(() => {
-        //roep tasks/notes aan
-    }, [groupItem])
+    const {groupItem, setGroupItem, groups} = useContext(TaskContext);
+    const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false);
+    const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
     const handleItemClick = (item: string) => {
         setGroupItem(item)
-        getTasksForADay(changedDate, item);
-        getNoteForADay(changedDate, item);
-        toggleBlur()
+        localStorage.setItem('groupSelection', item);
+        toggleBlur();
     }
 
+    const toggleAdd = () => {
+        const add = showAddModal;
+        setShowAddModal(!add);
+        setShowRemoveModal(false);
+    }
+    const toggleRemove = () => {
+        const remove = showRemoveModal;
+        setShowRemoveModal(!remove);
+        setShowAddModal(false);
+    }
 
     return (
+        <div className="flex gap-2">
         <Dropdown className="">
                 <DropdownTrigger>
                     <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit">{groupItem}</Button>
                 </DropdownTrigger>
-                <DropdownMenu aria-label="Dynamic Actions" items={dropdownItems} onAction={(key) => handleItemClick(key.toString())} className="flex flex-col rounded-lg pl-2 pt-2 pb-2 pr-2" style={{backgroundColor : '#333333'}}>
-                    {dropdownItems.map((item: string, index: number) => {
+                {groups && groups.length > 0 &&
+                <DropdownMenu aria-label="Dynamic Actions" items={groups} onAction={(key) => handleItemClick(key.toString())} className="flex flex-col rounded-lg pl-2 pt-2 pb-2 pr-2" style={{backgroundColor : '#333333'}}>
+                    {groups.map((item: string, index: number) => {
                         return <DropdownItem key={item} color="default" className="p-1">
                             {item}
                         </DropdownItem>
                     })}
                 </DropdownMenu>
+                }
         </Dropdown>
+        {/*Put down a form maybe, just try and fix so there can be groups added
+        Just need to think of a way to delete groups as well, maybe the delete icon but then with confirmation since it will delete a lot of shit */}
+        <button className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer" onClick={toggleAdd}><PlusIcon/></button>
+        <button className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer" onClick={toggleRemove}><TrashCanIcon color={"#ffffff"}/></button>
+        {showAddModal && <AddGroupModal showModal={showAddModal} setShowModal={setShowAddModal}/>}
+        {showRemoveModal && <RemoveGroupModal showModal={showRemoveModal} setShowModal={setShowRemoveModal}/>}
+        </div>
       );
 }
 export default GroupDropDown;
