@@ -15,8 +15,14 @@ const List = () => {
         setChangedDate(change + num);
         getTasksForADay(change+num, groupItem);
         getNoteForADay(change+num, groupItem);
-
     }
+
+    const changeDateToToday = () => {
+        setChangedDate(0);
+        getTasksForADay(0, groupItem);
+        getNoteForADay(0, groupItem);
+    }
+
     return (
         <div className="flex flex-col items-start">
             <div id="taskList" className="flex flex-col w-full">
@@ -26,8 +32,9 @@ const List = () => {
             })}
             </div>
             <div className="flex gap-3 mt-6 w-full justify-between">
-                <button onClick={() => addNewTask("", changedDate, groupItem)} className="rounded-lg bg-blue-500 pt-1 pl-2 pr-2 pb-1 flex items-center gap-2"><PlusIcon/>New Task</button>
+                <button onClick={() => addNewTask("", changedDate, groupItem)} className="rounded-lg bg-blue-500 pt-1 pl-2 pr-2 pb-1 flex items-center gap-2 hover:cursor-pointer"><PlusIcon/>New Task</button>
                 <div className="flex items-center">
+                    <button onClick={changeDateToToday}className="rounded-lg bg-blue-500 pt-1 pl-2 pr-2 pb-1 flex items-center mr-3 hover:cursor-pointer">Today</button>
                     <div onClick={() => changeDate(-1)}><ArrowLeftIcon/></div>
                     <div onClick={() => changeDate(1)}><ArrowRightIcon/></div>
                 </div>

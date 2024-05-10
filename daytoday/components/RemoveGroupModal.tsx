@@ -11,7 +11,6 @@ const RemoveGroupModal = ({showModal, setShowModal} : RemoveGroupInterface) => {
     const {groups, removeNotesByGroup, removeTasksByGroup, removeGroup, groupItem} = useContext(TaskContext);
     const [selectedGroup, setSelectedGroup] = useState('');
     const removeGroupOnAction = () => {
-        //setShowModal(false);
         setShowModal(false);
         if(selectedGroup== '') return null
         console.log(selectedGroup);

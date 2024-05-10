@@ -33,9 +33,9 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
 
     return (
         <div className="flex gap-2">
-        <Dropdown className="">
+        <Dropdown>
                 <DropdownTrigger>
-                    <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit">{groupItem}</Button>
+                    <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 h-fit rounded-lg w-fit">{groupItem}</Button>
                 </DropdownTrigger>
                 {groups && groups.length > 0 &&
                 <DropdownMenu aria-label="Dynamic Actions" items={groups} onAction={(key) => handleItemClick(key.toString())} className="flex flex-col rounded-lg pl-2 pt-2 pb-2 pr-2" style={{backgroundColor : '#333333'}}>

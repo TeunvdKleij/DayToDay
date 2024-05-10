@@ -97,19 +97,23 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     useEffect(() => {
        startUp()
     }, [])
+
     useEffect(() => {
         getTasksForADay(changedDate, groupItem);
         getNoteForADay(changedDate, groupItem);
     }, [groups])
 
     useEffect(() => {
+        console.log(groupItem);
         getTasksForADay(changedDate, groupItem);
         getNoteForADay(changedDate, groupItem);
     }, [groupItem])
 
+    useEffect(() => {
+        console.log(tasks)
+    }, [tasks])
+
     const addNewTask = async (taskName: string, changedDate: number, groupItem: string) => {
-        // const groupId = groups.indexOf(groupItem)+1
-        // console.log(groupId);
         let result = await axios.post("https://localhost:7267/api/Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem})
         .then(async res => {
             await getTasksForADay(changedDate, groupItem);
@@ -137,10 +141,9 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     const getTasksForADay = async (changedDate: number, groupItem: string) => {
-        // if(groups == null) return null;
-        // const groupId = groups.indexOf(groupItem)+1
         let result = await axios.post(con + "Task/TasksForADay", {ChangedDate: changedDate, GroupName: groupItem})
             .then(res => {
+                console.log(res.data);
                 var taskList = [];
                 var checkedlist = [];
                 var taskIds = [];
@@ -175,15 +178,14 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
     
     const getNoteForADay = async (changedDate: number, groupItem: string) => {
-        // if(groups == null) return null;
-        // const groupId = groups.indexOf(groupItem)+1
         let result = await axios.post("https://localhost:7267/api/Note/NoteForADay", {ChangedDate: changedDate, GroupName: groupItem})
             .then(res => {
                 if(res.data.status == 200){
                     if(res.data.note.noteText != null) setNoteText(res.data.note.noteText);
                 }
-                
-                //setNoteText(res.data.note.noteText);
+                if(res.data.status == 204){
+                    setNoteText("");
+                }
             })
             .catch(error => {
                 console.log('Error:', error);
@@ -236,7 +238,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
 
 
     const updateNote = async (changedDate: number, noteText: string, groupItem: string) => {
-        const groupId = groups.indexOf(groupItem)+1
+        console.log(changedDate, noteText, groupItem);
         await axios.post('https://localhost:7267/api/Note/UpdateNote', {ChangedDate: changedDate, NoteText: noteText, GroupName: groupItem})
         .catch(error => {
             console.log('Error:', error);

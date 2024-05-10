@@ -3,7 +3,6 @@ import EditIcon from "@/icons/editIcon";
 import TrashCanIcon from "@/icons/trashcanicon";
 import { TaskContext } from "@/providers/TaskProvider";
 import { useContext, useEffect, useState } from "react";
-import 'react-datepicker/dist/react-datepicker.css';
 
 interface TaskProps {
     taskName: any; 
@@ -19,6 +18,7 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
         setTaskValue(taskName);
         setTaskDone(checkedTasks[index])
     }, [taskName])
+
 
     const changeTaskState = () =>{
         const taskStatus = taskDone;
@@ -47,6 +47,7 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
         event.target.value = '';
 
     }
+
     const toggleVisibilityDatepicker = () => {
         var editstate = toggleDatepicker;
         setToggleDatepicker(!editstate);
@@ -59,8 +60,9 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
                     {taskValue}
                 </p>
             </div>
+            {/*{`text-black h-5 w-6 text-sm rounded-md ${toggleDatepicker ? "block" : "hidden"}`} */}
             <input type="date" id="datepicker" onChange={() => onChangeDate(event, tasksId[index])} className={`text-black h-5 w-6 text-sm rounded-md ${toggleDatepicker ? "block" : "hidden"}`}></input>
-            <div className="cursor-pointer" onClick={toggleVisibilityDatepicker}><EditIcon/></div>
+            <div className="cursor-pointer" id="editButton" onClick={toggleVisibilityDatepicker}><EditIcon/></div>
             <div className="cursor-pointer" onClick={() => deleteTask(tasksId[index])}><TrashCanIcon color={"#919191"}/></div>
         </div>
     );

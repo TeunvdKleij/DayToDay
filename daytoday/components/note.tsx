@@ -33,7 +33,7 @@ const Note = () => {
     return (
         <div>
             {/* <RichTextEditor/> */}
-            <textarea onChange={changeTextArea} onBlur={onBlurChanges} className="bg-eerie-black w-full min-h-60" value={text} style={{height: height}}></textarea>
+            <textarea id="noteTextarea" onChange={changeTextArea} onBlur={onBlurChanges} className="bg-eerie-black w-full min-h-60" value={text} style={{height: height}}></textarea>
         </div> 
     );
 }
