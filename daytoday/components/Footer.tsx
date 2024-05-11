@@ -9,7 +9,6 @@ const Footer = () => {
             <GitHubIcon width={24} color="#919191"/>
             <h1 className="text-light-grey">GitHub</h1>
         </div>
-        {/* <div id="email" className="flex gap-2 hover:cursor-pointer"> */}
             <a id="email" className="flex gap-2 hover: cursor-pointer" href="mailto:teunvanderkleij@gmail.com">
                 <EmailIcon width={24} color="#919191"/>
                 <h1 className="text-light-grey">Email me!</h1>

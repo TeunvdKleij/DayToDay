@@ -1,5 +1,4 @@
-import PlusIcon from "@/icons/plusicon";
-import { TaskContext } from "@/providers/TaskProvider";
+import { GroupContext } from "@/providers/GroupProvider";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 
 interface AddGroupInterface{
@@ -8,7 +7,7 @@ interface AddGroupInterface{
 }
 
 const AddGroupModal = ({showModal, setShowModal} : AddGroupInterface) => {
-    const {groups, addGroup} = useContext(TaskContext)
+    const {groups, addGroup} = useContext(GroupContext)
     const [input, setInput] = useState<string>('')
 
     const addNewGroup = (event: any) => {

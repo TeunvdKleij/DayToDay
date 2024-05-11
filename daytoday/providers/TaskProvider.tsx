@@ -1,6 +1,8 @@
 'use client'
 import axios from 'axios';
-import React, {createContext, ReactNode, useEffect, useState} from 'react';
+import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
+import { NoteContext } from './NoteProvider';
+import { GroupContext } from './GroupProvider';
 interface TaskProps {
     children: ReactNode,
 }
@@ -22,19 +24,6 @@ interface TaskContextProps {
     setChangedDate: (newValue: number) => void;
     getTasksForADay: (changedDate: number, group: string) => void;
     editTask: (id:string, changedDate: any) => void;
-    noteText: string;
-    setNoteText: (text: string) => void;
-    getNoteForADay: (changed: any, groupItem: string) => void;
-    updateNote: (changed: number, text: string, groupItem: string) => void;
-    groupItem: string;
-    setGroupItem: (value: string) => void;
-    showNote: boolean;
-    setShowNote: (toggle: boolean) => void;
-    groups: string[];
-    setGroups: (value: string[]) => void;
-    addGroup: (name: string) => void;
-    removeGroup: (name: string) => void;
-    removeNotesByGroup: (name: string) => void
     removeTasksByGroup: (name: string) => void
 }
 
@@ -56,19 +45,6 @@ export const TaskContext = createContext<TaskContextProps>({
     setChangedDate: () => {},
     getTasksForADay: () => {},
     editTask: () => {},
-    noteText: "",
-    setNoteText: () => {},
-    getNoteForADay: () => {},
-    updateNote: () => {},
-    groupItem: "School",
-    setGroupItem: () => {},
-    showNote: false,
-    setShowNote: () => {},
-    groups: [],
-    setGroups: () => {},
-    addGroup: () => {},
-    removeGroup: () => {},
-    removeNotesByGroup: () => {},
     removeTasksByGroup: () => {}
 
 });
@@ -80,15 +56,11 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const [checkedTasks, setCheckedTasks] = useState<boolean[]>([])
     const [tasksId, setTasksId] = useState<string[]>([]);
     const [changedDate, setChangedDate] = useState<number>(0)
-    const [noteText, setNoteText] = useState<string>("")
-    const [groupItem, setGroupItem] = useState<string>("")
-    const [showNote, setShowNote] = useState<boolean>(false)
-    const [groups, setGroups] = useState<string[]>([]);
-    const connectionString = "http://192.168.1.241:7267/api/"
-    const con = "https://localhost:7267/api/"
+    const {getNoteForADay} = useContext(NoteContext);
+    const {setGroups, setGroupItem, groups, groupItem, getGroups} = useContext(GroupContext)
 
     const startUp = async () => {
-        setGroups(await getGroups())
+        setGroups(await getGroups());
         const groupName = localStorage.getItem('groupSelection')
         if(groupName != null) setGroupItem(groupName);
         else {setGroupItem(groups[0])}
@@ -104,16 +76,16 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }, [groups])
 
     useEffect(() => {
-        console.log(groupItem);
         getTasksForADay(changedDate, groupItem);
         getNoteForADay(changedDate, groupItem);
     }, [groupItem])
 
-    useEffect(() => {
-        console.log(tasks)
-    }, [tasks])
-
     const addNewTask = async (taskName: string, changedDate: number, groupItem: string) => {
+        if(changedDate < 0) {
+            console.log("Can't add task, you're in the past!")
+            //make a toast
+            return null;
+        }
         let result = await axios.post("https://localhost:7267/api/Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem})
         .then(async res => {
             await getTasksForADay(changedDate, groupItem);
@@ -141,9 +113,8 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     const getTasksForADay = async (changedDate: number, groupItem: string) => {
-        let result = await axios.post(con + "Task/TasksForADay", {ChangedDate: changedDate, GroupName: groupItem})
+        let result = await axios.post("https://localhost:7267/api/Task/TasksForADay", {ChangedDate: changedDate, GroupName: groupItem})
             .then(res => {
-                console.log(res.data);
                 var taskList = [];
                 var checkedlist = [];
                 var taskIds = [];
@@ -166,83 +137,16 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             })
             return result
     }
-    const getGroups = async () =>{
-        let result = await axios.get('https://localhost:7267/api/Group/GetGroups')
-        .then(res => {
-            return res.data.groups
-        })
-        .catch(error => {
-            console.log('Error:', error);
-        });
-        return result
-    }
-    
-    const getNoteForADay = async (changedDate: number, groupItem: string) => {
-        let result = await axios.post("https://localhost:7267/api/Note/NoteForADay", {ChangedDate: changedDate, GroupName: groupItem})
-            .then(res => {
-                if(res.data.status == 200){
-                    if(res.data.note.noteText != null) setNoteText(res.data.note.noteText);
-                }
-                if(res.data.status == 204){
-                    setNoteText("");
-                }
-            })
-            .catch(error => {
-                console.log('Error:', error);
-            })
-    }
-    const addGroup = (name: string) => {
-       let result = axios.post("https://localhost:7267/api/Group/AddGroup", {Name: name})
-       .then(res => {
-            result = res.data
-            setGroups(res.data.groups);
-       })
-       .catch(err => {
-            console.log('Error:', err);
-       })
-       return result
-    }
+
     const removeTasksByGroup = (name: string) => {
         let result = axios.post("https://localhost:7267/api/Task/RemoveTasksByGroup", {Name: name})
         .then(res => {
              result = res.data
-             console.log(result);
         })
         .catch(err => {
              console.log('Error:', err);
         })
         return result
-    }
-    const removeNotesByGroup = (name: string) => {
-        let result = axios.post("https://localhost:7267/api/Note/RemoveNotesByGroup", {Name: name})
-        .then(res => {
-             result = res.data
-             console.log(result);
-        })
-        .catch(err => {
-             console.log('Error:', err);
-        })
-        return result
-    }
-    const removeGroup = (name: string) => {
-        let result = axios.post("https://localhost:7267/api/Group/RemoveGroup", {Name: name})
-        .then(res => {
-             result = res.data
-             console.log(result);
-        })
-        .catch(err => {
-             console.log('Error:', err);
-        })
-        return result
-    }
-
-
-    const updateNote = async (changedDate: number, noteText: string, groupItem: string) => {
-        console.log(changedDate, noteText, groupItem);
-        await axios.post('https://localhost:7267/api/Note/UpdateNote', {ChangedDate: changedDate, NoteText: noteText, GroupName: groupItem})
-        .catch(error => {
-            console.log('Error:', error);
-        });
     }
 
     const deleteTask = async (id: string) => {
@@ -283,19 +187,6 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             setChangedDate,
             getTasksForADay,
             editTask,
-            noteText,
-            setNoteText,
-            getNoteForADay,
-            updateNote,
-            groupItem,
-            setGroupItem,
-            showNote,
-            setShowNote,
-            groups,
-            setGroups,
-            addGroup,
-            removeGroup,
-            removeNotesByGroup,
             removeTasksByGroup
         }}>
             {children}

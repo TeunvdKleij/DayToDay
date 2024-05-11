@@ -1,11 +1,13 @@
 import { TaskContext } from "@/providers/TaskProvider";
 import { useContext, useEffect, useRef, useState } from "react";
-import ReactQuill from "react-quill";
-import RichTextEditor from "./richTextEditor";
+import { NoteContext } from "@/providers/NoteProvider";
+import { GroupContext } from "@/providers/GroupProvider";
 
 
 const Note = () => {
-    const {setNoteText, noteText, updateNote, changedDate, groupItem} = useContext(TaskContext);
+    const {changedDate} = useContext(TaskContext);
+    const {setNoteText, noteText, updateNote} = useContext(NoteContext);
+    const {groupItem} = useContext(GroupContext)
     const [text, setText] = useState(noteText);
     const [height, setHeight] = useState(240);
     
@@ -25,6 +27,7 @@ const Note = () => {
     const changeTextArea = (event: any) => {
         setText(event.target.value);
     }
+
     const onBlurChanges = (event: any) => {
         setNoteText(event.target.value);
         updateNote(changedDate, event.target.value, groupItem)
@@ -32,7 +35,6 @@ const Note = () => {
 
     return (
         <div>
-            {/* <RichTextEditor/> */}
             <textarea id="noteTextarea" onChange={changeTextArea} onBlur={onBlurChanges} className="bg-eerie-black w-full min-h-60" value={text} style={{height: height}}></textarea>
         </div> 
     );

@@ -6,11 +6,12 @@ import { group } from "console";
 import { useContext, useEffect, useState } from "react";
 import AddGroupModal from "./AddGroupModal";
 import RemoveGroupModal from "./RemoveGroupModal";
+import { GroupContext } from "@/providers/GroupProvider";
 interface DropdownInterface {
     toggleBlur: () => void
 }
 const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
-    const {groupItem, setGroupItem, groups} = useContext(TaskContext);
+    const {groupItem, setGroupItem, groups} = useContext(GroupContext);
     const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false);
     const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
@@ -47,8 +48,6 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
                 </DropdownMenu>
                 }
         </Dropdown>
-        {/*Put down a form maybe, just try and fix so there can be groups added
-        Just need to think of a way to delete groups as well, maybe the delete icon but then with confirmation since it will delete a lot of shit */}
         <button className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer" onClick={toggleAdd}><PlusIcon/></button>
         <button className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer" onClick={toggleRemove}><TrashCanIcon color={"#ffffff"}/></button>
         {showAddModal && <AddGroupModal showModal={showAddModal} setShowModal={setShowAddModal}/>}

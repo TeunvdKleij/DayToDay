@@ -5,54 +5,48 @@ import List from "@/components/list";
 import Note from "@/components/note";
 import SkeletonLoader from "@/components/skeletonLoader";
 import ArrowWithoutStickIcon from "@/icons/ArrowWithoutStickIcon";
+import { GroupContext } from "@/providers/GroupProvider";
+import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";
-import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
-import DatePicker from "react-date-picker";
 
 export default function Home() {
   const [percentage, setPercentage] = useState<number>(0);
   const [done, setDone] = useState<boolean>(false);
-  const {tasksCount, checkedTasksCount, changedDate, showNote, setShowNote, groups } = useContext(TaskContext);
+  const {tasksCount, checkedTasksCount, changedDate} = useContext(TaskContext);
+  const {showNote, setShowNote} = useContext(NoteContext);
+  const {groups} = useContext(GroupContext);
   const [blur, setBlur] = useState<boolean>(false);
+
+  //useEffect to set the progressbar based on if the checkedTasksCount or tasksCount is changed
+  useEffect(() => {
+    if(checkedTasksCount == 0 && tasksCount == 0) setPercentage(0);
+    else setPercentage((checkedTasksCount/tasksCount)*100);
+    if(checkedTasksCount/tasksCount == 1) setDone(true);
+    else setDone(false);
+  }, [checkedTasksCount, tasksCount])
+
+  //useEffect to set the focus on the note when it becomes visible
+  useEffect(() => {
+    const textarea = document.getElementById('noteTextarea');
+    if(textarea != null) textarea.focus();
+  }, [showNote])
+
 
   const toggleBlur = () => {
     const blurred = blur
     setBlur(!blurred);
   };
+
   const toggleBlurMain = () => {
     const blurred = blur
     if(blurred == true) setBlur(false);
   }
 
-  useEffect(() => {
-    if(checkedTasksCount == 0 && tasksCount == 0) setPercentage(0);
-    else setPercentage((checkedTasksCount/tasksCount)*100);
-    if(checkedTasksCount/tasksCount == 1) setDone(true);
-    else setDone(false);
-  }, [checkedTasksCount])
-
-  useEffect(() => {
-    if(checkedTasksCount == 0 && tasksCount == 0) setPercentage(0);
-    else setPercentage((checkedTasksCount/tasksCount)*100);
-    if(checkedTasksCount/tasksCount == 1) setDone(true);
-    else setDone(false);
-  }, [tasksCount])
-
-  useEffect(() => {
-    const textarea = document.getElementById('noteTextarea');
-    if(textarea != null) {
-      textarea.focus();
-    }
-  }, [showNote])
-
   const toggleNote = () => {
     const toggle = showNote
     setShowNote(!toggle);
   }
-
-
-
 
   const getDay = (changeDate: number) => {
     var date = new Date();
@@ -60,17 +54,20 @@ export default function Home() {
     var dutchDayNames = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
     return dutchDayNames[date.getDay()];
   }
+
   const getMonth = (changeDate: number) => {
     var date = new Date();
     date.setDate(date.getDate()+changeDate)
     var dutchMonthNames = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "october", "november", "december"]
     return dutchMonthNames[date.getMonth()]
   }
+
   const getDayName = (changeDate: number) => {
     var date = new Date();
     date.setDate(date.getDate()+changeDate)
     return date.getDate();
   }
+  
   return (
     <div className="flex flex-col min-h-screen m-0">
       <div id="main" className={`flex flex-1 items-center flex-col ${blur ? " blur-sm" : ""}`} onClick={toggleBlurMain}>

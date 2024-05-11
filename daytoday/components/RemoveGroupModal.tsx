@@ -1,5 +1,6 @@
+import { GroupContext } from "@/providers/GroupProvider";
+import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";
-import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 
 interface RemoveGroupInterface{
@@ -8,18 +9,20 @@ interface RemoveGroupInterface{
 }
 
 const RemoveGroupModal = ({showModal, setShowModal} : RemoveGroupInterface) => {
-    const {groups, removeNotesByGroup, removeTasksByGroup, removeGroup, groupItem} = useContext(TaskContext);
+    const {removeTasksByGroup} = useContext(TaskContext);
+    const {groups, removeGroup, groupItem} = useContext(GroupContext);
+    const {removeNotesByGroup} = useContext(NoteContext);
     const [selectedGroup, setSelectedGroup] = useState('');
     const removeGroupOnAction = () => {
         setShowModal(false);
         if(selectedGroup== '') return null
-        console.log(selectedGroup);
         removeNotesByGroup(selectedGroup);
         removeTasksByGroup(selectedGroup);
         removeGroup(selectedGroup);
         window.location.reload();
 
     }
+    
     const handleRadioChange = (event: any) => {
         setSelectedGroup(event.target.value);
     };
@@ -29,7 +32,10 @@ const RemoveGroupModal = ({showModal, setShowModal} : RemoveGroupInterface) => {
             <div className="bg-eerie-black p-6 rounded-xl flex flex-col">
                 <div className="flex flex-col gap-2 p-3 pl-4">
                     {groups.map((name: string, index: number)=> {
-                        return <div className="flex gap-5" key={index}><input disabled={groupItem == name ? true : false} name="groups" type="radio" className={`${groupItem == name && "bg-black"}`} value={name} checked={selectedGroup === name} onChange={handleRadioChange}/><p className={`text-xl ${groupItem == name && "line-through opacity-50"}`}>{name}</p></div>
+                        return <div className="flex gap-5" key={index}>
+                            <input disabled={groupItem == name ? true : false} name="groups" type="radio" className={`${groupItem == name && "bg-black"}`} value={name} checked={selectedGroup === name} onChange={handleRadioChange}/>
+                            <p className={`text-xl ${groupItem == name && "line-through opacity-50"}`}>{name}</p>
+                            </div>
                     })}
                 </div>
                 <div className="flex w-full gap-2 p-3 justify-around">

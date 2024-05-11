@@ -1,5 +1,4 @@
 import React from 'react';
-import GroupDropDown from './GroupDropdown';
 
 const SkeletonLoader = () => {
 
