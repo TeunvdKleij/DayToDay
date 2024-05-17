@@ -6,41 +6,38 @@ import { Dispatch, SetStateAction, useContext, useState } from "react";
 interface RemoveGroupInterface{
     showModal: boolean;
     setShowModal: Dispatch<SetStateAction<boolean>>
+    groupName: string
+    prevGroup: string
 }
 
-const RemoveGroupModal = ({showModal, setShowModal} : RemoveGroupInterface) => {
+const RemoveGroupModal = ({showModal, setShowModal, groupName, prevGroup} : RemoveGroupInterface) => {
     const {removeTasksByGroup} = useContext(TaskContext);
-    const {groups, removeGroup, groupItem} = useContext(GroupContext);
+    const {groups, removeGroup, groupItem, setGroupItem} = useContext(GroupContext);
     const {removeNotesByGroup} = useContext(NoteContext);
-    const [selectedGroup, setSelectedGroup] = useState('');
-    const removeGroupOnAction = () => {
-        setShowModal(false);
-        if(selectedGroup== '') return null
-        removeNotesByGroup(selectedGroup);
-        removeTasksByGroup(selectedGroup);
-        removeGroup(selectedGroup);
-        window.location.reload();
 
+    const removeClick = async (item: string) => {
+        await removeNotesByGroup(item);
+        await removeTasksByGroup(item);
+        await removeGroup(item);
+        setGroupItem(prevGroup)
+        localStorage.setItem('groupSelection', prevGroup);
+        window.location.reload();
+        setShowModal(false)
     }
-    
-    const handleRadioChange = (event: any) => {
-        setSelectedGroup(event.target.value);
-    };
+
 
     return (
         <div className="absolute flex justify-center items-center content-center w-full h-full top-0 left-0 bg-black bg-opacity-40 z-40">
             <div className="bg-eerie-black p-6 rounded-xl flex flex-col">
-                <div className="flex flex-col gap-2 p-3 pl-4">
-                    {groups.map((name: string, index: number)=> {
-                        return <div className="flex gap-5" key={index}>
-                            <input disabled={groupItem == name ? true : false} name="groups" type="radio" className={`${groupItem == name && "bg-black"}`} value={name} checked={selectedGroup === name} onChange={handleRadioChange}/>
-                            <p className={`text-xl ${groupItem == name && "line-through opacity-50"}`}>{name}</p>
-                            </div>
-                    })}
-                </div>
+                <p className="">Weet je zeker dat je {groupName} wil verwijderen?</p>
+                <div className="flex gap-1">
+                    <p className="font-bold">Dit proces is </p>
+                    <p className="font-bold underline">niet</p>
+                    <p className="font-bold"> terug te draaien</p>
+                    </div>
                 <div className="flex w-full gap-2 p-3 justify-around">
-                    <button onClick={removeGroupOnAction} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer">Bevestigen</button>
-                    <button onClick={() =>  setShowModal(false)} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer">Annuleren</button>
+                    <button onClick={async () => removeClick(groupName)} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer">Bevestigen</button>
+                    <button onClick={() =>  setShowModal(false)} className="bg-zinc-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer">Annuleren</button>
                 </div>
             </div>
         </div>

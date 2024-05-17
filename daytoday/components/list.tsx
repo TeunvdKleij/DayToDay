@@ -1,27 +1,20 @@
 'use client'
 import { useContext, useEffect, useRef, useState } from "react";
-import Task from "./task"
 import { TaskContext } from "@/providers/TaskProvider";
 import PlusIcon from "@/icons/plusicon";
 import ArrowLeftIcon from "@/icons/arrowLeftIcon";
 import ArrowRightIcon from "@/icons/arrowRightIcon";
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
+import { MainContext } from "@/providers/MainProvider";
+import Task from "./Task";
 
 const List = () => {
     const {tasks, addNewTask, changedDate, setChangedDate, getTasksForADay} = useContext(TaskContext);
     const {groupItem} = useContext(GroupContext);
     const {getNoteForADay, showNote, setShowNote} = useContext(NoteContext)
     const [disabled, setDisabled] = useState<boolean>(false);
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-
-    useEffect(() => {
-        const updateScreenWidth = () => {
-            setScreenWidth(window.innerWidth);
-        };
-        window.addEventListener('resize', updateScreenWidth);
-        updateScreenWidth();
-    }, []);
+    const {screenWidth} = useContext(MainContext)
 
     useEffect(() => {
         if(changedDate < 0) setDisabled(true);
@@ -63,7 +56,7 @@ const List = () => {
             <div className="flex gap-3 mt-6 w-full justify-between">
                 <button disabled={disabled} onClick={() => addNewTask("", changedDate, groupItem)} className={`md:text-md text-sm w-fit rounded-lg pt-1 pl-2 pr-2 pb-1 flex items-center gap-2 hover:cursor-pointer ${changedDate < 0 ? "bg-grey" : "bg-blue-500" } `}><PlusIcon/>New Task</button>
                 <div className="flex items-center">
-                    {screenWidth >= 768 && <input type="date" className="rounded-lg text-black" onChange={changeDateWithDatepicker}></input>}
+                    {screenWidth && screenWidth >= 768 && <input type="date" className="rounded-lg text-black" onChange={changeDateWithDatepicker}></input>}
                     <button onClick={changeDateToToday}className={`rounded-lg pt-1 pl-2 pr-2 pb-1 flex bg-blue-500 items-center mr-3 ml-3 hover:cursor-pointer md:text-md text-sm `}>Today</button>
                     <div onClick={() => changeDate(-1)}><ArrowLeftIcon/></div>
                     <div onClick={() => changeDate(1)}><ArrowRightIcon/></div>

@@ -2,7 +2,9 @@
 import EditIcon from "@/icons/editIcon";
 import TrashCanIcon from "@/icons/trashcanicon";
 import { TaskContext } from "@/providers/TaskProvider";
-import { useContext, useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+import { useContext, useEffect, useRef, useState } from "react";
 
 interface TaskProps {
     taskName: any; 
@@ -52,11 +54,13 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
         const currentDate = new Date();
         const formattedDate = date.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'});
         const currentDateFormatted = currentDate.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'});
-        //make a toast alert of not being able to make a change to the past
-        if(formattedDate < currentDateFormatted) return null
+        if(formattedDate < currentDateFormatted) {
+            toast.error("Date is in the past")
+            return null
+        }
         editTask(id, formattedDate);
+        toast.success("Task edited")
         event.target.value = '';
-
     }
 
     const toggleVisibilityDatepicker = () => {
@@ -72,7 +76,6 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
                     {taskValue}
                 </p>
             </div>
-            {/*{`text-black h-5 w-6 text-sm rounded-md ${toggleDatepicker ? "block" : "hidden"}`} */}
             <input type="date" id="datepicker" min={min} onChange={() => onChangeDate(event, tasksId[index])} className={`text-black h-5 w-6 text-sm rounded-md ${toggleDatepicker ? "block" : "hidden"}`}></input>
             <div className="cursor-pointer" id="editButton" onClick={toggleVisibilityDatepicker}><EditIcon/></div>
             <div className="cursor-pointer" onClick={() => deleteTask(tasksId[index])}><TrashCanIcon color={"#919191"}/></div>

@@ -12,27 +12,37 @@ interface GroupContextProps {
     addGroup: (name: string) => void;
     removeGroup: (name: string) => void;
     getGroups: () => Promise<string[]>;
+    setToggleBool: (toggle: boolean) => void,
+    toggleBool: boolean
+    lastGroupItem: string
+    setLastGroupItem: (item: string) => void
 }
 
 export const GroupContext = createContext<GroupContextProps>({
-    groupItem: "Home",
+    groupItem: "",
     setGroupItem: () => {},
     groups: [],
     setGroups: () => {},
     addGroup: () => {},
     removeGroup: () => {},
     getGroups: async () => [], 
+    setToggleBool: () => {},
+    toggleBool: false,
+    lastGroupItem: "",
+    setLastGroupItem: () => {}
 });
 
 const GroupProvider: React.FC<GroupProps> = ({children}) => {
     const [groupItem, setGroupItem] = useState<string>("")
     const [groups, setGroups] = useState<string[]>([]);
+    const [toggleBool, setToggleBool] = useState<boolean>(false)
+    const [lastGroupItem, setLastGroupItem] = useState<string>("")
     
 
-    const removeGroup = (name: string) => {
-        let result = axios.post("https://localhost:7267/api/Group/RemoveGroup", {Name: name})
+    const removeGroup = async (name: string) => {
+        let result = await axios.post("https://localhost:7267/api/Group/RemoveGroup", {Name: name})
         .then(res => {
-             result = res.data
+             return res.data
         })
         .catch(err => {
              console.log('Error:', err);
@@ -40,8 +50,8 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
         return result
     }
 
-    const addGroup = (name: string) => {
-        let result = axios.post("https://localhost:7267/api/Group/AddGroup", {Name: name})
+    const addGroup = async (name: string) => {
+        let result = await axios.post("https://localhost:7267/api/Group/AddGroup", {Name: name})
         .then(res => {
              result = res.data
              setGroups(res.data.groups);
@@ -70,7 +80,11 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
             setGroupItem,
             setGroups,
             removeGroup,
-            getGroups
+            getGroups,
+            setToggleBool,
+            toggleBool,
+            lastGroupItem,
+            setLastGroupItem
         }}>
             {children}
         </GroupContext.Provider>

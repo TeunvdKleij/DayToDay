@@ -2,23 +2,29 @@ import { GroupContext } from "@/providers/GroupProvider";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 
 interface AddGroupInterface{
-    showModal: boolean;
     setShowModal: Dispatch<SetStateAction<boolean>>
+    groupName: string
+    prevGroup: string
 }
 
-const AddGroupModal = ({showModal, setShowModal} : AddGroupInterface) => {
+const AddGroupModal = ({setShowModal, groupName, prevGroup} : AddGroupInterface) => {
     const {groups, addGroup} = useContext(GroupContext)
     const [input, setInput] = useState<string>('')
 
-    const addNewGroup = (event: any) => {
+    const addNewGroup = () => {
         setShowModal(false);
         const lowercaseGroup = groups.map(item => item.toLowerCase());
         if(lowercaseGroup.includes(input.toLowerCase())) return null
         addGroup(input);
         window.location.reload();
     }
+
     const onChange = (event: any) => {
         setInput(event.target.value)
+    }
+
+    const cancelAdding = () => {
+        setShowModal(false);
     }
     
     return (
@@ -30,7 +36,7 @@ const AddGroupModal = ({showModal, setShowModal} : AddGroupInterface) => {
                 </div>
                 <div className="flex w-full gap-2 p-3 justify-around">
                     <button onClick={addNewGroup} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer">Bevestigen</button>
-                    <button onClick={() => setShowModal(false)} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer">Annuleren</button>
+                    <button onClick={cancelAdding} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer">Annuleren</button>
                 </div>
             </div>
         </div>

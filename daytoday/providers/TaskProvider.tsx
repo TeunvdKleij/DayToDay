@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import { NoteContext } from './NoteProvider';
 import { GroupContext } from './GroupProvider';
+import { toast } from 'react-toastify';
 interface TaskProps {
     children: ReactNode,
 }
@@ -25,6 +26,7 @@ interface TaskContextProps {
     getTasksForADay: (changedDate: number, group: string) => void;
     editTask: (id:string, changedDate: any) => void;
     removeTasksByGroup: (name: string) => void
+    getTasksForAGroup: (group: string) => void;
 }
 
 export const TaskContext = createContext<TaskContextProps>({
@@ -45,7 +47,8 @@ export const TaskContext = createContext<TaskContextProps>({
     setChangedDate: () => {},
     getTasksForADay: () => {},
     editTask: () => {},
-    removeTasksByGroup: () => {}
+    removeTasksByGroup: () => {},
+    getTasksForAGroup: () => {},
 
 });
 
@@ -56,8 +59,11 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const [checkedTasks, setCheckedTasks] = useState<boolean[]>([])
     const [tasksId, setTasksId] = useState<string[]>([]);
     const [changedDate, setChangedDate] = useState<number>(0)
+    const [newTaskAdded, setNewTaskAdded] = useState<boolean>(false);
     const {getNoteForADay} = useContext(NoteContext);
     const {setGroups, setGroupItem, groups, groupItem, getGroups} = useContext(GroupContext)
+    const {noteText, setShowNote, showNote} = useContext(NoteContext)
+
 
     const startUp = async () => {
         setGroups(await getGroups());
@@ -76,27 +82,45 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }, [groups])
 
     useEffect(() => {
+        console.info(showNote);
+    }, [showNote])
+
+    const getNoteAndTask = async () => {
+        await getTasksForADay(changedDate, groupItem);
+        const note = await getNoteForADay(changedDate, groupItem);
+    }
+
+    useEffect(() => {
         getTasksForADay(changedDate, groupItem);
         getNoteForADay(changedDate, groupItem);
-    }, [groupItem])
+    }, [groupItem]);
+
 
     const addNewTask = async (taskName: string, changedDate: number, groupItem: string) => {
         if(changedDate < 0) {
-            console.log("Can't add task, you're in the past!")
-            //make a toast
+            toast.error("Can't add task to the past")
             return null;
         }
+        setNewTaskAdded(true);
         let result = await axios.post("https://localhost:7267/api/Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem})
         .then(async res => {
             await getTasksForADay(changedDate, groupItem);
             await getNoteForADay(changedDate, groupItem);
-            const task = document.getElementById('task' + res.data.id)
-            task?.focus();   
+            setNewTaskAdded(false);
         })
         .catch(err => {
             return err;
         })
     }
+
+
+    useEffect(() => {
+        const lastTask = document.getElementById('taskList')?.children[tasks.length-1];
+        if(lastTask){
+            const id = lastTask?.id.replace("Div", "");
+            document.getElementById(id)?.focus();
+        }
+    }, [newTaskAdded])
 
     const updateTaskValueInDatabase = async (id: string, taskName: string) => {
         await axios.put('https://localhost:7267/api/Task/UpdateTaskValue', {Id: id, TaskName: taskName})
@@ -137,11 +161,38 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             })
             return result
     }
+    const getTasksForAGroup = async (groupItem: string) => {
+        let result = await axios.post("https://localhost:7267/api/Task/TasksForAGroup", {GroupName: groupItem})
+            .then(res => {
+                console.log(res.data);
+                var taskList = [];
+                var checkedlist = [];
+                var taskIds = [];
+                var checkedTasks = 0;
+                for(let i = 0; i < res.data.tasks.length; i++){
+                    taskList.push(res.data.tasks[i].taskName)
+                    checkedlist.push(res.data.tasks[i].done)
+                    taskIds.push(res.data.tasks[i].taskId)
+                    if(res.data.tasks[i].done) checkedTasks++;
+                }
+                setTasks(taskList);
+                setCheckedTasks(checkedlist);
+                setTasksCount(taskList.length);
+                setCheckedTasksCount(checkedTasks)
+                setTasksId(taskIds);
+                return taskList
+            })
+            .catch(error => {
+                console.log('Error:', error);
+            })
+            return result
+    }
 
-    const removeTasksByGroup = (name: string) => {
-        let result = axios.post("https://localhost:7267/api/Task/RemoveTasksByGroup", {Name: name})
+    const removeTasksByGroup = async (name: string) => {
+        let result = await axios.post("https://localhost:7267/api/Task/RemoveTasksByGroup", {GroupName: name})
         .then(res => {
-             result = res.data
+            console.log(res)
+             return res.data
         })
         .catch(err => {
              console.log('Error:', err);
@@ -158,6 +209,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             console.log('Error:', error);
         });
     }
+    
     const editTask = async (id: string, changeDate: any) => {
         await axios.put('https://localhost:7267/api/Task/UpdateTaskDate', {Id: id, date: changeDate})
         .then(res => {
@@ -187,7 +239,8 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             setChangedDate,
             getTasksForADay,
             editTask,
-            removeTasksByGroup
+            removeTasksByGroup,
+            getTasksForAGroup
         }}>
             {children}
         </TaskContext.Provider>

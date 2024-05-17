@@ -79,9 +79,7 @@ body{
   transform: scale(-1);
 }
 
-.ql-toolbar .ql-picker-options svg,
-.ql-toolbar .ql-picker-label svg,
-.ql-toolbar .ql-icon svg {
-    fill: #fff; /* Set the fill color to white */
+.custom-toast-background {
+  background-color: var(--bg-grey);
 }
 

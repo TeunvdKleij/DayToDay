@@ -29,30 +29,28 @@ export const NoteContext = createContext<NoteContextProps>({
 const NoteProvider: React.FC<NoteProps> = ({children}) => {
     const [noteText, setNoteText] = useState<string>("")
     const [showNote, setShowNote] = useState<boolean>(false)
-    const {} = useContext(TaskContext);
+
     
     const getNoteForADay = async (changedDate: number, groupItem: string) => {
         let result = await axios.post("https://localhost:7267/api/Note/NoteForADay", {ChangedDate: changedDate, GroupName: groupItem})
             .then(res => {
-                if(res.data.status == 200){
-                    if(res.data.note.noteText != null) setNoteText(res.data.note.noteText);
-                }
-                if(res.data.status == 204){
-                    setNoteText("");
-                }
+                if(res.data.status == 200) {if(res.data.note.noteText != null) setNoteText(res.data.note.noteText);}
+                if(res.data.status == 204) setNoteText("");
             })
             .catch(error => {
+                setNoteText("")
                 console.log('Error:', error);
             })
+
     }
 
-    const removeNotesByGroup = (name: string) => {
-        let result = axios.post("https://localhost:7267/api/Note/RemoveNotesByGroup", {Name: name})
+    const removeNotesByGroup = async (name: string) => {
+        let result = await axios.post("https://localhost:7267/api/Note/RemoveNotesByGroup", {GroupName: name})
         .then(res => {
-             result = res.data
+            return res.data
         })
-        .catch(err => {
-             console.log('Error:', err);
+        .catch(err => { 
+            console.log('Error:', err);
         })
         return result
     }
