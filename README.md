@@ -6,8 +6,9 @@ This project started as a personal project, but now this project will be availab
 # Installation
 
 To use this application, copy the https, and enter the following command in a terminal/cmd
+`docker compose`
 
-`docker run`
+```docker compose```
 
 
 
@@ -23,4 +24,7 @@ The first version are the use cases that represent the basic of usage of this ap
 - Navigate between the different days in multiple ways (Date, a today button and arrows to move one day at a time)
 - Use a note at each day and group if you want to write out thoughts concerning the tasks or other cases
 
+## Version 0.2
+Docker compose has been added
 
+`docker compose`
