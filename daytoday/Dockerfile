@@ -10,5 +10,5 @@ FROM node:16-alpine
 WORKDIR /app
 COPY --from=build /app ./
 RUN npm install --production
-EXPOSE 3000
+EXPOSE 3001
 CMD ["npm", "start"]
