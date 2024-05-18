@@ -1,39 +1,21 @@
-import { TaskContext } from "@/providers/TaskProvider";
-import { useContext, useEffect, useRef, useState } from "react";
+import ArrowWithoutStickIcon from "@/icons/ArrowWithoutStickIcon";
+import NoteTextArea from "./NoteTextArea";
+import { useContext } from "react";
+import { NoteContext } from "@/providers/NoteProvider";
 
-
-
-const Note = () => {
-    const {setNoteText, noteText, updateNote, changedDate, groupItem} = useContext(TaskContext);
-    const [text, setText] = useState(noteText);
-    const [height, setHeight] = useState(240);
-    
-    useEffect(() => {
-        const lines = calcLines(text);
-        setHeight(26*lines);
-    }, [text])
-
-    useEffect(() => {
-        setText(noteText);
-    }, [noteText])
-    
-    const calcLines = (text: string) => {
-        return (text.match(/\n/g) || []).length;
-    }
-
-    const changeTextArea = (event: any) => {
-        setText(event.target.value);
-    }
-    const onBlurChanges = (event: any) => {
-        setNoteText(event.target.value);
-        updateNote(changedDate, event.target.value, groupItem)
-    }
-
-    return (
-        <div>
-            <textarea onChange={changeTextArea} onBlur={onBlurChanges} className="bg-eerie-black w-full min-h-60" value={text} style={{height: height}}></textarea>
-        </div> 
+interface NoteInterface {
+    toggleNote: () => void
+}
+const Note = ({toggleNote} : NoteInterface) => {
+    const {showNote} = useContext(NoteContext);
+    return(
+        <div className="flex justify-center flex-col bg-eerie-black rounded-lg p-5 m-5 md:w-2/3 w-4/5">
+          <div className="flex justify-between mb-3 align-middle items-center">
+            <h1 id="title" className="flex justify-center md:text-3xl text-xl font-bold">Notitie</h1>
+            <div onClick={toggleNote} className={`hover:cursor-pointer ${showNote && "mirror"}`}><ArrowWithoutStickIcon width={40}/></div>
+          </div>
+          {showNote && <div className="fadeIn"><NoteTextArea/></div>}
+        </div>
     );
 }
 export default Note;
-

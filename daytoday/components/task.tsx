@@ -2,8 +2,9 @@
 import EditIcon from "@/icons/editIcon";
 import TrashCanIcon from "@/icons/trashcanicon";
 import { TaskContext } from "@/providers/TaskProvider";
-import { useContext, useEffect, useState } from "react";
-import 'react-datepicker/dist/react-datepicker.css';
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+import { useContext, useEffect, useRef, useState } from "react";
 
 interface TaskProps {
     taskName: any; 
@@ -11,10 +12,18 @@ interface TaskProps {
 }
 
 const Task: React.FC<TaskProps> = ({taskName, index}) => {
-    const {tasks, changedDate, checkedTasksCount, setCheckedTasksCount, checkedTasks, updateTaskStatusInDatabase, updateTaskValueInDatabase, deleteTask, tasksId, editTask} = useContext(TaskContext)
+    const {checkedTasksCount, setCheckedTasksCount, checkedTasks, updateTaskStatusInDatabase, updateTaskValueInDatabase, deleteTask, tasksId, editTask} = useContext(TaskContext)
     const [taskDone, setTaskDone] = useState<boolean>(false);
     const [taskValue, setTaskValue] = useState<string>('')
     const [toggleDatepicker, setToggleDatepicker] = useState<boolean>(false)
+    const [min, setMin] = useState<string>();
+
+    useEffect(() => {
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        setMin(formattedDate);
+    }, [])
+
     useEffect(() => {
         setTaskValue(taskName);
         setTaskDone(checkedTasks[index])
@@ -26,30 +35,39 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
         if(taskStatus == true) setCheckedTasksCount(checkedTasksCount-1);
         else setCheckedTasksCount(checkedTasksCount+1)
         updateTaskStatusInDatabase(tasksId[index], taskDone);
-
     }
+
     const changeTaskValue = (event: any) => {
         if(event.target.innerText == "") deleteTask(tasksId[index])
         else updateTaskValueInDatabase(tasksId[index], event.target.innerText)
     }
+
     const onKeyDown = (event: any) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             event.target.blur();
           }
     }
-    const onChangeDate = (event: any, id: any) => {
-        const datepicker = document.getElementById('datepicker')
-        const date = new Date(event.target.value);
-        const formattedDate = date.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'});
-        editTask(id, formattedDate);
-        toggleVisibilityDatepicker();
 
+    const onChangeDate = (event: any, id: any) => {
+        const date = new Date(event.target.value);
+        const currentDate = new Date();
+        const formattedDate = date.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'});
+        const currentDateFormatted = currentDate.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'});
+        if(formattedDate < currentDateFormatted) {
+            toast.error("Date is in the past")
+            return null
+        }
+        editTask(id, formattedDate);
+        toast.success("Task edited")
+        event.target.value = '';
     }
+
     const toggleVisibilityDatepicker = () => {
         var editstate = toggleDatepicker;
         setToggleDatepicker(!editstate);
     }
+
     return (
         <div id={"taskDiv" + tasksId[index]} className="flex flex-row w-full gap-3 content-center items-start mt-2 mb-2 ">
             <input onChange={changeTaskState} checked={taskDone} type="checkbox" className="w-5 h-5 hover:cursor-pointer md:mt-1 bg-white border border-gray-300 rounded-md checked:bg-blue-500 checked:border-transparent focus:outline-none transition-all duration-300 ease-in-out"></input>
@@ -58,9 +76,9 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
                     {taskValue}
                 </p>
             </div>
-            <input type="date" id="datepicker" onChange={() => onChangeDate(event, tasksId[index])} className={`text-black h-5 w-6 text-sm rounded-md ${toggleDatepicker ? "block" : "hidden"}`}></input>
-            <div className="cursor-pointer" onClick={toggleVisibilityDatepicker}><EditIcon/></div>
-            <div className="cursor-pointer" onClick={() => deleteTask(tasksId[index])}><TrashCanIcon/></div>
+            <input type="date" id="datepicker" min={min} onChange={() => onChangeDate(event, tasksId[index])} className={`text-black h-5 w-6 text-sm rounded-md ${toggleDatepicker ? "block" : "hidden"}`}></input>
+            <div className="cursor-pointer" id="editButton" onClick={toggleVisibilityDatepicker}><EditIcon/></div>
+            <div className="cursor-pointer" onClick={() => deleteTask(tasksId[index])}><TrashCanIcon color={"#919191"}/></div>
         </div>
     );
 }
