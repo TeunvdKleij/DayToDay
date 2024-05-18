@@ -23,13 +23,13 @@ export default function Home() {
   const [blur, setBlur] = useState<boolean>(false);
   const [headerText, setHeaderText] = useState<string>('')
 
-  //useEffect to set the progressbar based on if the checkedTasksCount or tasksCount is changed
   useEffect(() => {
     if(checkedTasksCount == 0 && tasksCount == 0) setPercentage(0);
     else setPercentage((checkedTasksCount/tasksCount)*100);
     if(checkedTasksCount/tasksCount == 1) setDone(true);
     else setDone(false);
   }, [checkedTasksCount, tasksCount])
+  
 
   //useEffect to set the focus on the note when it becomes visible
   useEffect(() => {
