@@ -6,9 +6,6 @@ This project started as a personal project, but now this project will be availab
 # Installation
 
 To use this application, copy the https, and enter the following command in a terminal/cmd
-`docker compose`
-
-```docker compose```
 
 
 
@@ -27,4 +24,3 @@ The first version are the use cases that represent the basic of usage of this ap
 ## Version 0.2
 Docker compose has been added
 
-`docker compose`
