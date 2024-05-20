@@ -61,7 +61,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const [changedDate, setChangedDate] = useState<number>(0)
     const [newTaskAdded, setNewTaskAdded] = useState<boolean>(false);
     const {getNoteForADay} = useContext(NoteContext);
-    const {setGroups, setGroupItem, groups, groupItem, getGroups} = useContext(GroupContext)
+    const {setGroups, setGroupItem, groups, groupItem, getGroups, toggleBool} = useContext(GroupContext)
     const {noteText, setShowNote, showNote} = useContext(NoteContext)
 
 
@@ -85,11 +85,6 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         console.info(showNote);
     }, [showNote])
 
-    const getNoteAndTask = async () => {
-        await getTasksForADay(changedDate, groupItem);
-        const note = await getNoteForADay(changedDate, groupItem);
-    }
-
     useEffect(() => {
         getTasksForADay(changedDate, groupItem);
         getNoteForADay(changedDate, groupItem);
@@ -104,7 +99,8 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         setNewTaskAdded(true);
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem})
         .then(async res => {
-            await getTasksForADay(changedDate, groupItem);
+            if(!toggleBool) await getTasksForADay(changedDate, groupItem);
+            else await getTasksForAGroup(groupItem);
             await getNoteForADay(changedDate, groupItem);
             setNewTaskAdded(false);
         })
@@ -202,8 +198,9 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
 
     const deleteTask = async (id: string) => {
         await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/DeleteTask", {Id: id})
-        .then(() => {
-          getTasksForADay(changedDate, groupItem);
+        .then(async () => {
+            if(!toggleBool) await getTasksForADay(changedDate, groupItem);
+            else await getTasksForAGroup(groupItem);
         })
         .catch(error => {
             console.log('Error:', error);
@@ -212,8 +209,9 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     
     const editTask = async (id: string, changeDate: any) => {
         await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskDate", {Id: id, date: changeDate})
-        .then(res => {
-            getTasksForADay(changedDate, groupItem)
+        .then(async res => {
+            if(!toggleBool) await getTasksForADay(changedDate, groupItem);
+            else await getTasksForAGroup(groupItem);
         })
         .catch(error => {
             console.log('Error:', error);
@@ -240,7 +238,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             getTasksForADay,
             editTask,
             removeTasksByGroup,
-            getTasksForAGroup
+            getTasksForAGroup,
         }}>
             {children}
         </TaskContext.Provider>
