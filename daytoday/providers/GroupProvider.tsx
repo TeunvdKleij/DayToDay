@@ -1,6 +1,6 @@
 'use client'
 import axios from 'axios';
-import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
+import React, {createContext, ReactNode, useState} from 'react';
 interface GroupProps {
     children: ReactNode,
 }
@@ -40,7 +40,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     
 
     const removeGroup = async (name: string) => {
-        let result = await axios.post("https://localhost:7267/api/Group/RemoveGroup", {Name: name})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/RemoveGroup", {Name: name})
         .then(res => {
              return res.data
         })
@@ -51,7 +51,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     }
 
     const addGroup = async (name: string) => {
-        let result = await axios.post("https://localhost:7267/api/Group/AddGroup", {Name: name})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/AddGroup", {Name: name})
         .then(res => {
              result = res.data
              setGroups(res.data.groups);
@@ -62,7 +62,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
         return result
      }
      const getGroups = async () => {
-        let result: string[] = await axios.get('https://localhost:7267/api/Group/GetGroups')
+        let result: string[] = await axios.get(process.env.NEXT_PUBLIC_API_URL + "Group/GetGroups")
         .then(res => {
             return res.data.groups
         })

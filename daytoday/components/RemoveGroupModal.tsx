@@ -1,18 +1,17 @@
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext } from "react";
 
 interface RemoveGroupInterface{
-    showModal: boolean;
     setShowModal: Dispatch<SetStateAction<boolean>>
     groupName: string
     prevGroup: string
 }
 
-const RemoveGroupModal = ({showModal, setShowModal, groupName, prevGroup} : RemoveGroupInterface) => {
+const RemoveGroupModal = ({setShowModal, groupName, prevGroup} : RemoveGroupInterface) => {
     const {removeTasksByGroup} = useContext(TaskContext);
-    const {groups, removeGroup, groupItem, setGroupItem} = useContext(GroupContext);
+    const {removeGroup, setGroupItem} = useContext(GroupContext);
     const {removeNotesByGroup} = useContext(NoteContext);
 
     const removeClick = async (item: string) => {

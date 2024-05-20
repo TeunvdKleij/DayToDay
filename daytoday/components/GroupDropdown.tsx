@@ -1,14 +1,11 @@
-import PlusIcon from "@/icons/plusicon";
 import TrashCanIcon from "@/icons/trashcanicon";
 import { TaskContext } from "@/providers/TaskProvider";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button, DropdownSection } from "@nextui-org/react"
-import { group } from "console";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AddGroupModal from "./AddGroupModal";
 import RemoveGroupModal from "./RemoveGroupModal";
 import { GroupContext } from "@/providers/GroupProvider";
 import Toggle from "./Toggle";
-import { toast } from "react-toastify";
 import { NoteContext } from "@/providers/NoteProvider";
 import ArrowWithoutStickIcon from "@/icons/ArrowWithoutStickIcon";
 interface DropdownInterface {
@@ -17,7 +14,7 @@ interface DropdownInterface {
 }
 const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
     const {groupItem, setGroupItem, groups, toggleBool, setToggleBool, removeGroup, lastGroupItem, setLastGroupItem} = useContext(GroupContext);
-    const {removeTasksByGroup, getTasksForAGroup, getTasksForADay, changedDate} = useContext(TaskContext)
+    const {getTasksForAGroup, getTasksForADay, changedDate} = useContext(TaskContext)
     const {setShowNote} = useContext(NoteContext)
     const {removeNotesByGroup} = useContext(NoteContext);
     const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false);
@@ -83,7 +80,7 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
         </Dropdown>
         <Toggle text={toggleBool ? "All tasks" : "Daily tasks"} onChange={handleToggleChange} checked={toggleBool}/>
         {showAddModal && <AddGroupModal groupName={groupItem} prevGroup={prevGroup}  setShowModal={setShowAddModal}/>}
-        {showRemoveModal && <RemoveGroupModal groupName={groupItem} prevGroup={prevGroup}  showModal={showRemoveModal} setShowModal={setShowRemoveModal}/>}
+        {showRemoveModal && <RemoveGroupModal groupName={groupItem} prevGroup={prevGroup} setShowModal={setShowRemoveModal}/>}
         </div>
       );
 }

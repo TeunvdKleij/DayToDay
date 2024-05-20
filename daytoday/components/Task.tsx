@@ -2,9 +2,9 @@
 import EditIcon from "@/icons/editIcon";
 import TrashCanIcon from "@/icons/trashcanicon";
 import { TaskContext } from "@/providers/TaskProvider";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 interface TaskProps {
     taskName: any; 

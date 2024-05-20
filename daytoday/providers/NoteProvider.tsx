@@ -1,7 +1,6 @@
 'use client'
 import axios from 'axios';
-import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
-import { TaskContext } from './TaskProvider';
+import React, {createContext, ReactNode, useState} from 'react';
 interface NoteProps {
     children: ReactNode,
 }
@@ -32,7 +31,7 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
 
     
     const getNoteForADay = async (changedDate: number, groupItem: string) => {
-        let result = await axios.post("https://localhost:7267/api/Note/NoteForADay", {ChangedDate: changedDate, GroupName: groupItem})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/NoteForADay", {ChangedDate: changedDate, GroupName: groupItem})
             .then(res => {
                 if(res.data.status == 200) {if(res.data.note.noteText != null) setNoteText(res.data.note.noteText);}
                 if(res.data.status == 204) setNoteText("");
@@ -45,7 +44,7 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
     }
 
     const removeNotesByGroup = async (name: string) => {
-        let result = await axios.post("https://localhost:7267/api/Note/RemoveNotesByGroup", {GroupName: name})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/RemoveNotesByGroup", {GroupName: name})
         .then(res => {
             return res.data
         })
@@ -57,7 +56,7 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
 
 
     const updateNote = async (changedDate: number, noteText: string, groupItem: string) => {
-        await axios.post('https://localhost:7267/api/Note/UpdateNote', {ChangedDate: changedDate, NoteText: noteText, GroupName: groupItem})
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/UpdateNote", {ChangedDate: changedDate, NoteText: noteText, GroupName: groupItem})
         .catch(error => {
             console.log('Error:', error);
         });

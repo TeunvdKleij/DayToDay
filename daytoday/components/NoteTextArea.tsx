@@ -1,5 +1,5 @@
 import { TaskContext } from "@/providers/TaskProvider";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NoteContext } from "@/providers/NoteProvider";
 import { GroupContext } from "@/providers/GroupProvider";
 

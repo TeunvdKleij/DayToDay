@@ -43,8 +43,12 @@
   --bg-light-grey: #919191;
   --bg-grey: #515151;
 }
+
 body{
   font-family: Arial, Helvetica, sans-serif;
+}
+.invertBg{
+  filter: invert()
 }
 .bg-light-mode{
   background-color: var(--bg-light-mode);

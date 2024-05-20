@@ -102,7 +102,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             return null;
         }
         setNewTaskAdded(true);
-        let result = await axios.post("https://localhost:7267/api/Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem})
         .then(async res => {
             await getTasksForADay(changedDate, groupItem);
             await getNoteForADay(changedDate, groupItem);
@@ -123,21 +123,21 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }, [newTaskAdded])
 
     const updateTaskValueInDatabase = async (id: string, taskName: string) => {
-        await axios.put('https://localhost:7267/api/Task/UpdateTaskValue', {Id: id, TaskName: taskName})
+        await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskValue", {Id: id, TaskName: taskName})
         .catch(error => {
             console.log('Error:', error);
         });
     }
 
     const updateTaskStatusInDatabase = async (id: string, taskDone: boolean) => {
-        await axios.put('https://localhost:7267/api/Task/UpdateTaskStatus', {Id: id, Done: !taskDone})
+        await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskStatus", {Id: id, Done: !taskDone})
         .catch(error => {
             console.log('Error:', error);
         });
     }
 
     const getTasksForADay = async (changedDate: number, groupItem: string) => {
-        let result = await axios.post("https://localhost:7267/api/Task/TasksForADay", {ChangedDate: changedDate, GroupName: groupItem})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/TasksForADay", {ChangedDate: changedDate, GroupName: groupItem})
             .then(res => {
                 var taskList = [];
                 var checkedlist = [];
@@ -162,7 +162,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             return result
     }
     const getTasksForAGroup = async (groupItem: string) => {
-        let result = await axios.post("https://localhost:7267/api/Task/TasksForAGroup", {GroupName: groupItem})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/TasksForAGroup", {GroupName: groupItem})
             .then(res => {
                 console.log(res.data);
                 var taskList = [];
@@ -189,7 +189,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     const removeTasksByGroup = async (name: string) => {
-        let result = await axios.post("https://localhost:7267/api/Task/RemoveTasksByGroup", {GroupName: name})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTasksByGroup", {GroupName: name})
         .then(res => {
             console.log(res)
              return res.data
@@ -201,7 +201,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     const deleteTask = async (id: string) => {
-        await axios.post('https://localhost:7267/api/Task/DeleteTask', {Id: id})
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/DeleteTask", {Id: id})
         .then(() => {
           getTasksForADay(changedDate, groupItem);
         })
@@ -211,7 +211,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
     
     const editTask = async (id: string, changeDate: any) => {
-        await axios.put('https://localhost:7267/api/Task/UpdateTaskDate', {Id: id, date: changeDate})
+        await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskDate", {Id: id, date: changeDate})
         .then(res => {
             getTasksForADay(changedDate, groupItem)
         })

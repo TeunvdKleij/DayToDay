@@ -1,14 +1,8 @@
 'use client'
 import Footer from "@/components/Footer";
-import GroupDropDown from "@/components/GroupDropdown";
-import Header from "@/components/Header";
-import List from "@/components/List";
 import MainTasks from "@/components/MainTasks";
-import MainTask from "@/components/MainTasks";
 import Note from "@/components/Note";
-import NoteTextArea from "@/components/NoteTextArea";
 import SkeletonLoader from "@/components/SkeletonLoader";
-import ArrowWithoutStickIcon from "@/icons/ArrowWithoutStickIcon";
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";
@@ -19,7 +13,7 @@ export default function Home() {
   const [done, setDone] = useState<boolean>(false);
   const {tasksCount, checkedTasksCount, changedDate} = useContext(TaskContext);
   const {showNote, setShowNote, getNoteForADay} = useContext(NoteContext);
-  const {groups, groupItem, toggleBool, setToggleBool} = useContext(GroupContext);
+  const {groups, groupItem, toggleBool} = useContext(GroupContext);
   const [blur, setBlur] = useState<boolean>(false);
   const [headerText, setHeaderText] = useState<string>('')
 
@@ -81,7 +75,8 @@ export default function Home() {
   }
   
   return (
-    <div className="flex flex-col min-h-screen m-0">
+    <>
+    <div id="main" className="flex flex-col min-h-screen m-0 bg-dark-mode">
       <div id="main" className={`flex flex-1 items-center flex-col ${blur ? " blur-sm" : ""}`} onClick={toggleBlurMain}>
         {groups && groups.length > 0
         ?
@@ -93,5 +88,6 @@ export default function Home() {
       </div>
       <div className="p-1 text-center m-0"><Footer/></div>
     </div>
+    </>
   );
 }
