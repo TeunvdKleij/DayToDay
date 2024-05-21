@@ -11,16 +11,18 @@ interface RemoveGroupInterface{
 
 const RemoveGroupModal = ({setShowModal, groupName, prevGroup} : RemoveGroupInterface) => {
     const {removeTasksByGroup} = useContext(TaskContext);
-    const {removeGroup, setGroupItem} = useContext(GroupContext);
+    const {removeGroup, setGroupItem, getGroups, groups} = useContext(GroupContext);
     const {removeNotesByGroup} = useContext(NoteContext);
 
     const removeClick = async (item: string) => {
         await removeNotesByGroup(item);
         await removeTasksByGroup(item);
         await removeGroup(item);
+        groups.indexOf(item)
+        groups.splice(groups.indexOf(item), 1)
         setGroupItem(prevGroup)
         localStorage.setItem('groupSelection', prevGroup);
-        window.location.reload();
+        await getGroups();
         setShowModal(false)
     }
 

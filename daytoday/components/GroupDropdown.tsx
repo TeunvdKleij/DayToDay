@@ -1,7 +1,7 @@
 import TrashCanIcon from "@/icons/trashcanicon";
 import { TaskContext } from "@/providers/TaskProvider";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button, DropdownSection } from "@nextui-org/react"
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AddGroupModal from "./AddGroupModal";
 import RemoveGroupModal from "./RemoveGroupModal";
 import { GroupContext } from "@/providers/GroupProvider";

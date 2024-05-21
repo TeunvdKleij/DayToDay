@@ -8,15 +8,16 @@ interface AddGroupInterface{
 }
 
 const AddGroupModal = ({setShowModal, groupName, prevGroup} : AddGroupInterface) => {
-    const {groups, addGroup} = useContext(GroupContext)
+    const {groups, addGroup, getGroups} = useContext(GroupContext)
     const [input, setInput] = useState<string>('')
 
-    const addNewGroup = () => {
+    const addNewGroup = async () => {
         setShowModal(false);
         const lowercaseGroup = groups.map(item => item.toLowerCase());
         if(lowercaseGroup.includes(input.toLowerCase())) return null
         addGroup(input);
-        window.location.reload();
+        groups.push(input)
+        await getGroups();
     }
 
     const onChange = (event: any) => {
