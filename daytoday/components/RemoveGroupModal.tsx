@@ -18,7 +18,6 @@ const RemoveGroupModal = ({setShowModal, groupName, prevGroup} : RemoveGroupInte
         await removeNotesByGroup(item);
         await removeTasksByGroup(item);
         await removeGroup(item);
-        groups.indexOf(item)
         groups.splice(groups.indexOf(item), 1)
         setGroupItem(prevGroup)
         localStorage.setItem('groupSelection', prevGroup);
