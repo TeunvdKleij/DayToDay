@@ -1,10 +1,19 @@
 interface ArrowInterface {
     width: number
+    direction: directionEnum,
 }
 
-const ArrowWithoutStickIcon = ({width} : ArrowInterface) =>{
+export enum directionEnum {
+    RIGHT = 270,
+    DOWN = 0,
+    LEFT = 90,
+    UP = 180
+}
+
+
+const ArrowWithoutStickIcon = ({width, direction} : ArrowInterface) =>{
     return(
-        <svg viewBox="0 0 24 24" width={width} fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+        <svg viewBox="0 0 24 24" style={{transform: "rotate(" + direction + "deg)"}} width={width} fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
             <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
             <g id="SVGRepo_iconCarrier"> 

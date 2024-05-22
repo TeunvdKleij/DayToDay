@@ -76,6 +76,7 @@ export default function Home() {
   
   return (
     <>
+    <a href="https://145.44.53.82:7267/swagger/index.html">Druk</a>
     <div id="main" className="flex flex-col min-h-screen m-0 bg-dark-mode">
       <div id="main" className={`flex flex-1 items-center flex-col ${blur ? " blur-sm" : ""}`} onClick={toggleBlurMain}>
         {groups && groups.length > 0
@@ -86,7 +87,7 @@ export default function Home() {
         }
         <Note toggleNote={toggleNote}/>
       </div>
-      <div className="p-1 text-center m-0"><Footer/></div>
+      <Footer/>
     </div>
     </>
   );

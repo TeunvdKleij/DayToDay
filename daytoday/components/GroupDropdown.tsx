@@ -7,7 +7,7 @@ import RemoveGroupModal from "./RemoveGroupModal";
 import { GroupContext } from "@/providers/GroupProvider";
 import Toggle from "./Toggle";
 import { NoteContext } from "@/providers/NoteProvider";
-import ArrowWithoutStickIcon from "@/icons/ArrowWithoutStickIcon";
+import ArrowWithoutStickIcon, { directionEnum } from "@/icons/ArrowWithoutStickIcon";
 interface DropdownInterface {
     toggleBlur: () => void
 
@@ -57,25 +57,25 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
         <div className="flex gap-2">
         <Dropdown>
                 <DropdownTrigger>
-                    <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 h-fit rounded-lg w-fit md:text-md ">{groupItem}<ArrowWithoutStickIcon width={20}/></Button>
+                    <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 h-fit rounded-lg w-fit md:text-md ">{groupItem}<ArrowWithoutStickIcon direction={directionEnum.DOWN} width={20}/></Button>
                 </DropdownTrigger>
                 {groups && groups.length > 0 &&
-                <DropdownMenu aria-label="Dynamic Actions" items={groups} onAction={(key) => handleItemClick(key.toString())} className="flex flex-col rounded-lg pl-2 pt-2 pb-2 pr-2" style={{backgroundColor : '#333333'}}>
-                    <DropdownSection showDivider>  
-                    {groups.map((item: string, index: number) => {
-                        const disabled = item == groupItem;
-                        return <DropdownItem key={item} textValue={item} color="default" className="p-1">
-                            <div className="flex justify-between">
-                            {item}
-                            {!disabled && <button onClick={showDelete}><TrashCanIcon color={"#ffffff"}/></button>}
-                            </div>
-                        </DropdownItem>
-                    })}
-                    </DropdownSection>
-                    <DropdownSection>
-                        <DropdownItem color="default" className="p-1" textValue="+ New group" key="+ New group">+ New group</DropdownItem>
+                    <DropdownMenu aria-label="Dynamic Actions" items={groups} onAction={(key) => handleItemClick(key.toString())} className="flex flex-col rounded-lg p-1 bg-eerie-black border-[1px] border-neutral-700">
+                        <DropdownSection showDivider>
+                            {groups.map((item: string, index: number) => {
+                                const disabled = item == groupItem;
+                                return (
+                                    <DropdownItem key={item} textValue={item} color="default" className="p-0.5">
+                                        <div className={`flex gap-10 min-w-36 p-2 rounded-lg outline-none justify-between hover:bg-zinc-500 ${!disabled ? "bg-eerie-black" : " bg-zinc-600 border-1 border-zinc-400"}`}>
+                                            {item}
+                                            {!disabled ? <button onClick={showDelete}><TrashCanIcon color={"#ffffff"}/></button> : <button><ArrowWithoutStickIcon direction={directionEnum.RIGHT} width={15} /></button> }
+                                        </div>
+                                    </DropdownItem>
+                                )
+                            })}
                         </DropdownSection>
-                </DropdownMenu>
+                        <DropdownItem color="default" className="bg-blue-500 mb-2 pt-2 pb-1.5 pr-1.5 pl-2 rounded-lg w-auto ml-1 mr-1 text-center hover:cursor-pointer" textValue="+ New group" key="+ New group">+ New group</DropdownItem>
+                    </DropdownMenu>
                 }
         </Dropdown>
         <Toggle text={toggleBool ? "All tasks" : "Daily tasks"} onChange={handleToggleChange} checked={toggleBool}/>
@@ -85,6 +85,7 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
       );
 }
 export default GroupDropDown;
+
 
 
 
