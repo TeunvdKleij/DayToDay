@@ -55,12 +55,6 @@ const List = () => {
             </div>
             <div className="flex gap-3 mt-6 w-full justify-between">
                 <button disabled={disabled} onClick={() => addNewTask("", changedDate, groupItem)} className={`md:text-md text-sm w-fit rounded-lg pt-1 pl-2 pr-2 pb-1 flex items-center gap-2 hover:cursor-pointer ${changedDate < 0 ? "bg-grey" : "bg-blue-500" } `}><PlusIcon/>New Task</button>
-                <div className="flex items-center">
-                    {screenWidth && screenWidth >= 768 && <input type="date" className="rounded-lg text-black" onChange={changeDateWithDatepicker}></input>}
-                    <button onClick={changeDateToToday}className={`rounded-lg pt-1 pl-2 pr-2 pb-1 flex bg-blue-500 items-center mr-3 ml-3 hover:cursor-pointer md:text-md text-sm `}>Today</button>
-                    <div onClick={() => changeDate(-1)}><ArrowLeftIcon/></div>
-                    <div onClick={() => changeDate(1)}><ArrowRightIcon/></div>
-                </div>
             </div>
         </div>
 

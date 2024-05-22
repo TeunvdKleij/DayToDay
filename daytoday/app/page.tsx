@@ -76,7 +76,7 @@ export default function Home() {
   
   return (
     <>
-    <a href="https://145.44.53.82:7267/swagger/index.html">Druk</a>
+    {/* <a href="https://145.44.53.82:7267/swagger/index.html">Druk</a> */}
     <div id="main" className="flex flex-col min-h-screen m-0 bg-dark-mode">
       <div id="main" className={`flex flex-1 items-center flex-col ${blur ? " blur-sm" : ""}`} onClick={toggleBlurMain}>
         {groups && groups.length > 0
@@ -86,8 +86,8 @@ export default function Home() {
         <SkeletonLoader/>
         }
         <Note toggleNote={toggleNote}/>
+        <div onClick={() => window.open('https://www.linkedin.com/in/teun-van-der-kleij-9b805a258/', '_blank')} className="hover:cursor-pointer m-5">© Teun van der Kleij, 2024</div>
       </div>
-      <Footer/>
     </div>
     </>
   );
