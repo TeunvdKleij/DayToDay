@@ -1,6 +1,6 @@
 import TrashCanIcon from "@/icons/trashcanicon";
 import { TaskContext } from "@/providers/TaskProvider";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button, DropdownSection } from "@nextui-org/react"
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button, DropdownSection} from "@nextui-org/react"
 import { useContext, useEffect, useState } from "react";
 import AddGroupModal from "./AddGroupModal";
 import RemoveGroupModal from "./RemoveGroupModal";
@@ -11,6 +11,7 @@ import ArrowWithoutStickIcon, { directionEnum } from "@/icons/ArrowWithoutStickI
 import { MainContext } from "@/providers/MainProvider";
 import ArrowRightIcon from "@/icons/arrowRightIcon";
 import ArrowLeftIcon from "@/icons/arrowLeftIcon";
+import Calendar from "./Calendar";
 interface DropdownInterface {
     toggleBlur: () => void
 }
@@ -89,11 +90,11 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
 
 
     return (
-        <div className="flex justify-between w-full flex-wrap">
+        <div className="flex justify-between items-center w-full flex-wrap">
             <div className="flex gap-2 w-fit">
                 <Dropdown>
                     <DropdownTrigger>
-                        <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 h-fit rounded-lg w-fit text-md ">{groupItem}<ArrowWithoutStickIcon direction={directionEnum.DOWN} width={screenWidth && screenWidth >= 768 ? 20 : 18}/></Button>
+                        <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 h-fit rounded-lg w-fit md:text-md text-sm">{groupItem}<ArrowWithoutStickIcon direction={directionEnum.DOWN} width={screenWidth && screenWidth >= 768 ? 20 : 18}/></Button>
                     </DropdownTrigger>
                     {groups && groups.length > 0 &&
                         <DropdownMenu aria-label="Dynamic Actions" items={groups} onAction={(key) => handleItemClick(key.toString())} className="flex flex-col rounded-lg p-1 bg-eerie-black border-[1px] border-neutral-700">
@@ -117,13 +118,17 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
                 <Toggle text={toggleBool ? "All tasks" : "Daily tasks"} onChange={handleToggleChange} checked={toggleBool}/>
                 {showAddModal && <AddGroupModal groupName={groupItem} prevGroup={prevGroup}  setShowModal={setShowAddModal}/>}
                 {showRemoveModal && <RemoveGroupModal groupName={groupItem} prevGroup={prevGroup} setShowModal={setShowRemoveModal}/>}
-        </div>
-        <div className="flex items-center">
-            {screenWidth && screenWidth >= 768 && <input type="date" className="rounded-lg text-black" onChange={changeDateWithDatepicker}></input>}
-            <button onClick={changeDateToToday}className={`rounded-lg pt-1 pl-2 pr-2 pb-1 flex bg-blue-500 items-center mr-3 ml-3 hover:cursor-pointer md:text-md text-sm `}>Today</button>
-            <div className="hover:cursor-pointer" onClick={() => changeDate(-1)}><ArrowLeftIcon/></div>
-            <div className="hover:cursor-pointer" onClick={() => changeDate(1)}><ArrowRightIcon/></div>
-        </div>
+            </div>
+            <div className="flex items-center">
+                {screenWidth && screenWidth >=768 && 
+                <>
+                    <Calendar task={false} onChange={changeDateWithDatepicker}/>
+                    <button onClick={changeDateToToday}className="rounded-lg pt-1 pl-2 pr-2 pb-1 flex bg-blue-500 items-center mr-3 ml-3 hover:cursor-pointer md:text-base text-sm">Today</button>
+                </>
+                }
+                <div className="hover:cursor-pointer" onClick={() => changeDate(-1)}><ArrowLeftIcon/></div>
+                <div className="hover:cursor-pointer" onClick={() => changeDate(1)}><ArrowRightIcon/></div>
+            </div>
         </div>
     );
 }

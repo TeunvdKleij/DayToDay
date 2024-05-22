@@ -5,6 +5,9 @@ import { TaskContext } from "@/providers/TaskProvider";
 import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import { useContext, useEffect, useState } from "react";
+import { MainContext } from "@/providers/MainProvider";
+import DatePickerEditIcon from "@/icons/DatePickerEditIcon";
+import Calendar from "./Calendar";
 
 interface TaskProps {
     taskName: any; 
@@ -13,6 +16,7 @@ interface TaskProps {
 
 const Task: React.FC<TaskProps> = ({taskName, index}) => {
     const {checkedTasksCount, setCheckedTasksCount, checkedTasks, updateTaskStatusInDatabase, updateTaskValueInDatabase, deleteTask, tasksId, editTask} = useContext(TaskContext)
+    const {screenWidth} = useContext(MainContext);
     const [taskDone, setTaskDone] = useState<boolean>(false);
     const [taskValue, setTaskValue] = useState<string>('')
     const [toggleDatepicker, setToggleDatepicker] = useState<boolean>(false)
@@ -60,7 +64,6 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
         }
         toggleVisibilityDatepicker();
         editTask(id, formattedDate);
-        toast.success("Task edited")
         event.target.value = '';
     }
 
@@ -77,8 +80,7 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
                     {taskValue}
                 </p>
             </div>
-            <input type="date" id="datepicker" min={min} onChange={() => onChangeDate(event, tasksId[index])} className={`text-black h-5 w-6 text-sm rounded-md ${toggleDatepicker ? "block" : "hidden"}`}></input>
-            <div className="cursor-pointer" id="editButton" onClick={toggleVisibilityDatepicker}><EditIcon/></div>
+            <Calendar task={true} onChange={() => onChangeDate(event, tasksId[index])}/>
             <div className="cursor-pointer" onClick={() => deleteTask(tasksId[index])}><TrashCanIcon color={"#919191"}/></div>
         </div>
     );
