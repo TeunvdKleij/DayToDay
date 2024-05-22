@@ -1,5 +1,6 @@
 import { GroupContext } from "@/providers/GroupProvider";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState, ReactNode } from "react";
+import Dialog from "@/components/Dialog";
 
 interface AddGroupInterface{
     setShowModal: Dispatch<SetStateAction<boolean>>
@@ -21,27 +22,17 @@ const AddGroupModal = ({setShowModal, groupName, prevGroup} : AddGroupInterface)
         await getGroups();
     }
 
-    const onChange = (event: any) => {
+    const handleInputChange = (event: any) => {
         setInput(event.target.value)
     }
 
-    const cancelAdding = () => {
-        setShowModal(false);
-    }
-    
     return (
-        <div className="absolute flex justify-center items-center content-center w-full h-full top-0 left-0 bg-black bg-opacity-40 z-50">
-            <div className="bg-eerie-black p-10 rounded-xl flex flex-col">
-                <div className="flex gap-10 p-6">
-                    <p>Name</p>
-                    <input type="text" id="addGroupInput" value={input} onChange={onChange} className="rounded-lg text-black"></input>
-                </div>
-                <div className="flex w-full gap-2 p-3 justify-around">
-                    <button onClick={addNewGroup} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer">Bevestigen</button>
-                    <button onClick={cancelAdding} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 rounded-lg w-fit hover:cursor-pointer">Annuleren</button>
-                </div>
-            </div>
-        </div>
+        <Dialog setShowModal={setShowModal} title={"New group"} description={"Fill in the input to add a new group"}
+                onAccept={addNewGroup} canAccept={input !== ""}>
+            <p>Name</p>
+            <input type="text" id="addGroupInput" value={input} onChange={(e) => handleInputChange(e)}
+                   className="rounded-lg h-[40px] p-3 bg-[#757575] text-white"></input>
+        </Dialog>
     );
 }
 export default AddGroupModal
