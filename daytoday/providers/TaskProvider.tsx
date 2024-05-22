@@ -1,5 +1,5 @@
 'use client'
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import { NoteContext } from './NoteProvider';
 import { GroupContext } from './GroupProvider';
@@ -132,51 +132,40 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         });
     }
 
+    const fillTasks = (res: AxiosResponse<any, any>) =>{
+        var taskList: any[] = [];
+        var checkedlist: any[] = [];
+        var taskIds: any[] = [];
+        var checkedTasks = 0;
+        for(let i = 0; i < res.data.tasks.length; i++){
+            taskList.push(res.data.tasks[i].taskName)
+            checkedlist.push(res.data.tasks[i].done)
+            taskIds.push(res.data.tasks[i].taskId)
+            if(res.data.tasks[i].done) checkedTasks++;
+        }
+        setTasks(taskList);
+        setCheckedTasks(checkedlist);
+        setTasksCount(taskList.length);
+        setCheckedTasksCount(checkedTasks)
+        setTasksId(taskIds);
+        return taskList
+    }
+
     const getTasksForADay = async (changedDate: number, groupItem: string) => {
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/TasksForADay", {ChangedDate: changedDate, GroupName: groupItem})
             .then(res => {
-                var taskList = [];
-                var checkedlist = [];
-                var taskIds = [];
-                var checkedTasks = 0;
-                for(let i = 0; i < res.data.tasks.length; i++){
-                    taskList.push(res.data.tasks[i].taskName)
-                    checkedlist.push(res.data.tasks[i].done)
-                    taskIds.push(res.data.tasks[i].taskId)
-                    if(res.data.tasks[i].done) checkedTasks++;
-                }
-                setTasks(taskList);
-                setCheckedTasks(checkedlist);
-                setTasksCount(taskList.length);
-                setCheckedTasksCount(checkedTasks)
-                setTasksId(taskIds);
-                return taskList
+                return fillTasks(res);
             })
             .catch(error => {
                 console.log('Error:', error);
             })
             return result
     }
+
     const getTasksForAGroup = async (groupItem: string) => {
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/TasksForAGroup", {GroupName: groupItem})
             .then(res => {
-                console.log(res.data);
-                var taskList = [];
-                var checkedlist = [];
-                var taskIds = [];
-                var checkedTasks = 0;
-                for(let i = 0; i < res.data.tasks.length; i++){
-                    taskList.push(res.data.tasks[i].taskName)
-                    checkedlist.push(res.data.tasks[i].done)
-                    taskIds.push(res.data.tasks[i].taskId)
-                    if(res.data.tasks[i].done) checkedTasks++;
-                }
-                setTasks(taskList);
-                setCheckedTasks(checkedlist);
-                setTasksCount(taskList.length);
-                setCheckedTasksCount(checkedTasks)
-                setTasksId(taskIds);
-                return taskList
+                return fillTasks(res);
             })
             .catch(error => {
                 console.log('Error:', error);

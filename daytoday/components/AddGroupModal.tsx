@@ -15,6 +15,7 @@ const AddGroupModal = ({setShowModal, groupName, prevGroup} : AddGroupInterface)
         setShowModal(false);
         const lowercaseGroup = groups.map(item => item.toLowerCase());
         if(lowercaseGroup.includes(input.toLowerCase())) return null
+        if(input.length == 0) return null
         addGroup(input);
         groups.push(input)
         await getGroups();

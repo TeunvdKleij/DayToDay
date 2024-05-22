@@ -8,12 +8,14 @@ import { GroupContext } from "@/providers/GroupProvider";
 import Toggle from "./Toggle";
 import { NoteContext } from "@/providers/NoteProvider";
 import ArrowWithoutStickIcon, { directionEnum } from "@/icons/ArrowWithoutStickIcon";
+import { MainContext } from "@/providers/MainProvider";
 interface DropdownInterface {
     toggleBlur: () => void
 
 }
 const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
     const {groupItem, setGroupItem, groups, toggleBool, setToggleBool, removeGroup, lastGroupItem, setLastGroupItem} = useContext(GroupContext);
+    const {screenWidth} = useContext(MainContext)
     const {getTasksForAGroup, getTasksForADay, changedDate} = useContext(TaskContext)
     const {setShowNote} = useContext(NoteContext)
     const {removeNotesByGroup} = useContext(NoteContext);
@@ -57,7 +59,7 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
         <div className="flex gap-2">
         <Dropdown>
                 <DropdownTrigger>
-                    <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 h-fit rounded-lg w-fit md:text-md ">{groupItem}<ArrowWithoutStickIcon direction={directionEnum.DOWN} width={20}/></Button>
+                    <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 h-fit rounded-lg w-fit md:text-sm ">{groupItem}<ArrowWithoutStickIcon direction={directionEnum.DOWN} width={screenWidth && screenWidth >= 768 ? 20 : 10}/></Button>
                 </DropdownTrigger>
                 {groups && groups.length > 0 &&
                     <DropdownMenu aria-label="Dynamic Actions" items={groups} onAction={(key) => handleItemClick(key.toString())} className="flex flex-col rounded-lg p-1 bg-eerie-black border-[1px] border-neutral-700">

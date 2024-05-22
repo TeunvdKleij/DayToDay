@@ -58,6 +58,7 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
             toast.error("Date is in the past")
             return null
         }
+        toggleVisibilityDatepicker();
         editTask(id, formattedDate);
         toast.success("Task edited")
         event.target.value = '';
