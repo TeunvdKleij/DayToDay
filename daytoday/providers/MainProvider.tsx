@@ -37,7 +37,7 @@ const MainProvider: React.FC<MainProps> = ({children}) => {
         <MainContext.Provider value={{
             screenWidth,
             theme,
-            setTheme
+            setTheme,
         }}>
             {children}
         </MainContext.Provider>

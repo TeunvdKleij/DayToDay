@@ -13,8 +13,8 @@ interface GroupContextProps {
     addGroup: (name: string) => void;
     removeGroup: (name: string) => void;
     getGroups: () => Promise<string[]>;
-    setToggleBool: (toggle: boolean) => void,
-    toggleBool: boolean
+    setToggleDropDown: (toggle: boolean) => void,
+    toggleDropDown: boolean
     lastGroupItem: string
     setLastGroupItem: (item: string) => void
 }
@@ -27,8 +27,8 @@ export const GroupContext = createContext<GroupContextProps>({
     addGroup: () => {},
     removeGroup: () => {},
     getGroups: async () => [], 
-    setToggleBool: () => {},
-    toggleBool: false,
+    setToggleDropDown: () => {},
+    toggleDropDown: false,
     lastGroupItem: "",
     setLastGroupItem: () => {}
 });
@@ -36,7 +36,7 @@ export const GroupContext = createContext<GroupContextProps>({
 const GroupProvider: React.FC<GroupProps> = ({children}) => {
     const [groupItem, setGroupItem] = useState<string>("")
     const [groups, setGroups] = useState<string[]>([]);
-    const [toggleBool, setToggleBool] = useState<boolean>(false)
+    const [toggleDropDown, setToggleDropDown] = useState<boolean>(false)
     const [lastGroupItem, setLastGroupItem] = useState<string>("")
     
 
@@ -47,7 +47,6 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
         })
         .catch(err => {
             toast.error("Group not removed")
-            //console.log('Error:', err);
         })
         return result
     }
@@ -71,7 +70,6 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
         })
         .catch(error => {
             toast.error("No groups retrieved")
-            //console.log('Error:', error);
         });
         return result
     }
@@ -85,8 +83,8 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
             setGroups,
             removeGroup,
             getGroups,
-            setToggleBool,
-            toggleBool,
+            setToggleDropDown,
+            toggleDropDown,
             lastGroupItem,
             setLastGroupItem
         }}>

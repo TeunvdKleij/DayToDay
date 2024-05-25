@@ -80,7 +80,7 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
             <div className="mt-1 hover-trigger" onMouseOver={() => setHovering(true)} onMouseLeave={() => setHovering(false)}><DragIcon hovering={hovering}/></div>
             <input onChange={changeTaskState} checked={taskDone} type="checkbox" className="w-5 h-5 hover:cursor-pointer md:mt-1 bg-white border border-gray-300 rounded-md checked:bg-blue-500 checked:border-transparent focus:outline-none transition-all duration-300 ease-in-out"></input>
             <div id="name" className="flex justify-center w-full">
-                <p id={"task"+tasksId[index]} onBlur={changeTaskValue} onKeyDown={onKeyDown} suppressContentEditableWarning={true} contentEditable={true} className={`resize-none text-sm md:text-lg bg-transparent border-none w-full overflow-auto ${taskDone && "line-through opacity-50"}`}>
+                <p id={"task"+tasksId[index]} onBlur={changeTaskValue} onKeyDown={onKeyDown} suppressContentEditableWarning={true} contentEditable={true} className={`resize-none text-sm md:text-lg bg-transparent border-none w-full overflow-auto ${taskDone && "line-through opacity-50 z-0"}`}>
                     {taskValue}
                 </p>
             </div>

@@ -12,9 +12,9 @@ import { useContext, useEffect, useState } from "react";
 export default function Home() {
   const [percentage, setPercentage] = useState<number>(0);
   const [done, setDone] = useState<boolean>(false);
-  const {tasksCount, checkedTasksCount, changedDate} = useContext(TaskContext);
+  const {tasksCount, checkedTasksCount, changedDate, selectedSortOption} = useContext(TaskContext);
   const {showNote, setShowNote, getNoteForADay} = useContext(NoteContext);
-  const {groups, groupItem, toggleBool} = useContext(GroupContext);
+  const {groups, groupItem, toggleDropDown} = useContext(GroupContext);
   const [blur, setBlur] = useState<boolean>(false);
   const [headerText, setHeaderText] = useState<string>('')
 
@@ -34,9 +34,13 @@ export default function Home() {
 
   //useEffect to set the header text based on if all tasks are selected or not
   useEffect(() => {
-    if(toggleBool) setHeaderText("Alle taken voor " + groupItem);
+    if(selectedSortOption == "All tasks") setHeaderText("Alle taken voor " + groupItem);
     else setHeaderText("Taken voor " +  getDay(changedDate) + " " + getDayName(changedDate) + " " + getMonth(changedDate))
-  }, [toggleBool, groupItem, changedDate])
+  }, [selectedSortOption, groupItem, changedDate])
+
+  useEffect(() =>{
+
+  })
 
 
   const toggleBlur = () => {
@@ -82,7 +86,7 @@ export default function Home() {
       <div id="main" className={`flex flex-1 items-center flex-col ${blur ? " blur-sm" : ""}`} onClick={toggleBlurMain}>
         {groups && groups.length > 0
         ?
-        <MainTasks done={done} headerText={headerText} percentage={percentage} toggleBlur={toggleBlur}/>
+        <MainTasks done={done} headerText={headerText} percentage={percentage} toggleBlur={toggleBlur} blur={blur}/>
         : 
         <SkeletonLoader/>
         }
