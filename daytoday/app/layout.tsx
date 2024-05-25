@@ -6,7 +6,6 @@ import NoteProvider from "@/providers/NoteProvider";
 import GroupProvider from "@/providers/GroupProvider";
 import { ToastContainer } from "react-toastify";
 import MainProvider from "@/providers/MainProvider";
-import LightDarkModeToggle from "@/components/LightDarkModeToggle";
 
 const inter = Inter({ subsets: ["latin"] });
 

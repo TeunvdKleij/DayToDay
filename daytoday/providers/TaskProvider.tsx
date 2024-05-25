@@ -61,12 +61,12 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const [changedDate, setChangedDate] = useState<number>(0)
     const [newTaskAdded, setNewTaskAdded] = useState<boolean>(false);
     const {getNoteForADay} = useContext(NoteContext);
-    const {setGroups, setGroupItem, groups, groupItem, getGroups, toggleBool} = useContext(GroupContext)
+    const {setGroupItem, groups, groupItem, getGroups, toggleBool} = useContext(GroupContext)
     const {noteText, setShowNote, showNote} = useContext(NoteContext)
 
 
     const startUp = async () => {
-        setGroups(await getGroups());
+        await getGroups();
         const groupName = localStorage.getItem('groupSelection')
         if(groupName != null) setGroupItem(groupName);
         else {setGroupItem(groups[0])}

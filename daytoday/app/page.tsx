@@ -1,5 +1,4 @@
 'use client'
-import Footer from "@/components/Footer";
 import MainTasks from "@/components/MainTasks";
 import Note from "@/components/Note";
 import SkeletonLoader from "@/components/SkeletonLoader";
@@ -13,8 +12,7 @@ export default function Home() {
   const [done, setDone] = useState<boolean>(false);
   const {tasksCount, checkedTasksCount, changedDate} = useContext(TaskContext);
   const {showNote, setShowNote, getNoteForADay} = useContext(NoteContext);
-  const {groups, groupItem, toggleBool} = useContext(GroupContext);
-  const [blur, setBlur] = useState<boolean>(false);
+  const {groups, groupItem, toggleBool, loading} = useContext(GroupContext);
   const [headerText, setHeaderText] = useState<string>('')
 
   useEffect(() => {
@@ -37,16 +35,6 @@ export default function Home() {
     else setHeaderText("Taken voor " +  getDay(changedDate) + " " + getDayName(changedDate) + " " + getMonth(changedDate))
   }, [toggleBool, groupItem, changedDate])
 
-
-  const toggleBlur = () => {
-    const blurred = blur
-    setBlur(!blurred);
-  };
-
-  const toggleBlurMain = () => {
-    const blurred = blur
-    if(blurred) setBlur(false);
-  }
 
   const toggleNote = () => {
     const toggle = showNote
@@ -78,12 +66,12 @@ export default function Home() {
     <>
     {/* <a href="https://192.168.1.241:7267/swagger/index.html">Druk</a> */}
     <div id="main" className="flex flex-col min-h-screen m-0 bg-dark-mode">
-      <div id="main" className={`flex flex-1 items-center flex-col ${blur ? " blur-sm" : ""}`} onClick={toggleBlurMain}>
-        {groups && groups.length > 0
-        ?
-        <MainTasks done={done} headerText={headerText} percentage={percentage} toggleBlur={toggleBlur}/>
-        : 
-        <SkeletonLoader/>
+      <div id="main" className={`flex flex-1 items-center flex-col`}>
+        {!loading
+          ?
+          <MainTasks done={done} headerText={headerText} percentage={percentage}/>
+          :
+          <SkeletonLoader/>
         }
         <Note toggleNote={toggleNote}/>
         <div onClick={() => window.open('https://www.linkedin.com/in/teun-van-der-kleij-9b805a258/', '_blank')} className="hover:cursor-pointer m-5">© Teun van der Kleij, 2024</div>
