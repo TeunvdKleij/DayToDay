@@ -1,4 +1,4 @@
-import TrashCanIcon from "@/icons/trashcanicon";
+import TrashCanIcon from "@/icons/TrashcanIcon";
 import { TaskContext } from "@/providers/TaskProvider";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button, DropdownSection} from "@nextui-org/react"
 import { useContext, useEffect, useState } from "react";
@@ -7,10 +7,10 @@ import RemoveGroupModal from "./RemoveGroupModal";
 import { GroupContext } from "@/providers/GroupProvider";
 import Toggle from "./Toggle";
 import { NoteContext } from "@/providers/NoteProvider";
-import ArrowWithoutStickIcon, { directionEnum } from "@/icons/ArrowWithoutStickIcon";
+import ArrowWithoutStickIcon, { directionEnum } from "@/icons/Arrows/ArrowWithoutStickIcon";
 import { MainContext } from "@/providers/MainProvider";
-import ArrowRightIcon from "@/icons/arrowRightIcon";
-import ArrowLeftIcon from "@/icons/arrowLeftIcon";
+import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
+import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
 import Calendar from "./Calendar";
 interface DropdownInterface {
     toggleBlur: () => void
@@ -120,12 +120,7 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
                 {showRemoveModal && <RemoveGroupModal groupName={groupItem} prevGroup={prevGroup} setShowModal={setShowRemoveModal}/>}
             </div>
             <div className="flex items-center">
-                {screenWidth && screenWidth >=768 && 
-                <>
-                    <Calendar task={false} onChange={changeDateWithDatepicker}/>
-                    <button onClick={changeDateToToday}className="rounded-lg pt-1 pl-2 pr-2 pb-1 flex bg-blue-500 items-center mr-3 ml-3 hover:cursor-pointer md:text-base text-sm">Today</button>
-                </>
-                }
+                {screenWidth && screenWidth >=768 && <Calendar task={false} onChange={changeDateWithDatepicker}/>}
                 <div className="hover:cursor-pointer" onClick={() => changeDate(-1)}><ArrowLeftIcon/></div>
                 <div className="hover:cursor-pointer" onClick={() => changeDate(1)}><ArrowRightIcon/></div>
             </div>

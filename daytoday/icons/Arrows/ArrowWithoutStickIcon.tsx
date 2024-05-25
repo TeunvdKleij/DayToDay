@@ -13,7 +13,7 @@ export enum directionEnum {
 
 const ArrowWithoutStickIcon = ({width, direction} : ArrowInterface) =>{
     return(
-        <svg viewBox="0 0 24 24" style={{transform: "rotate(" + direction + "deg)"}} width={width} fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+        <svg viewBox="0 0 24 24" style={{transform: "rotate(" + direction + "deg)"}} className="hover:cursor-pointer" width={width} fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
             <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
             <g id="SVGRepo_iconCarrier"> 

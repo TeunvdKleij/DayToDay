@@ -1,6 +1,6 @@
 'use client'
-import EditIcon from "@/icons/editIcon";
-import TrashCanIcon from "@/icons/trashcanicon";
+import EditIcon from "@/icons/EditIcon";
+import TrashCanIcon from "@/icons/TrashcanIcon";
 import { TaskContext } from "@/providers/TaskProvider";
 import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { MainContext } from "@/providers/MainProvider";
 import DatePickerEditIcon from "@/icons/DatePickerEditIcon";
 import Calendar from "./Calendar";
+import DragIcon from "@/icons/DragIcon";
 
 interface TaskProps {
     taskName: any; 
@@ -15,12 +16,14 @@ interface TaskProps {
 }
 
 const Task: React.FC<TaskProps> = ({taskName, index}) => {
-    const {checkedTasksCount, setCheckedTasksCount, checkedTasks, updateTaskStatusInDatabase, updateTaskValueInDatabase, deleteTask, tasksId, editTask} = useContext(TaskContext)
+    const {checkedTasksCount, setCheckedTasksCount, checkedTasks, updateTaskStatusInDatabase, updateTaskValueInDatabase, removeTask, tasksId, editTask} = useContext(TaskContext)
     const {screenWidth} = useContext(MainContext);
     const [taskDone, setTaskDone] = useState<boolean>(false);
     const [taskValue, setTaskValue] = useState<string>('')
     const [toggleDatepicker, setToggleDatepicker] = useState<boolean>(false)
     const [min, setMin] = useState<string>();
+    const [hovering, setHovering] = useState<boolean>(false);
+
 
     useEffect(() => {
         const today = new Date();
@@ -42,7 +45,7 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
     }
 
     const changeTaskValue = (event: any) => {
-        if(event.target.innerText == "") deleteTask(tasksId[index])
+        if(event.target.innerText == "") removeTask(tasksId[index])
         else updateTaskValueInDatabase(tasksId[index], event.target.innerText)
     }
 
@@ -73,7 +76,8 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
     }
 
     return (
-        <div id={"taskDiv" + tasksId[index]} className="flex flex-row w-full gap-3 content-center items-start mt-2 mb-2 ">
+        <div id={"taskDiv" + tasksId[index]} className="flex flex-row w-full h-fit gap-3 content-center items-start mt-2 mb-2 ">
+            <div className="mt-1 hover-trigger" onMouseOver={() => setHovering(true)} onMouseLeave={() => setHovering(false)}><DragIcon hovering={hovering}/></div>
             <input onChange={changeTaskState} checked={taskDone} type="checkbox" className="w-5 h-5 hover:cursor-pointer md:mt-1 bg-white border border-gray-300 rounded-md checked:bg-blue-500 checked:border-transparent focus:outline-none transition-all duration-300 ease-in-out"></input>
             <div id="name" className="flex justify-center w-full">
                 <p id={"task"+tasksId[index]} onBlur={changeTaskValue} onKeyDown={onKeyDown} suppressContentEditableWarning={true} contentEditable={true} className={`resize-none text-sm md:text-lg bg-transparent border-none w-full overflow-auto ${taskDone && "line-through opacity-50"}`}>
@@ -81,7 +85,8 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
                 </p>
             </div>
             <Calendar task={true} onChange={() => onChangeDate(event, tasksId[index])}/>
-            <div className="cursor-pointer" onClick={() => deleteTask(tasksId[index])}><TrashCanIcon color={"#919191"}/></div>
+            <div className="cursor-pointer" onClick={() => removeTask(tasksId[index])}><TrashCanIcon color={"#919191"}/></div>
+            {/* <div className="mt-1 hover-trigger" onMouseOver={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>=</div> */}
         </div>
     );
 }

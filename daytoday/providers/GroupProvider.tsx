@@ -1,6 +1,7 @@
 'use client'
 import axios from 'axios';
 import React, {createContext, ReactNode, useState} from 'react';
+import { toast } from 'react-toastify';
 interface GroupProps {
     children: ReactNode,
 }
@@ -42,10 +43,11 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     const removeGroup = async (name: string) => {
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/RemoveGroup", {Name: name})
         .then(res => {
-             return res.data
+            return res.data
         })
         .catch(err => {
-             console.log('Error:', err);
+            toast.error("Group not removed")
+            //console.log('Error:', err);
         })
         return result
     }
@@ -53,11 +55,12 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     const addGroup = async (name: string) => {
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/AddGroup", {Name: name})
         .then(res => {
-             result = res.data
-             setGroups(res.data.groups);
+            setGroups(res.data.groups);
+            return res.data
         })
         .catch(err => {
-             console.log('Error:', err);
+            toast.error("Group not added")
+            console.log('Error:', err);
         })
         return result
      }
@@ -67,7 +70,8 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
             return res.data.groups
         })
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("No groups retrieved")
+            //console.log('Error:', error);
         });
         return result
     }

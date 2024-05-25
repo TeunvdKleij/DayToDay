@@ -1,6 +1,7 @@
 'use client'
 import axios from 'axios';
 import React, {createContext, ReactNode, useState} from 'react';
+import { toast } from 'react-toastify';
 interface NoteProps {
     children: ReactNode,
 }
@@ -38,7 +39,8 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
             })
             .catch(error => {
                 setNoteText("")
-                console.log('Error:', error);
+                toast.error("Note not retrieved")
+                //console.log('Error:', error);
             })
 
     }
@@ -49,7 +51,8 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
             return res.data
         })
         .catch(err => { 
-            console.log('Error:', err);
+            toast.error("Notes not removed")
+            //console.log('Error:', err);
         })
         return result
     }
@@ -58,7 +61,8 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
     const updateNote = async (changedDate: number, noteText: string, groupItem: string) => {
         await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/UpdateNote", {ChangedDate: changedDate, NoteText: noteText, GroupName: groupItem})
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("Note not updated")
+            //console.log('Error:', error);
         });
     }
 

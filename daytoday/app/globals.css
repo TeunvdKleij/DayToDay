@@ -87,3 +87,7 @@ body{
   background-color: var(--bg-grey);
 }
 
+.hover-trigger:hover + svg .icon {
+  fill: #b1b1b1; 
+}
+

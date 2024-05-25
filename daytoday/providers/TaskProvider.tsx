@@ -19,7 +19,7 @@ interface TaskContextProps {
     addNewTask: (taskName: string, changedDate: number, groupItem: string) => void;
     updateTaskStatusInDatabase: (id: string, taskDone: boolean) => void;
     updateTaskValueInDatabase: (id: string, taskName: string) => void;
-    deleteTask: (id: string) => void;
+    removeTask: (id: string) => void;
     tasksId: string[];
     changedDate: number;
     setChangedDate: (newValue: number) => void;
@@ -41,7 +41,7 @@ export const TaskContext = createContext<TaskContextProps>({
     addNewTask: () => {},
     updateTaskStatusInDatabase: () => {},
     updateTaskValueInDatabase: () => {},
-    deleteTask: () => {},
+    removeTask: () => {},
     tasksId: [],
     changedDate: 0,
     setChangedDate: () => {},
@@ -121,14 +121,16 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const updateTaskValueInDatabase = async (id: string, taskName: string) => {
         await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskValue", {Id: id, TaskName: taskName})
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("Task value not updated")
+            //console.log('Error:', error);
         });
     }
 
     const updateTaskStatusInDatabase = async (id: string, taskDone: boolean) => {
         await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskStatus", {Id: id, Done: !taskDone})
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("Task status not updated")
+            //console.log('Error:', error);
         });
     }
 
@@ -157,7 +159,8 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
                 return fillTasks(res);
             })
             .catch(error => {
-                console.log('Error:', error);
+                toast.error("Tasks not retrieved")
+                //console.log('Error:', error);
             })
             return result
     }
@@ -168,7 +171,8 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
                 return fillTasks(res);
             })
             .catch(error => {
-                console.log('Error:', error);
+                toast.error("Tasks for a group not retrieved")
+                //console.log('Error:', error);
             })
             return result
     }
@@ -176,23 +180,24 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const removeTasksByGroup = async (name: string) => {
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTasksByGroup", {GroupName: name})
         .then(res => {
-            console.log(res)
-             return res.data
+            return res.data
         })
         .catch(err => {
-             console.log('Error:', err);
+            toast.error("Tasks for group not removed")
+            //console.log('Error:', err);
         })
         return result
     }
 
-    const deleteTask = async (id: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/DeleteTask", {Id: id})
+    const removeTask = async (id: string) => {
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTask", {Id: id})
         .then(async () => {
             if(!toggleBool) await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
         })
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("Task not removed")
+            //console.log('Error:', error);
         });
     }
     
@@ -203,7 +208,8 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             else await getTasksForAGroup(groupItem);
         })
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("Task not updated")
+            //console.log('Error:', error);
         });
     }
 
@@ -220,7 +226,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             addNewTask,
             updateTaskStatusInDatabase,
             updateTaskValueInDatabase,
-            deleteTask,
+            removeTask,
             tasksId,
             changedDate,
             setChangedDate,

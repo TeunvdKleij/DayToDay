@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import MainTasks from "@/components/MainTasks";
 import Note from "@/components/Note";
 import SkeletonLoader from "@/components/SkeletonLoader";
+import ShareIcon from "@/icons/ShareIcon";
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";

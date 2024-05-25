@@ -6,7 +6,6 @@ import NoteProvider from "@/providers/NoteProvider";
 import GroupProvider from "@/providers/GroupProvider";
 import { ToastContainer } from "react-toastify";
 import MainProvider from "@/providers/MainProvider";
-import LightDarkModeToggle from "@/components/LightDarkModeToggle";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +28,7 @@ export default function RootLayout({
               <NoteProvider>
                 <ToastContainer
                   position="top-right"
-                  autoClose={2000}
+                  autoClose={3000}
                   hideProgressBar={false}
                   newestOnTop={false}
                   closeOnClick

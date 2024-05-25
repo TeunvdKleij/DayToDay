@@ -1,50 +1,40 @@
 'use client'
 import { useContext, useEffect, useRef, useState } from "react";
 import { TaskContext } from "@/providers/TaskProvider";
-import PlusIcon from "@/icons/plusicon";
-import ArrowLeftIcon from "@/icons/arrowLeftIcon";
-import ArrowRightIcon from "@/icons/arrowRightIcon";
+import PlusIcon from "@/icons/PlusIcon";
+import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
+import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
 import { MainContext } from "@/providers/MainProvider";
 import Task from "./Task";
+import DotsIcon from "@/icons/DotsIcon";
+import ShareIcon from "@/icons/ShareIcon";
+import SortIcon from "@/icons/SortIcon";
 
 const List = () => {
-    const {tasks, addNewTask, changedDate, setChangedDate, getTasksForADay} = useContext(TaskContext);
+    const {tasks, addNewTask, changedDate} = useContext(TaskContext);
     const {groupItem} = useContext(GroupContext);
-    const {getNoteForADay, showNote, setShowNote} = useContext(NoteContext)
     const [disabled, setDisabled] = useState<boolean>(false);
-    const {screenWidth} = useContext(MainContext)
+    const [toggleOptions, setToggleOptions] = useState<boolean>(false)
+    const [isMounted, setIsMounted] = useState(false); // New state to manage mounting
 
     useEffect(() => {
         if(changedDate < 0) setDisabled(true);
         else setDisabled(false);
     }, [changedDate])
 
-    const changeDate = (num: number) => {
-        var change = changedDate;
-        setShowNote(false)
-        changeDateToDate(change+num);
+    const handleToggleOptions = () => {
+        if (toggleOptions) {
+            setToggleOptions(false);
+            setTimeout(() => setIsMounted(false), 300);
+        } 
+        else {
+            setIsMounted(true);
+            setTimeout(() => setToggleOptions(true), 10); 
+        }
     }
 
-    const changeDateToToday = () =>{
-        changeDateToDate(0);
-    }
-
-    const changeDateToDate = (number: number) => {
-        setChangedDate(number);
-        getTasksForADay(number, groupItem);
-        getNoteForADay(number, groupItem);
-    }
-
-    const changeDateWithDatepicker = (event: any) => {
-        const selectedDate = new Date(event.target.value);
-        const today = new Date();
-        const differenceMs = selectedDate.getTime() - today.getTime();
-        const differenceDays = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
-        changeDateToDate(differenceDays);
-        event.target.value = ""
-    }
 
     return (
         <div className="flex flex-col items-start">
