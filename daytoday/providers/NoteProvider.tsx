@@ -40,7 +40,6 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
             .catch(error => {
                 setNoteText("")
                 toast.error("Note not retrieved")
-                //console.log('Error:', error);
             })
 
     }
@@ -52,7 +51,6 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
         })
         .catch(err => { 
             toast.error("Notes not removed")
-            //console.log('Error:', err);
         })
         return result
     }
@@ -62,7 +60,6 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
         await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/UpdateNote", {ChangedDate: changedDate, NoteText: noteText, GroupName: groupItem})
         .catch(error => {
             toast.error("Note not updated")
-            //console.log('Error:', error);
         });
     }
 

@@ -29,7 +29,8 @@ const Dialog = ({setShowModal, children, description, title, onCancel, onAccept,
     }
 
     return (
-        <div className="fixed flex justify-center items-center content-center w-full h-full top-0 left-0 bg-black bg-opacity-40 z-50"
+        <div
+            className="fixed flex justify-center items-center content-center w-full h-full top-0 left-0 bg-black bg-opacity-40 z-[1000]"
             onClick={(e) => handleHideModal(e)}>
             <div className="bg-eerie-black rounded-xl flex flex-col gap-3 min-w-[300px] max-w-[500px] m-3">
                 <div className="w-full flex-col gap-1 pt-5 pr-5 pl-5">

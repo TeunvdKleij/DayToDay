@@ -74,7 +74,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
 
 
     const startUp = async () => {
-        setGroups(await getGroups());
+        await getGroups();
         const groupName = localStorage.getItem('groupSelection')
         if(groupName != null) setGroupItem(groupName);
         else {setGroupItem(groups[0])}
@@ -212,7 +212,6 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const removeTasksByGroup = async (name: string) => {
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTasksByGroup", {GroupName: name})
         .then(res => {
-            console.log(res.data);
             return res.data
         })
         .catch(err => {

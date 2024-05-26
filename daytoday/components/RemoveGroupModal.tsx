@@ -21,8 +21,7 @@ const RemoveGroupModal = ({setShowModal, groupName, prevGroup} : RemoveGroupInte
         await removeGroup(item);
         groups.splice(groups.indexOf(item), 1)
         setGroupItem(prevGroup)
-        localStorage.setItem('groupSelection', prevGroup);
-        await getGroups();
+        localStorage.setItem('groupSelection', (groups && groups.length > 0 ? groups[0] : ''));
         setShowModal(false)
     }
 

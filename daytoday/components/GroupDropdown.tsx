@@ -1,6 +1,5 @@
 import TrashCanIcon from "@/icons/TrashcanIcon";
 import { TaskContext } from "@/providers/TaskProvider";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Button, DropdownSection} from "@nextui-org/react"
 import { useContext, useEffect, useState } from "react";
 import AddGroupModal from "./AddGroupModal";
 import RemoveGroupModal from "./RemoveGroupModal";
@@ -12,14 +11,11 @@ import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
 import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
 import Calendar from "./Calendar";
 import DotsIcon from "@/icons/DotsIcon";
-import DropDown from "./DropDown";
 import { MainContext } from "@/providers/MainProvider";
-interface DropdownInterface {
-    toggleBlur: () => void
-    blur: boolean
-}
+import Dropdown, { DropdownIconsEnum } from "./Dropdown";
+import DropDownOptions from "./DropDownOptions";
 
-const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
+const GroupDropDown = () => {
     const {groupItem, setGroupItem, groups, toggleDropDown, setToggleDropDown} = useContext(GroupContext);
     const {screenWidth} = useContext(MainContext)
     const {getTasksForAGroup, getTasksForADay, changedDate, setChangedDate, selectedSortOption} = useContext(TaskContext)
@@ -27,7 +23,9 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
     const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false);
     const [showAddModal, setShowAddModal] = useState<boolean>(false);
     const [disabled, setDisabled] = useState<boolean>(false);
-    const [prevGroup, setPrevGroup] = useState<string>('')
+    const [prevGroup, setPrevGroup] = useState<string>('');
+    const [formattedDataDropdown, setFormattedDataDropdown] = useState<any[]>([]);
+    const [formattedSelectedGroupDropdown, setFormattedSelectedGroupDropdown] = useState<any>([]);
 
     useEffect(() => {
         if(changedDate < 0) setDisabled(true);
@@ -49,6 +47,7 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
     const handleItemClick = async (item: string) => {
         if(item == "+ New group"){
             toggleAdd();
+            setGroupItem(groupItem);
         }
         else{
             setGroupItem(item)
@@ -56,12 +55,11 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
             setToggleDropDown(false)
             setShowNote(false)
         }
-        toggleBlur();
     }
 
-    const showDelete = () => {
+    const showDelete = (item: any) => {
         setShowRemoveModal(true)
-        setPrevGroup(groupItem);
+        setPrevGroup(item);
     }
 
     const toggleAdd = () => {
@@ -70,12 +68,12 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
         setShowRemoveModal(false);
     }
 
-    const handleToggleChange = async () => {
-        const toggle = toggleDropDown;
-        setToggleDropDown(!toggle);
-        if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
-        else await getTasksForAGroup(groupItem);
-    }
+    // const handleToggleChange = async () => {
+    //     const toggle = toggleDropDown;
+    //     setToggleDropDown(!toggle);
+    //     if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
+    //     else await getTasksForAGroup(groupItem);
+    // }
 
     const changeDateWithDatepicker = (event: any) => {
         const selectedDate = new Date(event.target.value);
@@ -89,48 +87,46 @@ const GroupDropDown: React.FC<DropdownInterface> = ({toggleBlur}) => {
         setToggleDropDown(!toggleDropDown);
     }
 
+    useEffect(() => {
+        if(groups && groups.length > 0){
+            const formattedData = groups.map((item: string, index: number) => {
+                return {
+                    value: item,
+                    onClick: () => handleItemClick(item),
+                    actions: [
+                        {
+                            icon: DropdownIconsEnum.DELETE,
+                            onClick: () => showDelete(item)
+                        },
+                    ]
+                }
+            })
+            setFormattedDataDropdown(formattedData);
+        }
+    }, [groups]);
+
+    useEffect(() => {
+        if(groupItem){
+            const formattedSelectedGroup = {
+                value: groupItem,
+                onClick: () => handleItemClick(groupItem),
+            }
+            setFormattedSelectedGroupDropdown(formattedSelectedGroup);
+        }
+    }, [groupItem]);
+
 
     return (
         <div className="flex justify-between items-center w-full flex-wrap">
             <div className="flex gap-2 w-fit">
-                <Dropdown>
-                    <DropdownTrigger>
-                        <Button variant="bordered" onClick={toggleBlur} className="bg-blue-500 pt-1 pb-1 pr-2 pl-2 h-fit rounded-lg w-fit md:text-md text-sm">{groupItem}<ArrowWithoutStickIcon direction={directionEnum.DOWN} width={screenWidth && screenWidth >= 768 ? 20 : 18}/></Button>
-                    </DropdownTrigger>
-                    {groups && groups.length > 0 &&
-                        <DropdownMenu aria-label="Dynamic Actions" items={groups} onAction={(key) => handleItemClick(key.toString())} className="flex flex-col rounded-lg p-1 bg-eerie-black border-[1px] border-neutral-700">
-                            <DropdownSection>
-                                {groups.map((item: string, index: number) => {
-                                    const disabled = item == groupItem;
-                                    return (
-                                        <DropdownItem key={item} textValue={item} color="default" className="p-0.5">
-                                            <div className={`flex gap-10 min-w-36 p-2 rounded-lg outline-none justify-between align-middle items-center hover:bg-zinc-500 ${!disabled ? "bg-eerie-black" : " bg-zinc-600 border-1 border-zinc-400"}`}>
-                                                {item}
-                                                {!disabled 
-                                                ? 
-                                                <button className={"w-[20px] h-[20px] justify-center align-middle items-center hover:bg-zinc-400 p-1 box-content rounded-lg"} onClick={showDelete}>
-                                                    <TrashCanIcon color={"#ffffff"}/>
-                                                </button> 
-                                                : 
-                                                <button className={"w-[20px] h-[20px] justify-center align-middle items-center hover:bg-zinc-400 p-1 box-content rounded-lg"}>
-                                                    <ArrowWithoutStickIcon direction={directionEnum.RIGHT} width={20}/>
-                                                </button> 
-                                                }
-                                            </div>
-                                        </DropdownItem>
-                                    )
-                                })}
-                            </DropdownSection>
-                            <DropdownItem color="default" className="bg-blue-500 mb-2 pt-2 pb-1.5 pr-1.5 pl-2 rounded-lg w-auto ml-1 mr-1 text-center hover:cursor-pointer" textValue="+ New group" key="+ New group">+ New group</DropdownItem>
-                        </DropdownMenu>
-                    }
+                <Dropdown data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown}>
+                   <button onClick={(e) => handleItemClick("+ New group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ New group</button>
                 </Dropdown>
-                
                 <DotsIcon onClick={toggleOptionMenu}/>
                 <div className="flex flex-row h-fit mt-1">{selectedSortOption}</div>
-                {toggleDropDown &&  <DropDown/>}
-                {/* <Toggle text={toggleDropDown ? "All tasks" : "Daily tasks"} onChange={handleToggleChange} checked={toggleDropDown}/> */}
-                {showAddModal && <AddGroupModal groupName={groupItem} prevGroup={prevGroup}  setShowModal={setShowAddModal}/>}
+                {toggleDropDown &&  <DropDownOptions/>}
+                {/* <DropDownOptions/> */}
+                {showAddModal && <AddGroupModal setShowModal={setShowAddModal}/>}
                 {showRemoveModal && <RemoveGroupModal groupName={groupItem} prevGroup={prevGroup} setShowModal={setShowRemoveModal}/>}
             </div>
             <div className="flex items-center">

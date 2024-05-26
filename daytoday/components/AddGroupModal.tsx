@@ -4,11 +4,9 @@ import Dialog from "@/components/Dialog";
 
 interface AddGroupInterface{
     setShowModal: Dispatch<SetStateAction<boolean>>
-    groupName: string
-    prevGroup: string
 }
 
-const AddGroupModal = ({setShowModal, groupName, prevGroup} : AddGroupInterface) => {
+const AddGroupModal = ({setShowModal} : AddGroupInterface) => {
     const {groups, addGroup, getGroups} = useContext(GroupContext)
     const [input, setInput] = useState<string>('')
 
