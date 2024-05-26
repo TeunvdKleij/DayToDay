@@ -1,8 +1,6 @@
 import GroupDropDown from "./GroupDropdown";
 import Header from "./Header";
 import List from "./List";
-import Dropdown, {DropdownIconsEnum} from "@/components/Dropdown";
-import {useState} from "react";
 
 interface MainTasksInterface{
     done: boolean;

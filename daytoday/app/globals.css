@@ -184,3 +184,17 @@ body{
     display: flex;
   }
 }
+.hover-trigger:hover + svg .icon {
+  fill: #b1b1b1; 
+}
+
+#sortList li{
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+#sortList li:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(113 113 122 / var(--tw-bg-opacity));
+  cursor: pointer;
+}
+

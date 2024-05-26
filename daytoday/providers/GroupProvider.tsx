@@ -3,21 +3,22 @@ import axios from 'axios';
 import React, {createContext, ReactNode, useEffect, useState} from 'react';
 import is from "@sindresorhus/is";
 import undefined = is.undefined;
+import { toast } from 'react-toastify';
 interface GroupProps {
     children: ReactNode,
 }
 interface GroupContextProps {
-    groupItem: string,
-    setGroupItem: (value: string) => void,
-    groups: any,
-    setGroups: (value: string[]) => void,
-    addGroup: (name: string) => void,
-    removeGroup: (name: string) => void,
-    getGroups: () => void;
-    setToggleBool: (toggle: boolean) => void,
-    toggleBool: boolean,
-    lastGroupItem: string,
-    setLastGroupItem: (item: string) => void,
+    groupItem: string;
+    setGroupItem: (value: string) => void;
+    groups: string[];
+    setGroups: (value: string[]) => void;
+    addGroup: (name: string) => void;
+    removeGroup: (name: string) => void;
+    getGroups: () => Promise<void>;
+    setToggleDropDown: (toggle: boolean) => void,
+    toggleDropDown: boolean
+    lastGroupItem: string
+    setLastGroupItem: (item: string) => void
     loading: boolean,
 }
 
@@ -28,9 +29,9 @@ export const GroupContext = createContext<GroupContextProps>({
     setGroups: () => {},
     addGroup: () => {},
     removeGroup: () => {},
-    getGroups: () => {},
-    setToggleBool: () => {},
-    toggleBool: false,
+    getGroups: async () => {}, 
+    setToggleDropDown: () => {},
+    toggleDropDown: false,
     lastGroupItem: "",
     setLastGroupItem: () => {},
     loading: true,
@@ -38,9 +39,9 @@ export const GroupContext = createContext<GroupContextProps>({
 
 const GroupProvider: React.FC<GroupProps> = ({children}) => {
     const [groupItem, setGroupItem] = useState<string>("")
-    const [groups, setGroups] = useState<any>(undefined);
-    const [toggleBool, setToggleBool] = useState<boolean>(false);
-    const [lastGroupItem, setLastGroupItem] = useState<string>("");
+    const [groups, setGroups] = useState<string[]>([]);
+    const [toggleDropDown, setToggleDropDown] = useState<boolean>(false)
+    const [lastGroupItem, setLastGroupItem] = useState<string>("")
     const [loading, setLoading] = useState(true);
 
     const removeGroup = async (name: string) => {
@@ -100,8 +101,8 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
             setGroups,
             removeGroup,
             getGroups,
-            setToggleBool,
-            toggleBool,
+            setToggleDropDown,
+            toggleDropDown,
             lastGroupItem,
             setLastGroupItem,
             loading

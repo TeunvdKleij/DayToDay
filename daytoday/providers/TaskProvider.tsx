@@ -19,7 +19,7 @@ interface TaskContextProps {
     addNewTask: (taskName: string, changedDate: number, groupItem: string) => void;
     updateTaskStatusInDatabase: (id: string, taskDone: boolean) => void;
     updateTaskValueInDatabase: (id: string, taskName: string) => void;
-    deleteTask: (id: string) => void;
+    removeTask: (id: string) => void;
     tasksId: string[];
     changedDate: number;
     setChangedDate: (newValue: number) => void;
@@ -27,6 +27,9 @@ interface TaskContextProps {
     editTask: (id:string, changedDate: any) => void;
     removeTasksByGroup: (name: string) => void
     getTasksForAGroup: (group: string) => void;
+    taskSortOptions: string[];
+    selectedSortOption: string;
+    setSelectedSortOption: (value: string) => void
 }
 
 export const TaskContext = createContext<TaskContextProps>({
@@ -41,7 +44,7 @@ export const TaskContext = createContext<TaskContextProps>({
     addNewTask: () => {},
     updateTaskStatusInDatabase: () => {},
     updateTaskValueInDatabase: () => {},
-    deleteTask: () => {},
+    removeTask: () => {},
     tasksId: [],
     changedDate: 0,
     setChangedDate: () => {},
@@ -49,6 +52,9 @@ export const TaskContext = createContext<TaskContextProps>({
     editTask: () => {},
     removeTasksByGroup: () => {},
     getTasksForAGroup: () => {},
+    taskSortOptions: ["Daily tasks", "All tasks", "Finished tasks",  "Unfinished tasks"],
+    selectedSortOption: "Daily tasks",
+    setSelectedSortOption: () => {}
 
 });
 
@@ -61,8 +67,10 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const [changedDate, setChangedDate] = useState<number>(0)
     const [newTaskAdded, setNewTaskAdded] = useState<boolean>(false);
     const {getNoteForADay} = useContext(NoteContext);
-    const {setGroupItem, groups, groupItem, getGroups, toggleBool} = useContext(GroupContext)
+    const {setGroups, setGroupItem, groups, groupItem, getGroups, toggleDropDown} = useContext(GroupContext)
     const {noteText, setShowNote, showNote} = useContext(NoteContext)
+    const [selectedSortOption, setSelectedSortOption] = useState<string>('Daily tasks')
+    const taskSortOptions = ["Daily tasks", "All tasks", "Finished tasks",  "Unfinished tasks"]
 
 
     const startUp = async () => {
@@ -79,16 +87,20 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     useEffect(() => {
         getTasksForADay(changedDate, groupItem);
         getNoteForADay(changedDate, groupItem);
-    }, [groups])
+    }, [groups, groupItem])
 
     useEffect(() => {
         console.info(showNote);
     }, [showNote])
 
-    useEffect(() => {
-        getTasksForADay(changedDate, groupItem);
-        getNoteForADay(changedDate, groupItem);
-    }, [groupItem]);
+    const getTasks = async () => {
+        if(selectedSortOption == "All tasks") await getTasksForAGroup(groupItem);
+        else await getTasksForADay(changedDate, groupItem);
+    }
+
+    useEffect(() =>{
+        getTasks();
+    }, [selectedSortOption])
 
 
     const addNewTask = async (taskName: string, changedDate: number, groupItem: string) => {
@@ -99,7 +111,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         setNewTaskAdded(true);
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem})
         .then(async res => {
-            if(!toggleBool) await getTasksForADay(changedDate, groupItem);
+            if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
             await getNoteForADay(changedDate, groupItem);
             setNewTaskAdded(false);
@@ -121,14 +133,14 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const updateTaskValueInDatabase = async (id: string, taskName: string) => {
         await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskValue", {Id: id, TaskName: taskName})
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("Task value not updated")
         });
     }
 
     const updateTaskStatusInDatabase = async (id: string, taskDone: boolean) => {
         await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskStatus", {Id: id, Done: !taskDone})
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("Task status not updated")
         });
     }
 
@@ -138,10 +150,34 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         var taskIds: any[] = [];
         var checkedTasks = 0;
         for(let i = 0; i < res.data.tasks.length; i++){
-            taskList.push(res.data.tasks[i].taskName)
-            checkedlist.push(res.data.tasks[i].done)
-            taskIds.push(res.data.tasks[i].taskId)
-            if(res.data.tasks[i].done) checkedTasks++;
+            if(selectedSortOption == "Daily tasks"){
+                taskList.push(res.data.tasks[i].taskName)
+                checkedlist.push(res.data.tasks[i].done)
+                taskIds.push(res.data.tasks[i].taskId)
+                if(res.data.tasks[i].done) checkedTasks++;
+            }
+            else if(selectedSortOption == "Unfinished tasks"){
+                if(!res.data.tasks[i].done){
+                    taskList.push(res.data.tasks[i].taskName)
+                    checkedlist.push(res.data.tasks[i].done)
+                    taskIds.push(res.data.tasks[i].taskId)
+                    if(res.data.tasks[i].done) checkedTasks++;
+                }
+            }
+            else if(selectedSortOption == "Finished tasks"){
+                if(res.data.tasks[i].done){
+                    taskList.push(res.data.tasks[i].taskName)
+                    checkedlist.push(res.data.tasks[i].done)
+                    taskIds.push(res.data.tasks[i].taskId)
+                    if(res.data.tasks[i].done) checkedTasks++;
+                }
+            }
+            else {
+                taskList.push(res.data.tasks[i].taskName)
+                checkedlist.push(res.data.tasks[i].done)
+                taskIds.push(res.data.tasks[i].taskId)
+                if(res.data.tasks[i].done) checkedTasks++;
+            }
         }
         setTasks(taskList);
         setCheckedTasks(checkedlist);
@@ -157,7 +193,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
                 return fillTasks(res);
             })
             .catch(error => {
-                console.log('Error:', error);
+                toast.error("Tasks not retrieved")
             })
             return result
     }
@@ -168,7 +204,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
                 return fillTasks(res);
             })
             .catch(error => {
-                console.log('Error:', error);
+                toast.error("Tasks for a group not retrieved")
             })
             return result
     }
@@ -176,34 +212,34 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const removeTasksByGroup = async (name: string) => {
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTasksByGroup", {GroupName: name})
         .then(res => {
-            console.log(res)
-             return res.data
+            console.log(res.data);
+            return res.data
         })
         .catch(err => {
-             console.log('Error:', err);
+            toast.error("Tasks for group not removed")
         })
         return result
     }
 
-    const deleteTask = async (id: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/DeleteTask", {Id: id})
+    const removeTask = async (id: string) => {
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTask", {Id: id})
         .then(async () => {
-            if(!toggleBool) await getTasksForADay(changedDate, groupItem);
+            if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
         })
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("Task not removed")
         });
     }
     
     const editTask = async (id: string, changeDate: any) => {
         await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskDate", {Id: id, date: changeDate})
         .then(async res => {
-            if(!toggleBool) await getTasksForADay(changedDate, groupItem);
+            if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
         })
         .catch(error => {
-            console.log('Error:', error);
+            toast.error("Task not updated")
         });
     }
 
@@ -220,7 +256,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             addNewTask,
             updateTaskStatusInDatabase,
             updateTaskValueInDatabase,
-            deleteTask,
+            removeTask,
             tasksId,
             changedDate,
             setChangedDate,
@@ -228,6 +264,9 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             editTask,
             removeTasksByGroup,
             getTasksForAGroup,
+            selectedSortOption,
+            setSelectedSortOption,
+            taskSortOptions
         }}>
             {children}
         </TaskContext.Provider>

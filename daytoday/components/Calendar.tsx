@@ -10,7 +10,7 @@ interface CalendarInterface{
 
 const Calendar = ({task, onChange} : CalendarInterface) => {
     return (
-        <div className="relative flex justify-end bottom-0 right-0 w-8 h-5 items-center hover:cursor-pointer">
+        <div className="relative flex justify-end bottom-0 right-0 w-8 h-5 mr-2 items-center hover:cursor-pointer">
             <input type="date" className="absolute rounded-lg text-black w-5 h-5 opacity-0 z-10 hover:cursor-pointer" onChange={onChange}></input>
             <div className="absolute flex items-center justify-center z-0">{task ? <DatePickerEditIcon/> : <DatePickerIcon/> }</div>
         </div>
