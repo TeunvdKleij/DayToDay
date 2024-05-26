@@ -212,7 +212,6 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const removeTasksByGroup = async (name: string) => {
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTasksByGroup", {GroupName: name})
         .then(res => {
-            console.log(res.data);
             return res.data
         })
         .catch(err => {

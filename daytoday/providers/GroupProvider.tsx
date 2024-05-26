@@ -50,7 +50,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
                 getGroups();
             })
             .catch(err => {
-                console.log('Error:', err);
+                toast.error("Group not removed")
             });
     }
 
@@ -62,7 +62,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
                 getGroups();
             })
             .catch(err => {
-                console.log('Error:', err);
+                toast.error("Group not added")
             });
     }
 
@@ -70,12 +70,12 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
         setLoading(true);
         await axios.get(process.env.NEXT_PUBLIC_API_URL + "Group/GetGroups")
             .then((res) => {
-                setGroups(res.data);
+                setGroups(res.data.groups);
                 let item = localStorage.getItem('groupSelection');
                 setGroupItem(item ? item : res.data[0] ? res.data[0] : "");
             })
             .catch(error => {
-                console.log('Error:', error);
+                toast.error("Groups not retrieved")
             });
         setLoading(false);
     }

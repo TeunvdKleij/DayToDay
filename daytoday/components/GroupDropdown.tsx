@@ -11,11 +11,11 @@ import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
 import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
 import Calendar from "./Calendar";
 import DotsIcon from "@/icons/DotsIcon";
-import DropDown from "./DropDown";
 import { MainContext } from "@/providers/MainProvider";
-import Dropdown, {DropdownIconsEnum} from "@/components/Dropdown";
+import Dropdown, { DropdownIconsEnum } from "./Dropdown";
+import DropDownOptions from "./DropDownOptions";
 
-const GroupDropDown: React.FC<DropdownInterface> = () => {
+const GroupDropDown = () => {
     const {groupItem, setGroupItem, groups, toggleDropDown, setToggleDropDown} = useContext(GroupContext);
     const {screenWidth} = useContext(MainContext)
     const {getTasksForAGroup, getTasksForADay, changedDate, setChangedDate, selectedSortOption} = useContext(TaskContext)
@@ -68,12 +68,12 @@ const GroupDropDown: React.FC<DropdownInterface> = () => {
         setShowRemoveModal(false);
     }
 
-    const handleToggleChange = async () => {
-        const toggle = toggleDropDown;
-        setToggleDropDown(!toggle);
-        if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
-        else await getTasksForAGroup(groupItem);
-    }
+    // const handleToggleChange = async () => {
+    //     const toggle = toggleDropDown;
+    //     setToggleDropDown(!toggle);
+    //     if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
+    //     else await getTasksForAGroup(groupItem);
+    // }
 
     const changeDateWithDatepicker = (event: any) => {
         const selectedDate = new Date(event.target.value);
@@ -93,7 +93,6 @@ const GroupDropDown: React.FC<DropdownInterface> = () => {
                 return {
                     value: item,
                     onClick: () => handleItemClick(item),
-                    icon: DropdownIconsEnum.FOLDER,
                     actions: [
                         {
                             icon: DropdownIconsEnum.DELETE,
@@ -111,7 +110,6 @@ const GroupDropDown: React.FC<DropdownInterface> = () => {
             const formattedSelectedGroup = {
                 value: groupItem,
                 onClick: () => handleItemClick(groupItem),
-                icon: DropdownIconsEnum.FOLDER
             }
             setFormattedSelectedGroupDropdown(formattedSelectedGroup);
         }
@@ -121,14 +119,14 @@ const GroupDropDown: React.FC<DropdownInterface> = () => {
     return (
         <div className="flex justify-between items-center w-full flex-wrap">
             <div className="flex gap-2 w-fit">
-                <Dropdown icon={DropdownIconsEnum.FOLDER} data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown}>
+                <Dropdown data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown}>
                    <button onClick={(e) => handleItemClick("+ New group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ New group</button>
                 </Dropdown>
                 <DotsIcon onClick={toggleOptionMenu}/>
                 <div className="flex flex-row h-fit mt-1">{selectedSortOption}</div>
-                {toggleDropDown &&  <DropDown/>}
-                {/* <Toggle text={toggleDropDown ? "All tasks" : "Daily tasks"} onChange={handleToggleChange} checked={toggleDropDown}/> */}
-                {showAddModal && <AddGroupModal groupName={groupItem} prevGroup={prevGroup}  setShowModal={setShowAddModal}/>}
+                {toggleDropDown &&  <DropDownOptions/>}
+                {/* <DropDownOptions/> */}
+                {showAddModal && <AddGroupModal setShowModal={setShowAddModal}/>}
                 {showRemoveModal && <RemoveGroupModal groupName={groupItem} prevGroup={prevGroup} setShowModal={setShowRemoveModal}/>}
             </div>
             <div className="flex items-center">

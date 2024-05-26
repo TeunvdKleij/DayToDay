@@ -13,7 +13,7 @@ export default function Home() {
   const [done, setDone] = useState<boolean>(false);
   const {tasksCount, checkedTasksCount, changedDate, selectedSortOption} = useContext(TaskContext);
   const {showNote, setShowNote, getNoteForADay} = useContext(NoteContext);
-  const {groups, groupItem, toggleBool, loading} = useContext(GroupContext);
+  const {groups, groupItem, toggleDropDown, loading} = useContext(GroupContext);
   const [headerText, setHeaderText] = useState<string>('')
 
   useEffect(() => {
