@@ -72,11 +72,6 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
             }
             return input.trimStart();
         }
-        console.log(replaceHTML('<div >'));     // true
-        console.log(replaceHTML('<p class="test"> Hallo </p>')); // true
-        console.log(replaceHTML('<span/>'));   // true
-        console.log(replaceHTML('<notanelement>')); // false
-        console.log(replaceHTML('<scrip<script>t>'));  // true
     }, [])
 
     const onKeyDown = (event: any) => {

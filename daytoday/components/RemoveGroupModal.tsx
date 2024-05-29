@@ -20,7 +20,7 @@ const RemoveGroupModal = ({setShowModal, groupName, prevGroup} : RemoveGroupInte
         await removeTasksByGroup(item);
         await removeGroup(item);
         groups.splice(groups.indexOf(item), 1)
-        setGroupItem(prevGroup)
+        setGroupItem(groupName)
         localStorage.setItem('groupSelection', (groups && groups.length > 0 ? groups[0] : ''));
         setShowModal(false)
     }
@@ -30,8 +30,8 @@ const RemoveGroupModal = ({setShowModal, groupName, prevGroup} : RemoveGroupInte
         <Dialog
             setShowModal={setShowModal}
             title={"Remove group"}
-            description={"Are you sure you want to remove <b class='pl-1'>" + groupName + "</b>?"}
-            onAccept={async () => removeClick(groupName)}
+            description={"Are you sure you want to remove <b class='pl-1'>" + prevGroup + "</b>?"}
+            onAccept={async () => removeClick(prevGroup)}
             canAccept={true}
         />
     );

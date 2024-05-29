@@ -57,9 +57,9 @@ const GroupDropDown = () => {
         }
     }
 
-    const showDelete = (item: any) => {
+    const showDelete = async (item: any) => {
+        await setPrevGroup(item);
         setShowRemoveModal(true)
-        setPrevGroup(item);
     }
 
     const toggleAdd = () => {

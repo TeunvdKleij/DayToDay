@@ -11,6 +11,7 @@ import Task from "./Task";
 import DotsIcon from "@/icons/DotsIcon";
 import ShareIcon from "@/icons/ShareIcon";
 import SortIcon from "@/icons/SortIcon";
+import Button, { ColorEnum } from "./Button";
 
 const List = () => {
     const {tasks, addNewTask, changedDate} = useContext(TaskContext);
@@ -35,7 +36,6 @@ const List = () => {
         }
     }
 
-
     return (
         <div className="flex flex-col items-start">
             <div id="taskList" className="flex flex-col w-full">
@@ -44,7 +44,14 @@ const List = () => {
                 })}
             </div>
             <div className="flex gap-3 mt-6 w-full justify-between">
-                <button disabled={disabled} onClick={() => addNewTask("", changedDate, groupItem)} className={`md:text-md text-sm w-fit rounded-lg pt-1 pl-2 pr-2 pb-1 flex items-center gap-2 hover:cursor-pointer ${changedDate < 0 ? "bg-grey" : "bg-blue-500" } `}><PlusIcon/>New Task</button>
+                <Button 
+                    text={"Task"} 
+                    disabled={changedDate < 0} 
+                    onClick={() => addNewTask("", changedDate, groupItem)}
+                    backgroundColor={ColorEnum.BLUE}
+                >
+                    <PlusIcon/>
+                </Button>
             </div>
         </div>
 
