@@ -32,7 +32,7 @@ export default function Home() {
 
   //useEffect to set the header text based on if all tasks are selected or not
   useEffect(() => {
-      if(selectedSortOption == "All tasks") setHeaderText("Alle taken voor " + groupItem);
+      if(selectedSortOption && selectedSortOption.value == "All tasks") setHeaderText("Alle taken voor " + groupItem);
       else if(changedDate == 0) setHeaderText("Vandaag")
       else if(changedDate == 1) setHeaderText("Morgen")
       else if(changedDate == -1) setHeaderText("Gisteren")

@@ -26,23 +26,19 @@ const DropDownOptions = () => {
         setFormattedTaskOptions(formattedData)
     }, [taskSortOptions]);
 
-    useEffect(() => {
-        if(selectedSortOption){
-            const formattedSelectedOption = {
-                value: selectedSortOption,
-                onClick: () => handleClick(selectedSortOption),
-                actions: [{icon: DropdownIconsEnum.FILTER}]
-            }
-            setFormattedSelectedTaskOptions(formattedSelectedOption);
-        }
-    }, [selectedSortOption])
+    // useEffect(() => {
+    //     if(selectedSortOption){
+    //         const formattedSelectedOption = selectedSortOption
+    //         setFormattedSelectedTaskOptions(formattedSelectedOption);
+    //     }
+    // }, [selectedSortOption])
 
     return (
         // <Dropdown data={formattedTaskOptions} defaultItem={formattedSelectedTaskOptions}/>
         <div className="bg-zinc-800 border-[1px] border-neutral-600 z-10 flex absolute top-[128px] left-[280px] rounded-lg shadow-md shadow-zinc-900 blur-none">
             <ul id="sortList" className="p-3">
                 {taskSortOptions.map((value: string, index: number) => {
-                    if(value == selectedSortOption) return <li key={index} onClick={() => handleClick(value)} className="flex justify-between min-w-40">{value}<ArrowWithoutStickIcon direction={directionEnum.RIGHT} width={20} className={"fill-white"} /> </li>
+                    if(value == selectedSortOption.value) return <li key={index} onClick={() => handleClick(value)} className="flex justify-between min-w-40">{value}<ArrowWithoutStickIcon direction={directionEnum.RIGHT} width={20} className={"fill-white"} /> </li>
                     return <li key={index} onClick={() => handleClick(value)}>{value}</li>
                 })}
             </ul>

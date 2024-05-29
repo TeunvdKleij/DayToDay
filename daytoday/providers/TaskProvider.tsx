@@ -4,6 +4,7 @@ import React, {createContext, ReactNode, useContext, useEffect, useState} from '
 import { NoteContext } from './NoteProvider';
 import { GroupContext } from './GroupProvider';
 import { toast } from 'react-toastify';
+import {DropdownIconsEnum} from "@/components/Dropdown";
 interface TaskProps {
     children: ReactNode,
 }
@@ -28,8 +29,8 @@ interface TaskContextProps {
     removeTasksByGroup: (name: string) => void
     getTasksForAGroup: (group: string) => void;
     taskSortOptions: string[];
-    selectedSortOption: string;
-    setSelectedSortOption: (value: string) => void
+    selectedSortOption: any;
+    setSelectedSortOption: (value: any) => void
 }
 
 export const TaskContext = createContext<TaskContextProps>({
@@ -53,7 +54,7 @@ export const TaskContext = createContext<TaskContextProps>({
     removeTasksByGroup: () => {},
     getTasksForAGroup: () => {},
     taskSortOptions: ["Daily tasks", "All tasks", "Finished tasks",  "Unfinished tasks"],
-    selectedSortOption: "Daily tasks",
+    selectedSortOption: {},
     setSelectedSortOption: () => {}
 
 });
@@ -69,7 +70,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const {getNoteForADay} = useContext(NoteContext);
     const {setGroups, setGroupItem, groups, groupItem, getGroups, toggleDropDown} = useContext(GroupContext)
     const {noteText, setShowNote, showNote} = useContext(NoteContext)
-    const [selectedSortOption, setSelectedSortOption] = useState<string>('Daily tasks')
+    const [selectedSortOption, setSelectedSortOption] = useState<any>();
     const taskSortOptions = ["Daily tasks", "All tasks", "Finished tasks",  "Unfinished tasks"]
 
 
@@ -94,7 +95,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }, [showNote])
 
     const getTasks = async () => {
-        if(selectedSortOption == "All tasks") await getTasksForAGroup(groupItem);
+        if(selectedSortOption && selectedSortOption?.value == "All tasks") await getTasksForAGroup(groupItem);
         else await getTasksForADay(changedDate, groupItem);
     }
 
@@ -111,7 +112,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         setNewTaskAdded(true);
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem})
         .then(async res => {
-            if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
+            if(selectedSortOption && selectedSortOption.value != "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
             await getNoteForADay(changedDate, groupItem);
             setNewTaskAdded(false);
@@ -150,13 +151,13 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         var taskIds: any[] = [];
         var checkedTasks = 0;
         for(let i = 0; i < res.data.tasks.length; i++){
-            if(selectedSortOption == "Daily tasks"){
+            if(selectedSortOption && selectedSortOption.value == "Daily tasks"){
                 taskList.push(res.data.tasks[i].taskName)
                 checkedlist.push(res.data.tasks[i].done)
                 taskIds.push(res.data.tasks[i].taskId)
                 if(res.data.tasks[i].done) checkedTasks++;
             }
-            else if(selectedSortOption == "Unfinished tasks"){
+            else if(selectedSortOption && selectedSortOption.value == "Unfinished tasks"){
                 if(!res.data.tasks[i].done){
                     taskList.push(res.data.tasks[i].taskName)
                     checkedlist.push(res.data.tasks[i].done)
@@ -164,7 +165,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
                     if(res.data.tasks[i].done) checkedTasks++;
                 }
             }
-            else if(selectedSortOption == "Finished tasks"){
+            else if(selectedSortOption && selectedSortOption.value == "Finished tasks"){
                 if(res.data.tasks[i].done){
                     taskList.push(res.data.tasks[i].taskName)
                     checkedlist.push(res.data.tasks[i].done)
@@ -223,7 +224,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const removeTask = async (id: string) => {
         await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTask", {Id: id})
         .then(async () => {
-            if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
+            if(selectedSortOption && selectedSortOption.value !== "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
         })
         .catch(error => {
@@ -234,7 +235,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const editTask = async (id: string, changeDate: any) => {
         await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskDate", {Id: id, date: changeDate})
         .then(async res => {
-            if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
+            if(selectedSortOption && selectedSortOption.value !== "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
         })
         .catch(error => {

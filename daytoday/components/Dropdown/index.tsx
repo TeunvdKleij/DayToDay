@@ -4,11 +4,13 @@ import FolderIcon from "@/icons/Dropdown/folderIcon";
 import FilterIcon from "@/icons/Dropdown/filterIcon";
 import DeleteIcon from "@/icons/Dropdown/deleteIcon";
 import ArrowWithoutStickIcon, { directionEnum } from '@/icons/Arrows/ArrowWithoutStickIcon';
+import DotsIcon from "@/icons/DotsIcon";
 
 export enum DropdownIconsEnum {
     FOLDER = "folder",
     FILTER = "filter",
     DELETE = "delete",
+    DOTS = "dots",
 }
 
 interface DropdownProps {
@@ -18,6 +20,8 @@ interface DropdownProps {
     defaultItem?: DataProps,
     visible?: boolean,
     setVisible?: (value: boolean) => void,
+    className?: string,
+    showArrow?: boolean,
 }
 
 interface DataProps {
@@ -28,11 +32,11 @@ interface DataProps {
 }
 
 interface DataActionProps {
-    icon: DropdownIconsEnum,
+    icon?: DropdownIconsEnum,
     onClick?: () => void,
 }
 
-const Dropdown = ({ children, icon, data, defaultItem, visible, setVisible }: DropdownProps) => {
+const Dropdown = ({ children, icon, data, defaultItem, visible, setVisible, className, showArrow }: DropdownProps) => {
     const [internalVisible, setInternalVisible] = useState<boolean>(false);
     const [animate, setAnimate] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<any>(defaultItem);
@@ -68,13 +72,17 @@ const Dropdown = ({ children, icon, data, defaultItem, visible, setVisible }: Dr
     return (
         <div className="relative">
             <button onClick={() => handleToggleDropdown()}
-                    className="text-white h-[35px] w-fit font-semibold text-base flex align-center justify-between items-center bg-blue-500 pl-2 pr-2 pb-1 pt-1 gap-2 rounded-lg hover:bg-blue-600">
+                    className={`text-white h-[35px] w-fit font-semibold text-base flex align-center justify-between items-center bg-blue-500 pl-2 pr-2 pb-1 pt-1 gap-2 rounded-lg hover:bg-blue-600 ${className}`}>
                 {icon === DropdownIconsEnum.FOLDER &&
                     <FolderIcon className="fill-none w-[20px] h-[20px] stroke-white" />}
                 {icon === DropdownIconsEnum.FILTER &&
                     <FilterIcon className="fill-none w-[20px] h-[20px] stroke-white" />}
+                {icon === DropdownIconsEnum.DOTS &&
+                    <DotsIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
                 {selectedItem ? selectedItem.value : "Select item ..."}
-                <ArrowWithoutStickIcon className="fill-white" width={25} direction={directionEnum.DOWN} />
+                {showArrow !== false && (
+                        <ArrowWithoutStickIcon className="fill-white" width={25} direction={directionEnum.DOWN} />
+                )}
             </button>
 
             {(visible || animate) && (
@@ -91,25 +99,29 @@ const Dropdown = ({ children, icon, data, defaultItem, visible, setVisible }: Dr
                                         <FolderIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
                                     {item.icon === DropdownIconsEnum.FILTER &&
                                         <FilterIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
+                                    {item.icon === DropdownIconsEnum.DOTS &&
+                                        <DotsIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
                                     {item.value}
                                     {item.actions && item.actions.length > 0 && (
                                         <div className="ml-auto flex gap-1">
                                             {item.actions.map((action, actionIndex) => (
                                                 item.value === selectedItem.value ?
-                                                    <div key={action.icon + actionIndex} onClick={(e) => handleItemClick(e, item)}
+                                                    <div key={action.icon ? action.icon + actionIndex : actionIndex + "icon"} onClick={(e) => handleItemClick(e, item)}
                                                          className="dropdown-btn text-zinc-300 w-[30px] h-[30px] font-semibold text-sm flex align-center justify-center items-center bg-none rounded-lg hover:bg-[#464646]">
                                                         <ArrowWithoutStickIcon direction={directionEnum.RIGHT} width={20} className="fill-zinc-300" />
                                                     </div>
                                                     :
-                                                    <div key={action.icon + actionIndex} onClick={action?.onClick && action.onClick}
-                                                         className="text-zinc-300 w-[30px] h-[30px] font-semibold text-sm flex align-center justify-center items-center bg-none rounded-lg hover:bg-[#464646]">
-                                                        {action.icon === DropdownIconsEnum.FOLDER &&
-                                                            <FolderIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
-                                                        {action.icon === DropdownIconsEnum.FILTER &&
-                                                            <FilterIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
-                                                        {action.icon === DropdownIconsEnum.DELETE &&
-                                                            <DeleteIcon className={"fill-zinc-300 w-[20px] h-[20px] stroke-zinc-300"} />}
-                                                    </div>
+                                                    action.icon && (
+                                                        <div key={action.icon + actionIndex} onClick={action?.onClick && action.onClick}
+                                                             className="text-zinc-300 w-[30px] h-[30px] font-semibold text-sm flex align-center justify-center items-center bg-none rounded-lg hover:bg-[#464646]">
+                                                            {action.icon === DropdownIconsEnum.FOLDER &&
+                                                                <FolderIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
+                                                            {action.icon === DropdownIconsEnum.FILTER &&
+                                                                <FilterIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
+                                                            {action.icon === DropdownIconsEnum.DELETE &&
+                                                                <DeleteIcon className={"fill-zinc-300 w-[20px] h-[20px] stroke-zinc-300"} />}
+                                                        </div>
+                                                    )
                                             ))}
                                         </div>
                                     )}

@@ -1,24 +1,20 @@
-import TrashCanIcon from "@/icons/TrashcanIcon";
-import { TaskContext } from "@/providers/TaskProvider";
-import { useContext, useEffect, useState } from "react";
+import {TaskContext} from "@/providers/TaskProvider";
+import {useContext, useEffect, useState} from "react";
 import AddGroupModal from "./AddGroupModal";
 import RemoveGroupModal from "./RemoveGroupModal";
-import { GroupContext } from "@/providers/GroupProvider";
-import Toggle from "./Toggle";
-import { NoteContext } from "@/providers/NoteProvider";
-import ArrowWithoutStickIcon, { directionEnum } from "@/icons/Arrows/ArrowWithoutStickIcon";
+import {GroupContext} from "@/providers/GroupProvider";
+import {NoteContext} from "@/providers/NoteProvider";
 import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
 import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
 import Calendar from "./Calendar";
-import DotsIcon from "@/icons/DotsIcon";
-import { MainContext } from "@/providers/MainProvider";
-import Dropdown, { DropdownIconsEnum } from "./Dropdown";
-import DropDownOptions from "./DropDownOptions";
+import {MainContext} from "@/providers/MainProvider";
+import Dropdown, {DropdownIconsEnum} from "./Dropdown";
+import task from "@/components/Task";
 
 const GroupDropDown = () => {
     const {groupItem, setGroupItem, groups, toggleDropDown, setToggleDropDown} = useContext(GroupContext);
     const {screenWidth} = useContext(MainContext)
-    const {getTasksForAGroup, getTasksForADay, changedDate, setChangedDate, selectedSortOption} = useContext(TaskContext)
+    const {getTasksForAGroup, getTasksForADay, changedDate, setChangedDate, taskSortOptions, setSelectedSortOption, selectedSortOption} = useContext(TaskContext)
     const {setShowNote, getNoteForADay} = useContext(NoteContext)
     const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false);
     const [showAddModal, setShowAddModal] = useState<boolean>(false);
@@ -26,6 +22,8 @@ const GroupDropDown = () => {
     const [prevGroup, setPrevGroup] = useState<string>('');
     const [formattedDataDropdown, setFormattedDataDropdown] = useState<any[]>([]);
     const [formattedSelectedGroupDropdown, setFormattedSelectedGroupDropdown] = useState<any>([]);
+    const [formattedSelectedTaskOptions, setFormattedSelectedTaskOptions] = useState<any>([]);
+
 
     useEffect(() => {
         if(changedDate < 0) setDisabled(true);
@@ -83,9 +81,6 @@ const GroupDropDown = () => {
         changeDateToDate(differenceDays);
         event.target.value = ""
     }
-    const toggleOptionMenu = () => {
-        setToggleDropDown(!toggleDropDown);
-    }
 
     useEffect(() => {
         if(groups && groups.length > 0){
@@ -115,6 +110,25 @@ const GroupDropDown = () => {
         }
     }, [groupItem]);
 
+    useEffect(() => {
+        if(taskSortOptions && taskSortOptions.length > 0) {
+            const formattedData = taskSortOptions.map((item: string, index: number) => {
+                let object = {
+                    value: item,
+                    actions: [
+                        {
+                            onClick: () => {},
+                        }
+                    ],
+                    onClick: () => {},
+                }
+                object.onClick = () => setSelectedSortOption(object);
+                return object;
+            });
+            setFormattedSelectedTaskOptions(formattedData)
+        }
+    }, [taskSortOptions]);
+
 
     return (
         <div className="flex justify-between items-center w-full flex-wrap">
@@ -122,9 +136,7 @@ const GroupDropDown = () => {
                 <Dropdown data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown}>
                    <button onClick={(e) => handleItemClick("+ New group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ New group</button>
                 </Dropdown>
-                <DotsIcon onClick={toggleOptionMenu}/>
-                {toggleDropDown &&  <DropDownOptions/>}
-                {/* <DropDownOptions/> */}
+                <Dropdown showArrow={false} className={"bg-transparent hover:bg-[#333]"} icon={DropdownIconsEnum.DOTS} data={formattedSelectedTaskOptions} defaultItem={selectedSortOption} />
                 {showAddModal && <AddGroupModal setShowModal={setShowAddModal}/>}
                 {showRemoveModal && <RemoveGroupModal groupName={groupItem} prevGroup={prevGroup} setShowModal={setShowRemoveModal}/>}
             </div>
