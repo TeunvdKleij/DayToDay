@@ -123,7 +123,6 @@ const GroupDropDown = () => {
                    <button onClick={(e) => handleItemClick("+ New group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ New group</button>
                 </Dropdown>
                 <DotsIcon onClick={toggleOptionMenu}/>
-                <div className="flex flex-row h-fit mt-1">{selectedSortOption}</div>
                 {toggleDropDown &&  <DropDownOptions/>}
                 {/* <DropDownOptions/> */}
                 {showAddModal && <AddGroupModal setShowModal={setShowAddModal}/>}
