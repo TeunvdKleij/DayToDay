@@ -1,5 +1,6 @@
 'use client'
 import React from 'react';
+import Button, { ColorEnum } from '../Button';
 
 interface DialogProps {
     setShowModal: (show: boolean) => void,
@@ -43,15 +44,8 @@ const Dialog = ({setShowModal, children, description, title, onCancel, onAccept,
                     </div>
                 )}
                 <div className="flex flex-row w-full gap-2 mt-3 justify-end pr-5 pb-5 pl-5">
-
-                    <button onClick={(e) => handleCancelModal(e)}
-                            className="bg-zinc-600 text-sm text-zinc-300 pt-2 pb-2 pr-3 pl-3 rounded-lg w-full hover:cursor-pointer">Annuleren
-                    </button>
-
-                    <button onClick={(e) => handleAcceptModal(e)}
-                            className={`${canAccept ? "bg-blue-500" : "bg-zinc-500"} text-sm pt-2 pb-2 pr-3 pl-3 rounded-lg w-full hover:cursor-pointer`}>Bevestigen
-                    </button>
-
+                    <Button text={"Annuleren"} backgroundColor={ColorEnum.LIGHTGREY} onClick={(e) => handleCancelModal(e)}/>
+                    <Button text={"Bevestigen"}  backgroundColor={ColorEnum.BLUE}  onClick={(e: any) => handleAcceptModal(e)} disabled={!canAccept}/>
                 </div>
             </div>
         </div>

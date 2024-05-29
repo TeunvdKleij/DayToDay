@@ -9,6 +9,7 @@ interface AddGroupInterface{
 const AddGroupModal = ({setShowModal} : AddGroupInterface) => {
     const {groups, addGroup, getGroups} = useContext(GroupContext)
     const [input, setInput] = useState<string>('')
+    const [charCount, setChartCount] = useState<number>(0);
 
     const addNewGroup = async () => {
         setShowModal(false);
@@ -21,15 +22,23 @@ const AddGroupModal = ({setShowModal} : AddGroupInterface) => {
     }
 
     const handleInputChange = (event: any) => {
-        setInput(event.target.value)
+        if(event.target.value.length <= 20){
+            setInput(event.target.value)
+            setChartCount(event.target.value.length);
+        }
     }
 
     return (
         <Dialog setShowModal={setShowModal} title={"New group"} description={"Fill in the input to add a new group"}
                 onAccept={addNewGroup} canAccept={input !== ""}>
-            <p>Name</p>
-            <input type="text" id="addGroupInput" value={input} onChange={(e) => handleInputChange(e)}
-                   className="rounded-lg h-[40px] p-3 bg-[#757575] text-white"></input>
+            <div className="flex justify-between">
+                <p>Name</p>
+                <p className="text-zinc-400">{charCount}/20</p>
+            </div>
+            <input type="text" id="addGroupInput" placeholder={"Enter new group name"} value={input} onChange={(e) => handleInputChange(e)}
+                   className="rounded-lg h-[40px] p-3 bg-[#757575] text-white">
+            </input>
+            
         </Dialog>
     );
 }
