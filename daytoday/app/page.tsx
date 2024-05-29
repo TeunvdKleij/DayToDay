@@ -32,13 +32,12 @@ export default function Home() {
 
   //useEffect to set the header text based on if all tasks are selected or not
   useEffect(() => {
-    if(selectedSortOption == "All tasks") setHeaderText("Alle taken voor " + groupItem);
-    else setHeaderText("Taken voor " +  getDay(changedDate) + " " + getDayName(changedDate) + " " + getMonth(changedDate))
+      if(selectedSortOption == "All tasks") setHeaderText("Alle taken voor " + groupItem);
+      else if(changedDate == 0) setHeaderText("Vandaag")
+      else if(changedDate == 1) setHeaderText("Morgen")
+      else if(changedDate == -1) setHeaderText("Gisteren")
+      else setHeaderText(getDay(changedDate) + " " + getDayName(changedDate) + " " + getMonth(changedDate))
   }, [selectedSortOption, groupItem, changedDate])
-
-  useEffect(() =>{
-
-  })
 
 
   const toggleNote = () => {
@@ -50,7 +49,7 @@ export default function Home() {
   const getDay = (changeDate: number) => {
     var date = new Date();
     date.setDate(date.getDate()+changeDate) 
-    var dutchDayNames = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+    var dutchDayNames = ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'];
     return dutchDayNames[date.getDay()];
   }
 
