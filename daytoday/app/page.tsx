@@ -1,4 +1,6 @@
 'use client'
+import Footer from "@/components/Footer";
+import Header from "@/components/Header/Header";
 import MainTasks from "@/components/MainTasks";
 import Note from "@/components/Note";
 import SkeletonLoader from "@/components/SkeletonLoader";
@@ -69,7 +71,7 @@ export default function Home() {
   return (
     <>
     {/* <a href="https://192.168.1.241:7267/swagger/index.html">Druk</a> */}
-    <div id="main" className="flex flex-col min-h-screen m-0 bg-dark-mode">
+    <div id="main" className="flex flex-col min-h-screen m-0 mb-14 bg-dark-mode">
       <div id="main" className={`flex flex-1 items-center flex-col`}>
         {!loading
           ?
@@ -78,9 +80,11 @@ export default function Home() {
           <SkeletonLoader/>
         }
         <Note toggleNote={toggleNote}/>
-        <div onClick={() => window.open('https://www.linkedin.com/in/teun-van-der-kleij-9b805a258/', '_blank')} className="hover:cursor-pointer m-5">© Teun van der Kleij, 2024</div>
+        <Footer/>
+        {/* <div onClick={() => window.open('https://www.linkedin.com/in/teun-van-der-kleij-9b805a258/', '_blank')} className="hover:cursor-pointer m-5">© Teun van der Kleij, 2024</div> */}
       </div>
     </div>
+    <Header/>
     </>
   );
 }

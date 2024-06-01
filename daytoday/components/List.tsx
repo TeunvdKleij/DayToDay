@@ -6,12 +6,13 @@ import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
 import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
-import { MainContext } from "@/providers/MainProvider";
+import { ColorEnum, MainContext } from "@/providers/MainProvider";
 import Task from "./Task";
 import DotsIcon from "@/icons/DotsIcon";
 import ShareIcon from "@/icons/ShareIcon";
 import SortIcon from "@/icons/SortIcon";
-import Button, { ColorEnum } from "./Button";
+import Button from "./Button/Button";
+
 
 const List = () => {
     const {tasks, addNewTask, changedDate} = useContext(TaskContext);

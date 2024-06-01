@@ -2,7 +2,7 @@ import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";
 import { Dispatch, SetStateAction, useContext } from "react";
-import Dialog from "@/components/Dialog";
+import Dialog from "@/components/Dialog/Dialog";
 
 interface RemoveGroupInterface{
     setShowModal: Dispatch<SetStateAction<boolean>>

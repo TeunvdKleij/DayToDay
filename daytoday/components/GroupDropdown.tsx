@@ -1,4 +1,3 @@
-import TrashCanIcon from "@/icons/TrashcanIcon";
 import { TaskContext } from "@/providers/TaskProvider";
 import { useContext, useEffect, useState } from "react";
 import AddGroupModal from "./AddGroupModal";
@@ -12,7 +11,7 @@ import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
 import Calendar from "./Calendar";
 import DotsIcon from "@/icons/DotsIcon";
 import { MainContext } from "@/providers/MainProvider";
-import Dropdown, { DropdownIconsEnum } from "./Dropdown";
+import Dropdown, { DropdownIconsEnum } from "./Dropdown/Dropdown";
 import DropDownOptions from "./DropDownOptions";
 
 const GroupDropDown = () => {
@@ -45,7 +44,7 @@ const GroupDropDown = () => {
     }
 
     const handleItemClick = async (item: string) => {
-        if(item == "+ New group"){
+        if(item == "+ Group"){
             toggleAdd();
             setGroupItem(groupItem);
         }
@@ -67,13 +66,6 @@ const GroupDropDown = () => {
         setShowAddModal(!add);
         setShowRemoveModal(false);
     }
-
-    // const handleToggleChange = async () => {
-    //     const toggle = toggleDropDown;
-    //     setToggleDropDown(!toggle);
-    //     if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
-    //     else await getTasksForAGroup(groupItem);
-    // }
 
     const changeDateWithDatepicker = (event: any) => {
         const selectedDate = new Date(event.target.value);
@@ -120,7 +112,7 @@ const GroupDropDown = () => {
         <div className="flex justify-between items-center w-full flex-wrap">
             <div className="flex gap-2 w-fit">
                 <Dropdown data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown}>
-                   <button onClick={(e) => handleItemClick("+ New group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ New group</button>
+                   <button onClick={(e) => handleItemClick("+ Group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ Group</button>
                 </Dropdown>
                 <DotsIcon onClick={toggleOptionMenu}/>
                 {toggleDropDown &&  <DropDownOptions/>}

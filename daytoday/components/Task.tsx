@@ -1,6 +1,5 @@
 'use client'
 import EditIcon from "@/icons/EditIcon";
-import TrashCanIcon from "@/icons/TrashcanIcon";
 import { TaskContext } from "@/providers/TaskProvider";
 import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
@@ -10,6 +9,7 @@ import DatePickerEditIcon from "@/icons/DatePickerEditIcon";
 import Calendar from "./Calendar";
 import DragIcon from "@/icons/DragIcon";
 import DOMPurify from 'dompurify';
+import TrashCanIcon from "@/icons/trashcanicon";
 
 interface TaskProps {
     taskName: any; 
@@ -18,7 +18,7 @@ interface TaskProps {
 
 const Task: React.FC<TaskProps> = ({taskName, index}) => {
     const {checkedTasksCount, setCheckedTasksCount, checkedTasks, updateTaskStatusInDatabase, updateTaskValueInDatabase, removeTask, tasksId, editTask} = useContext(TaskContext)
-    const {screenWidth} = useContext(MainContext);
+    const {screenWidth, replaceHTML} = useContext(MainContext);
     const [taskDone, setTaskDone] = useState<boolean>(false);
     const [taskValue, setTaskValue] = useState<string>('')
     const [toggleDatepicker, setToggleDatepicker] = useState<boolean>(false)
@@ -46,8 +46,9 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
     }
 
     const changeTaskValue = (event: any) => {
-        if(event.target.innerText == "") removeTask(tasksId[index])
-        else updateTaskValueInDatabase(tasksId[index], event.target.innerText)
+        if(replaceHTML(event.target.innerText) == "") removeTask(tasksId[index])
+        else updateTaskValueInDatabase(tasksId[index], replaceHTML(event.target.innerText));
+        setTaskValue(replaceHTML(event.target.innerText));
     }
 
     const onKeyDown = (event: any) => {

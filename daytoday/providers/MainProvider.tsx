@@ -17,9 +17,20 @@ export const MainContext = createContext<MainContextProps>({
     replaceHTML: () => ""
 });
 
+export enum ColorEnum {
+    BLUE = "bg-blue-500",
+    RED = "bg-red-500",
+    LIGHTGREY = "bg-light-grey",
+    GREY = "bg-grey",
+    GREEN = "bg-green-500",
+    NONE = ""
+}
+
 const MainProvider: React.FC<MainProps> = ({children}) => {
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
     const [theme, setTheme] = useState<string>("dark");
+    const [mainColor, setMainColor] = useState<string>('')
+
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -49,7 +60,6 @@ const MainProvider: React.FC<MainProps> = ({children}) => {
             "wbr"
         ];
         const pattern = new RegExp(`</?(${htmlElements.join('|')})[^>]*>`, 'gi');
-        // Keep replacing HTML tags until no more matches are found
         while (pattern.test(input)) {
             input = input.replace(pattern, '');
         }

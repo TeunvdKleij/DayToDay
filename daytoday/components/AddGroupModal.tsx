@@ -1,6 +1,7 @@
 import { GroupContext } from "@/providers/GroupProvider";
 import { Dispatch, SetStateAction, useContext, useState, ReactNode } from "react";
-import Dialog from "@/components/Dialog";
+import Dialog from "@/components/Dialog/Dialog";
+import { MainContext } from "@/providers/MainProvider";
 
 interface AddGroupInterface{
     setShowModal: Dispatch<SetStateAction<boolean>>
@@ -8,23 +9,26 @@ interface AddGroupInterface{
 
 const AddGroupModal = ({setShowModal} : AddGroupInterface) => {
     const {groups, addGroup, getGroups} = useContext(GroupContext)
+    const {replaceHTML} = useContext(MainContext);
     const [input, setInput] = useState<string>('')
     const [charCount, setChartCount] = useState<number>(0);
 
     const addNewGroup = async () => {
+        const inputValue = replaceHTML(input);
+        setInput(inputValue);
         setShowModal(false);
         const lowercaseGroup = groups.map(item => item.toLowerCase());
-        if(lowercaseGroup.includes(input.toLowerCase())) return null
-        if(input.length == 0) return null
-        addGroup(input);
-        groups.push(input)
+        if(lowercaseGroup.includes(inputValue.toLowerCase())) return null
+        if(inputValue.length == 0) return null
+        addGroup(inputValue);
+        groups.push(inputValue)
         await getGroups();
     }
 
     const handleInputChange = (event: any) => {
         if(event.target.value.length <= 20){
-            setInput(event.target.value)
-            setChartCount(event.target.value.length);
+            setInput(replaceHTML(event.target.value))
+            setChartCount(replaceHTML(event.target.value).length);
         }
     }
 
