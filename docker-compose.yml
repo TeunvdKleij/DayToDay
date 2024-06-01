@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./api/DaytoDay
+    container_name: DayToDayAPI
+    ports:
+      - "8090:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=production # Stel je omgevingsvariabele in indien nodig
+    volumes:
+      - nuget-packages:/root/.nuget/packages
+      - ./api/DayToDay/database:/app/database
+      - ./api/DayToDay/Dbbackups:/app/Dbbackups
+
+  frontend:
+    build:
+      context: ./client
+    container_name: DaytoDayClient
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3001:3000
+
+volumes:
+  nuget-packages:
+
+

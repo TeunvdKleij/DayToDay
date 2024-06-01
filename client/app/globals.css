@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face {
+  font-family: 'apple-font';
+  src: url('../fonts/sf-pro-rounded-semibold.otf') format('opentype');
+  /* You can define other font properties like font-weight, font-style, etc. */
+}
+
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px); /* Optional: Initial position */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Optional: Final position */
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fadeIn {
+  animation: fadeIn 0.5s ease-in; /* Adjust duration and timing function as needed */
+}
+.fadeOut {
+  animation: fadeOut 0.5s ease-out;
+}
+
+:root{
+  --bg-light-mode: #F5F5F5;
+  --bg-dark-mode: #131313;
+  --bg-eerie-black: #222222;
+  --bg-4A4A4A: #4A4A4A;
+  --bg-light-grey: #919191;
+  --bg-grey: #515151;
+}
+
+/* body{
+  font-family: apple-font, sans-serif; 
+} */
+.invertBg{
+  filter: invert()
+}
+.bg-light-mode{
+  background-color: var(--bg-light-mode);
+  color: black
+}
+.bg-dark-mode{
+  background-color: var(--bg-dark-mode);
+  color: white
+}
+.bg-eerie-black{
+  background-color: var(--bg-eerie-black);
+}
+.bg-light-grey{
+  background-color: var(--bg-light-grey)
+}
+.bg-grey {
+  background-color: var( --bg-grey);
+}
+.text-light-grey{
+  color: var(--bg-light-grey)
+}
+.brightness-90 {
+  filter: brightness(90%);
+}
+.bg-4A4A4A{
+  background-color: var(--bg-4A4A4A);
+}
+.bg-open-menu{
+  background-color: #82CFFF;
+}
+.mirror{
+  transform: scale(-1);
+}
+
+.custom-toast-background {
+  background-color: var(--bg-grey);
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: 0.3s;
+}
+
+.backdrop-blur-md {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+  transition: 0.3s;
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  transition: 0.3s;
+}
+
+.backdrop-blur-l {
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  transition: 0.3s;
+}
+
+.backdrop-blur-xl {
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  transition: 0.3s;
+}
+
+.dropdown-animated-blur-in {
+  transform-origin: top;
+  animation: dropdown-animated-blur-in 0.3s ease-in-out;
+}
+
+.dropdown-animated-blur-out {
+  transform-origin: top;
+  animation: dropdown-animated-blur-out 0.3s ease-in-out;
+}
+
+.dropdown-pop-in {
+  transform-origin: top;
+  animation: dropdown-pop-in 0.2s ease-in-out;
+}
+
+.dropdown-pop-out {
+  transform-origin: top;
+  animation: dropdown-pop-out 0.2s ease-in-out;
+}
+
+@keyframes dropdown-animated-blur-in {
+  from {
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    display: flex;
+  }
+  to {
+    display: flex;
+  }
+}
+
+@keyframes dropdown-animated-blur-out {
+  from {
+    display: flex;
+  }
+  to {
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    display: flex;
+  }
+}
+
+@keyframes dropdown-pop-in {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+    display: flex;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+    display: flex;
+  }
+}
+
+@keyframes dropdown-pop-out {
+  from {
+    transform: scaleX(1);
+    opacity: 1;
+    display: flex;
+  }
+  to {
+    transform: scale(0.8);
+    opacity: 0;
+    display: flex;
+  }
+}
+.hover-trigger:hover + svg .icon {
+  fill: #b1b1b1; 
+}
+
+#sortList li{
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+#sortList li:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(113 113 122 / var(--tw-bg-opacity));
+  cursor: pointer;
+}
+
