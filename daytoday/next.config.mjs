@@ -18,7 +18,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'none'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self' https://192.168.1.241:7267",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'none'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self' https://localhost:7267",
           },
           {
             key: 'X-Frame-Options',
