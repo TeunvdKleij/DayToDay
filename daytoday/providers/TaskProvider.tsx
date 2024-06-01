@@ -4,7 +4,7 @@ import React, {createContext, ReactNode, useContext, useEffect, useState} from '
 import { NoteContext } from './NoteProvider';
 import { GroupContext } from './GroupProvider';
 import { toast } from 'react-toastify';
-import {DropdownIconsEnum} from "@/components/Dropdown";
+import {DropdownIconsEnum} from "@/components/Dropdown/Dropdown";
 interface TaskProps {
     children: ReactNode,
 }
