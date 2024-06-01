@@ -9,7 +9,7 @@ import DatePickerEditIcon from "@/icons/DatePickerEditIcon";
 import Calendar from "./Calendar";
 import DragIcon from "@/icons/DragIcon";
 import DOMPurify from 'dompurify';
-import TrashCanIcon from "@/icons/trashcanicon";
+import TrashCanIcon from "@/icons/Trashcanicon";
 
 interface TaskProps {
     taskName: any; 
