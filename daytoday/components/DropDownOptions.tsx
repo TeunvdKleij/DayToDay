@@ -2,7 +2,7 @@ import ArrowWithoutStickIcon, { directionEnum } from "@/icons/Arrows/ArrowWithou
 import { GroupContext } from "@/providers/GroupProvider";
 import { TaskContext } from "@/providers/TaskProvider";
 import { useContext, useEffect, useState } from "react";
-import Dropdown, { DropdownIconsEnum } from "./Dropdown";
+import Dropdown, { DropdownIconsEnum } from "./Dropdown/Dropdown";
 
 
 const DropDownOptions = () => {

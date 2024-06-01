@@ -1,6 +1,5 @@
 'use client'
 import EditIcon from "@/icons/EditIcon";
-import TrashCanIcon from "@/icons/TrashcanIcon";
 import { TaskContext } from "@/providers/TaskProvider";
 import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
@@ -10,6 +9,7 @@ import DatePickerEditIcon from "@/icons/DatePickerEditIcon";
 import Calendar from "./Calendar";
 import DragIcon from "@/icons/DragIcon";
 import DOMPurify from 'dompurify';
+import TrashCanIcon from "@/icons/Trashcanicon";
 
 interface TaskProps {
     taskName: any; 
@@ -18,7 +18,7 @@ interface TaskProps {
 
 const Task: React.FC<TaskProps> = ({taskName, index}) => {
     const {checkedTasksCount, setCheckedTasksCount, checkedTasks, updateTaskStatusInDatabase, updateTaskValueInDatabase, removeTask, tasksId, editTask} = useContext(TaskContext)
-    const {screenWidth} = useContext(MainContext);
+    const {screenWidth, replaceHTML} = useContext(MainContext);
     const [taskDone, setTaskDone] = useState<boolean>(false);
     const [taskValue, setTaskValue] = useState<string>('')
     const [toggleDatepicker, setToggleDatepicker] = useState<boolean>(false)
@@ -46,38 +46,10 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
     }
 
     const changeTaskValue = (event: any) => {
-        if(event.target.innerText == "") removeTask(tasksId[index])
-        else updateTaskValueInDatabase(tasksId[index], event.target.innerText)
+        if(replaceHTML(event.target.innerText) == "") removeTask(tasksId[index])
+        else updateTaskValueInDatabase(tasksId[index], replaceHTML(event.target.innerText));
+        setTaskValue(replaceHTML(event.target.innerText));
     }
-
-
-    useEffect(() => {
-        const htmlElements = [
-            "a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdi", "bdo", "blockquote", 
-            "body", "br", "button", "canvas", "caption", "cite", "code", "col", "colgroup", "data", "datalist", 
-            "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption", 
-            "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hr", "html", "i", 
-            "iframe", "img", "input", "ins", "kbd", "label", "legend", "li", "link", "main", "map", "mark", "meta", 
-            "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "picture", 
-            "pre", "progress", "q", "rb", "rp", "rt", "rtc", "ruby", "s", "samp", "script", "section", "select", 
-            "slot", "small", "source", "span", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", 
-            "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "video", 
-            "wbr"
-        ];
-        function replaceHTML(input: string) {
-            const pattern = new RegExp(`</?(${htmlElements.join('|')})[^>]*>`, 'gi');
-            // Keep replacing HTML tags until no more matches are found
-            while (pattern.test(input)) {
-                input = input.replace(pattern, '');
-            }
-            return input.trimStart();
-        }
-        console.log(replaceHTML('<div >'));     // true
-        console.log(replaceHTML('<p class="test"> Hallo </p>')); // true
-        console.log(replaceHTML('<span/>'));   // true
-        console.log(replaceHTML('<notanelement>')); // false
-        console.log(replaceHTML('<scrip<script>t>'));  // true
-    }, [])
 
     const onKeyDown = (event: any) => {
         if (event.key === 'Enter') {

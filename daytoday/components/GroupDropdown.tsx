@@ -1,5 +1,5 @@
-import {TaskContext} from "@/providers/TaskProvider";
-import {useContext, useEffect, useState} from "react";
+import { TaskContext } from "@/providers/TaskProvider";
+import { useContext, useEffect, useState } from "react";
 import AddGroupModal from "./AddGroupModal";
 import RemoveGroupModal from "./RemoveGroupModal";
 import {GroupContext} from "@/providers/GroupProvider";
@@ -7,9 +7,10 @@ import {NoteContext} from "@/providers/NoteProvider";
 import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
 import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
 import Calendar from "./Calendar";
-import {MainContext} from "@/providers/MainProvider";
-import Dropdown, {DropdownIconsEnum} from "./Dropdown";
-import task from "@/components/Task";
+import DotsIcon from "@/icons/DotsIcon";
+import { MainContext } from "@/providers/MainProvider";
+import Dropdown, { DropdownIconsEnum } from "./Dropdown/Dropdown";
+import DropDownOptions from "./DropDownOptions";
 
 const GroupDropDown = () => {
     const {groupItem, setGroupItem, groups, toggleDropDown, setToggleDropDown} = useContext(GroupContext);
@@ -43,7 +44,7 @@ const GroupDropDown = () => {
     }
 
     const handleItemClick = async (item: string) => {
-        if(item == "+ New group"){
+        if(item == "+ Group"){
             toggleAdd();
             setGroupItem(groupItem);
         }
@@ -55,9 +56,9 @@ const GroupDropDown = () => {
         }
     }
 
-    const showDelete = (item: any) => {
+    const showDelete = async (item: any) => {
+        await setPrevGroup(item);
         setShowRemoveModal(true)
-        setPrevGroup(item);
     }
 
     const toggleAdd = () => {
@@ -65,13 +66,6 @@ const GroupDropDown = () => {
         setShowAddModal(!add);
         setShowRemoveModal(false);
     }
-
-    // const handleToggleChange = async () => {
-    //     const toggle = toggleDropDown;
-    //     setToggleDropDown(!toggle);
-    //     if(selectedSortOption != "All tasks") await getTasksForADay(changedDate, groupItem);
-    //     else await getTasksForAGroup(groupItem);
-    // }
 
     const changeDateWithDatepicker = (event: any) => {
         const selectedDate = new Date(event.target.value);
@@ -134,7 +128,7 @@ const GroupDropDown = () => {
         <div className="flex justify-between items-center w-full flex-wrap">
             <div className="flex gap-2 w-fit">
                 <Dropdown data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown}>
-                   <button onClick={(e) => handleItemClick("+ New group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ New group</button>
+                   <button onClick={(e) => handleItemClick("+ Group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ Group</button>
                 </Dropdown>
                 <Dropdown showArrow={false} className={"bg-transparent hover:bg-[#333]"} icon={DropdownIconsEnum.DOTS} data={formattedSelectedTaskOptions} defaultItem={selectedSortOption} />
                 {showAddModal && <AddGroupModal setShowModal={setShowAddModal}/>}
