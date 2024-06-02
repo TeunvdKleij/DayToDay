@@ -10,7 +10,6 @@ import Calendar from "./Calendar";
 import DotsIcon from "@/icons/DotsIcon";
 import { MainContext } from "@/providers/MainProvider";
 import Dropdown, { DropdownIconsEnum } from "./Dropdown/Dropdown";
-import DropDownOptions from "./DropDownOptions";
 
 const GroupDropDown = () => {
     const {groupItem, setGroupItem, groups, toggleDropDown, setToggleDropDown} = useContext(GroupContext);
@@ -130,7 +129,7 @@ const GroupDropDown = () => {
                 <Dropdown data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown}>
                    <button onClick={(e) => handleItemClick("+ Group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ Group</button>
                 </Dropdown>
-                <Dropdown showArrow={false} className={"bg-transparent hover:bg-[#333]"} icon={DropdownIconsEnum.DOTS} data={formattedSelectedTaskOptions} defaultItem={selectedSortOption} />
+                <Dropdown showArrow={false} className={"bg-transparent hover:bg-[#424242] hover:mr-5 "} icon={DropdownIconsEnum.DOTS} data={formattedSelectedTaskOptions} defaultItem={selectedSortOption} />
                 {showAddModal && <AddGroupModal setShowModal={setShowAddModal}/>}
                 {showRemoveModal && <RemoveGroupModal groupName={groupItem} prevGroup={prevGroup} setShowModal={setShowRemoveModal}/>}
             </div>

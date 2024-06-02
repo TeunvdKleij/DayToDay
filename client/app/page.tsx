@@ -4,6 +4,7 @@ import Header from "@/components/Header/Header";
 import MainTasks from "@/components/MainTasks";
 import Note from "@/components/Note";
 import SkeletonLoader from "@/components/SkeletonLoader";
+import GDPRNotice from "@/components/gdprNotice";
 import ShareIcon from "@/icons/ShareIcon";
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
@@ -17,6 +18,7 @@ export default function Home() {
   const {showNote, setShowNote, getNoteForADay} = useContext(NoteContext);
   const {groups, groupItem, toggleDropDown, loading} = useContext(GroupContext);
   const [headerText, setHeaderText] = useState<string>('')
+  const [gdpr, setGdpr] = useState<string>('');
 
   useEffect(() => {
     if(checkedTasksCount == 0 && tasksCount == 0) setPercentage(0);
@@ -24,7 +26,15 @@ export default function Home() {
     if(checkedTasksCount/tasksCount == 1) setDone(true);
     else setDone(false);
   }, [checkedTasksCount, tasksCount])
-  
+
+  useEffect(() => {
+    var gdprMessage = localStorage.getItem('gdpr')
+    if(gdprMessage) setGdpr(gdprMessage);
+  }, [])
+
+  useEffect(() => {
+    console.log(gdpr);
+  }, [gdpr])
 
   //useEffect to set the focus on the note when it becomes visible
   useEffect(() => {
@@ -70,21 +80,22 @@ export default function Home() {
   
   return (
     <>
-    {/* <a href="https://192.168.1.241:7267/swagger/index.html">Druk</a> */}
-    <div id="main" className="flex flex-col min-h-screen m-0 mb-14 bg-dark-mode">
-      <div id="main" className={`flex flex-1 items-center flex-col`}>
-        {!loading
-          ?
-          <MainTasks done={done} headerText={headerText} percentage={percentage}/>
-          :
-          <SkeletonLoader/>
-        }
-        <Note toggleNote={toggleNote}/>
-        <Footer/>
-        {/* <div onClick={() => window.open('https://www.linkedin.com/in/teun-van-der-kleij-9b805a258/', '_blank')} className="hover:cursor-pointer m-5">© Teun van der Kleij, 2024</div> */}
-      </div>
-    </div>
-    <Header/>
-    </>
+        {(gdpr.includes('denied') || gdpr == '') && <GDPRNotice setGdpr={setGdpr}/>}
+        {/* <a href="https://192.168.1.241:7267/swagger/index.html">Druk</a> */}
+        <div id="main" className="flex flex-col min-h-screen m-0 mb-14 bg-dark-mode">
+          <div id="main" className={`flex flex-1 items-center flex-col`}>
+            {!loading
+              ?
+              <MainTasks done={done} headerText={headerText} percentage={percentage}/>
+              :
+              <SkeletonLoader/>
+            }
+            <Note toggleNote={toggleNote}/>
+            <Footer/>
+            {/* <div onClick={() => window.open('https://www.linkedin.com/in/teun-van-der-kleij-9b805a258/', '_blank')} className="hover:cursor-pointer m-5">© Teun van der Kleij, 2024</div> */}
+          </div>
+        </div>
+        <Header/>
+      </>
   );
 }

@@ -72,7 +72,7 @@ const Dropdown = ({ children, icon, data, defaultItem, visible, setVisible, clas
     return (
         <div className="relative">
             <button onClick={() => handleToggleDropdown()}
-                    className={`text-white h-[35px] w-fit font-semibold text-base flex align-center justify-between items-center bg-blue-500 pl-2 pr-2 pb-1 pt-1 gap-2 rounded-lg hover:bg-blue-600 ${className}`}>
+                    className={`text-white h-[35px] w-fit font-semibold text-base flex align-center justify-between items-center bg-blue-500 pl-2 pr-2 pb-1 pt-1 gap-2 rounded-lg hover:bg-blue-600 ${className} `}>
                 {icon === DropdownIconsEnum.FOLDER &&
                     <FolderIcon className="fill-none w-[20px] h-[20px] stroke-white" />}
                 {icon === DropdownIconsEnum.FILTER &&
