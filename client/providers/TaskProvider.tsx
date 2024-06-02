@@ -70,7 +70,11 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const {getNoteForADay} = useContext(NoteContext);
     const {setGroups, setGroupItem, groups, groupItem, getGroups, toggleDropDown} = useContext(GroupContext)
     const {noteText, setShowNote, showNote} = useContext(NoteContext)
-    const [selectedSortOption, setSelectedSortOption] = useState<any>();
+    const [selectedSortOption, setSelectedSortOption] = useState<any>(
+        {
+            value: "Daily tasks"
+        }
+    );
     const taskSortOptions = ["Daily tasks", "All tasks", "Finished tasks",  "Unfinished tasks"]
 
 
@@ -151,13 +155,13 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         var taskIds: any[] = [];
         var checkedTasks = 0;
         for(let i = 0; i < res.data.tasks.length; i++){
-            if(selectedSortOption && selectedSortOption.value == "Daily tasks"){
+            if(selectedSortOption && selectedSortOption?.value == "Daily tasks"){
                 taskList.push(res.data.tasks[i].taskName)
                 checkedlist.push(res.data.tasks[i].done)
                 taskIds.push(res.data.tasks[i].taskId)
                 if(res.data.tasks[i].done) checkedTasks++;
             }
-            else if(selectedSortOption && selectedSortOption.value == "Unfinished tasks"){
+            else if(selectedSortOption && selectedSortOption?.value == "Unfinished tasks"){
                 if(!res.data.tasks[i].done){
                     taskList.push(res.data.tasks[i].taskName)
                     checkedlist.push(res.data.tasks[i].done)
@@ -165,7 +169,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
                     if(res.data.tasks[i].done) checkedTasks++;
                 }
             }
-            else if(selectedSortOption && selectedSortOption.value == "Finished tasks"){
+            else if(selectedSortOption && selectedSortOption?.value == "Finished tasks"){
                 if(res.data.tasks[i].done){
                     taskList.push(res.data.tasks[i].taskName)
                     checkedlist.push(res.data.tasks[i].done)
