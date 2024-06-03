@@ -1,6 +1,6 @@
 {
-    "name": "Your App Name",
-    "short_name": "App",
+    "name": "DayToDay",
+    "short_name": "DayToDay",
     "description": "Your App Description",
     "start_url": "/",
     "display": "standalone",

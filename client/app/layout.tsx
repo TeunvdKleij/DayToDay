@@ -6,6 +6,7 @@ import NoteProvider from "@/providers/NoteProvider";
 import GroupProvider from "@/providers/GroupProvider";
 import { ToastContainer } from "react-toastify";
 import MainProvider from "@/providers/MainProvider";
+import NavBar from "@/components/Header/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,13 +21,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-dark-mode">
+      <html lang="en" className="bg-dark-mode">
       <body>
-        <MainProvider>
-          <GroupProvider>
-            <TaskProvider>
-              <NoteProvider>
-                <ToastContainer
+      <MainProvider>
+        <GroupProvider>
+          <TaskProvider>
+            <NoteProvider>
+              <ToastContainer
                   position="top-right"
                   autoClose={3000}
                   hideProgressBar={false}
@@ -37,12 +38,12 @@ export default function RootLayout({
                   draggable
                   pauseOnHover
                   theme="colored"/>
-                {children}
-              </NoteProvider>
-            </TaskProvider>
-          </GroupProvider>
-        </MainProvider>
+              {children}
+            </NoteProvider>
+          </TaskProvider>
+        </GroupProvider>
+      </MainProvider>
       </body>
-    </html>
+      </html>
   );
 }

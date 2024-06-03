@@ -1,7 +1,7 @@
 'use client'
 import Footer from "@/components/Footer";
 import GDPRNotice from "@/components/GDPRNotice";
-import Header from "@/components/Header/Header";
+import NavBar from "@/components/Header/NavBar";
 import MainTasks from "@/components/MainTasks";
 import Note from "@/components/Note";
 import SkeletonLoader from "@/components/SkeletonLoader";
@@ -91,11 +91,10 @@ export default function Home() {
               <SkeletonLoader/>
             }
             <Note toggleNote={toggleNote}/>
+            <NavBar/>
             <Footer/>
-            {/* <div onClick={() => window.open('https://www.linkedin.com/in/teun-van-der-kleij-9b805a258/', '_blank')} className="hover:cursor-pointer m-5">© Teun van der Kleij, 2024</div> */}
           </div>
         </div>
-        <Header/>
       </>
   );
 }

@@ -1,10 +1,11 @@
 'use client';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, {ReactNode, useContext, useEffect, useState} from 'react';
 import FolderIcon from "@/icons/Dropdown/folderIcon";
 import FilterIcon from "@/icons/Dropdown/filterIcon";
 import DeleteIcon from "@/icons/Dropdown/deleteIcon";
 import ArrowWithoutStickIcon, { directionEnum } from '@/icons/Arrows/ArrowWithoutStickIcon';
 import DotsIcon from "@/icons/DotsIcon";
+import {MainContext} from "@/providers/MainProvider";
 
 export enum DropdownIconsEnum {
     FOLDER = "folder",
@@ -40,6 +41,7 @@ const Dropdown = ({ children, icon, data, defaultItem, visible, setVisible, clas
     const [internalVisible, setInternalVisible] = useState<boolean>(false);
     const [animate, setAnimate] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<any>(defaultItem);
+    const {screenWidth} = useContext(MainContext);
 
     visible = visible !== undefined ? visible : internalVisible;
     setVisible = setVisible || setInternalVisible;
@@ -72,14 +74,14 @@ const Dropdown = ({ children, icon, data, defaultItem, visible, setVisible, clas
     return (
         <div className="relative">
             <button onClick={() => handleToggleDropdown()}
-                    className={`text-white h-[35px] w-fit font-semibold text-base flex align-center justify-between items-center bg-blue-500 pl-2 pr-2 pb-1 pt-1 gap-2 rounded-lg hover:bg-blue-600 ${className} `}>
+                    className={`text-white h-[35px] w-fit font-semibold text-base flex align-center justify-between items-center pl-2 pr-2 pb-1 pt-1 gap-2 rounded-lg ${className} `}>
                 {icon === DropdownIconsEnum.FOLDER &&
                     <FolderIcon className="fill-none w-[20px] h-[20px] stroke-white" />}
                 {icon === DropdownIconsEnum.FILTER &&
                     <FilterIcon className="fill-none w-[20px] h-[20px] stroke-white" />}
                 {icon === DropdownIconsEnum.DOTS &&
                     <DotsIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
-                {selectedItem ? selectedItem.value : "Select item ..."}
+                {screenWidth && screenWidth >= 768 && (selectedItem ? selectedItem.value : "Select item ...")}
                 {showArrow !== false && (
                         <ArrowWithoutStickIcon className="fill-white" width={25} direction={directionEnum.DOWN} />
                 )}

@@ -1,11 +1,11 @@
 'use client'
-import Header from "@/components/Header/Header";
+import NavBar from "@/components/Header/NavBar";
 
 export default function Settings() {
   return (
     <>
-        <Header/>
         <h1>HALLO</h1>
+        <NavBar/>
     </>
   );
 }
