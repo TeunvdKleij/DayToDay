@@ -50,6 +50,7 @@ const List = () => {
                     disabled={changedDate < 0} 
                     onClick={() => addNewTask("", changedDate, groupItem)}
                     backgroundColor={ColorEnum.BLUE}
+                    className={"hover:bg-blue-600"}
                 >
                     <PlusIcon/>
                 </Button>
