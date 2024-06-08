@@ -1,10 +1,5 @@
-import EditIcon from "@/icons/EditIcon";
-import SettingsIcon from "@/icons/SettingsIcon";
-import ShareIcon from "@/icons/ShareIcon";
-import TaskIcon from "@/icons/TaskIcon";
 import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
-import {underline} from "next/dist/lib/picocolors";
 
 const NavBar = () =>{
     const router = useRouter();

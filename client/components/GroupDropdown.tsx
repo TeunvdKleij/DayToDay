@@ -7,14 +7,13 @@ import {NoteContext} from "@/providers/NoteProvider";
 import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
 import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
 import Calendar from "./Calendar";
-import DotsIcon from "@/icons/DotsIcon";
 import { MainContext } from "@/providers/MainProvider";
 import Dropdown, { DropdownIconsEnum } from "./Dropdown/Dropdown";
 
 const GroupDropDown = () => {
     const {groupItem, setGroupItem, groups, toggleDropDown, setToggleDropDown} = useContext(GroupContext);
     const {screenWidth} = useContext(MainContext)
-    const {getTasksForAGroup, getTasksForADay, changedDate, setChangedDate, taskSortOptions, setSelectedSortOption, selectedSortOption} = useContext(TaskContext)
+    const {getTasksForADay, changedDate, setChangedDate, taskSortOptions, setSelectedSortOption, selectedSortOption} = useContext(TaskContext)
     const {setShowNote, getNoteForADay} = useContext(NoteContext)
     const [showRemoveModal, setShowRemoveModal] = useState<boolean>(false);
     const [showAddModal, setShowAddModal] = useState<boolean>(false);

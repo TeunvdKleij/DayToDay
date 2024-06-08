@@ -1,9 +1,5 @@
 'use client';
-import React, { Children, MouseEventHandler, ReactNode, useEffect, useState } from 'react';
-import FolderIcon from "@/icons/Dropdown/folderIcon";
-import FilterIcon from "@/icons/Dropdown/filterIcon";
-import DeleteIcon from "@/icons/Dropdown/deleteIcon";
-import ArrowWithoutStickIcon, { directionEnum } from '@/icons/Arrows/ArrowWithoutStickIcon';
+import React, { ReactNode } from 'react';
 
 // Mogelijkheid tot icoon
 // text

@@ -14,7 +14,7 @@ interface DialogProps {
     onChange?: (e: any) => void
 }
 
-const Dialog = ({setShowModal, children, description, title, onCancel, onAccept, onChange, canAccept} : DialogProps) => {
+const Dialog = ({setShowModal, children, description, title, onCancel, onAccept, canAccept} : DialogProps) => {
 
     const handleHideModal = (e : any) => {
         if(e.target.classList.contains("fixed")) setShowModal(false);

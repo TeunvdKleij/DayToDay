@@ -1,15 +1,13 @@
 'use client'
-import EditIcon from "@/icons/EditIcon";
 import { TaskContext } from "@/providers/TaskProvider";
 import { toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
-import { useContext, useEffect, useState } from "react";
+import 'react-toastify/dist/ReactToastify.css';
+import { useCallback, useContext, useEffect, useState } from "react";
 import { MainContext } from "@/providers/MainProvider";
-import DatePickerEditIcon from "@/icons/DatePickerEditIcon";
 import Calendar from "./Calendar";
-import DragIcon from "@/icons/DragIcon";
-import DOMPurify from 'dompurify';
 import TrashCanIcon from "@/icons/Trashcanicon";
+import useMousetrap from "@/hooks/useShortcut";
+import { GroupContext } from "@/providers/GroupProvider";
 
 interface TaskProps {
     taskName: any; 
@@ -17,14 +15,13 @@ interface TaskProps {
 }
 
 const Task: React.FC<TaskProps> = ({taskName, index}) => {
-    const {checkedTasksCount, setCheckedTasksCount, checkedTasks, updateTaskStatusInDatabase, updateTaskValueInDatabase, removeTask, tasksId, editTask} = useContext(TaskContext)
-    const {screenWidth, replaceHTML} = useContext(MainContext);
+    const {checkedTasksCount, addNewTask, setCheckedTasksCount, checkedTasks, changedDate, updateTaskStatusInDatabase, updateTaskValueInDatabase, removeTask, tasksId, editTask} = useContext(TaskContext)
+    const {replaceHTML} = useContext(MainContext);
+    const {groupItem} = useContext(GroupContext);
     const [taskDone, setTaskDone] = useState<boolean>(false);
     const [taskValue, setTaskValue] = useState<string>('')
     const [toggleDatepicker, setToggleDatepicker] = useState<boolean>(false)
     const [min, setMin] = useState<string>();
-    const [hovering, setHovering] = useState<boolean>(false);
-
 
     useEffect(() => {
         const today = new Date();
@@ -46,9 +43,12 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
     }
 
     const changeTaskValue = (event: any) => {
-        if(replaceHTML(event.target.innerText) == "") removeTask(tasksId[index])
-        else updateTaskValueInDatabase(tasksId[index], replaceHTML(event.target.innerText));
-        setTaskValue(replaceHTML(event.target.innerText));
+        if(taskName !== event.target.innerText || event.target.innerText == ""){
+            console.log(taskName, event.target.innerText);
+            if(replaceHTML(event.target.innerText) == "") removeTask(tasksId[index])
+            else updateTaskValueInDatabase(tasksId[index], replaceHTML(event.target.innerText));
+            setTaskValue(replaceHTML(event.target.innerText));
+        }
     }
 
     const onKeyDown = (event: any) => {
@@ -76,6 +76,13 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
         var editstate = toggleDatepicker;
         setToggleDatepicker(!editstate);
     }
+
+    const myFunction = useCallback(() => {
+        addNewTask('', changedDate, groupItem);
+      }, []);
+    
+    useMousetrap('meta+h', myFunction);
+
 
     return (
         <div id={"taskDiv" + tasksId[index]} className="flex flex-row w-full h-fit gap-3 content-center items-start mt-2 mb-2 ">

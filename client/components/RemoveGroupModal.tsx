@@ -12,7 +12,7 @@ interface RemoveGroupInterface{
 
 const RemoveGroupModal = ({setShowModal, groupName, prevGroup} : RemoveGroupInterface) => {
     const {removeTasksByGroup} = useContext(TaskContext);
-    const {removeGroup, setGroupItem, getGroups, groups} = useContext(GroupContext);
+    const {removeGroup, setGroupItem, groups} = useContext(GroupContext);
     const {removeNotesByGroup} = useContext(NoteContext);
 
     const removeClick = async (item: string) => {

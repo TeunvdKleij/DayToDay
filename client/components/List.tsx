@@ -2,15 +2,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { TaskContext } from "@/providers/TaskProvider";
 import PlusIcon from "@/icons/PlusIcon";
-import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
-import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
 import { GroupContext } from "@/providers/GroupProvider";
-import { NoteContext } from "@/providers/NoteProvider";
-import { ColorEnum, MainContext } from "@/providers/MainProvider";
+import { ColorEnum } from "@/providers/MainProvider";
 import Task from "./Task";
-import DotsIcon from "@/icons/DotsIcon";
-import ShareIcon from "@/icons/ShareIcon";
-import SortIcon from "@/icons/SortIcon";
 import Button from "./Button/Button";
 
 

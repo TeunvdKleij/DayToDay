@@ -5,7 +5,6 @@ import NavBar from "@/components/Header/NavBar";
 import MainTasks from "@/components/MainTasks";
 import Note from "@/components/Note";
 import SkeletonLoader from "@/components/SkeletonLoader";
-import ShareIcon from "@/icons/ShareIcon";
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";
@@ -16,7 +15,7 @@ export default function Home() {
   const [done, setDone] = useState<boolean>(false);
   const {tasksCount, checkedTasksCount, changedDate, selectedSortOption} = useContext(TaskContext);
   const {showNote, setShowNote, getNoteForADay} = useContext(NoteContext);
-  const {groups, groupItem, toggleDropDown, loading} = useContext(GroupContext);
+  const {groupItem, loading} = useContext(GroupContext);
   const [headerText, setHeaderText] = useState<string>('')
   const [gdpr, setGdpr] = useState<string>('');
 
@@ -31,10 +30,6 @@ export default function Home() {
     var gdprMessage = localStorage.getItem('gdpr')
     if(gdprMessage) setGdpr(gdprMessage);
   }, [])
-
-  useEffect(() => {
-    console.log(gdpr);
-  }, [gdpr])
 
   //useEffect to set the focus on the note when it becomes visible
   useEffect(() => {

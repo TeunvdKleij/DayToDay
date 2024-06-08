@@ -1,7 +1,5 @@
 import DatePickerEditIcon from "@/icons/DatePickerEditIcon";
 import DatePickerIcon from "@/icons/DatePickerIcon";
-import { MainContext } from "@/providers/MainProvider";
-import { useContext, useEffect, useState } from "react";
 
 interface CalendarInterface{
     task: boolean

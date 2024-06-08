@@ -4,7 +4,6 @@ import React, {createContext, ReactNode, useContext, useEffect, useState} from '
 import { NoteContext } from './NoteProvider';
 import { GroupContext } from './GroupProvider';
 import { toast } from 'react-toastify';
-import {DropdownIconsEnum} from "@/components/Dropdown/Dropdown";
 interface TaskProps {
     children: ReactNode,
 }
@@ -68,8 +67,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const [changedDate, setChangedDate] = useState<number>(0)
     const [newTaskAdded, setNewTaskAdded] = useState<boolean>(false);
     const {getNoteForADay} = useContext(NoteContext);
-    const {setGroups, setGroupItem, groups, groupItem, getGroups, toggleDropDown} = useContext(GroupContext)
-    const {noteText, setShowNote, showNote} = useContext(NoteContext)
+    const {setGroupItem, groups, groupItem, getGroups} = useContext(GroupContext)
     const [selectedSortOption, setSelectedSortOption] = useState<any>(
         {
             value: "Daily tasks"
@@ -94,9 +92,6 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         getNoteForADay(changedDate, groupItem);
     }, [groups, groupItem])
 
-    useEffect(() => {
-        console.info(showNote);
-    }, [showNote])
 
     const getTasks = async () => {
         if(selectedSortOption && selectedSortOption?.value == "All tasks") await getTasksForAGroup(groupItem);
