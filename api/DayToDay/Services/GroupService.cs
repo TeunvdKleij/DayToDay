@@ -37,7 +37,7 @@ public class GroupService
         string groupName = _validationService.replaceHTML(groupDto.Name);
         if (string.IsNullOrEmpty(groupName) || groupName.Length > 20) 
             return new BadRequestObjectResult(new{});
-        var groups = _dataContext.Group.Select(i => i.Name).ToList();
+        var groups = await _dataContext.Group.Select(i => i.Name).ToListAsync();
         if (groups.Contains(groupName)) return new BadRequestObjectResult(new{});
         
         AddGroup(groupName);
@@ -51,13 +51,13 @@ public class GroupService
         {
             Name = groupName
         };
-        _dataContext.Group.Add(newGroup);
+        await _dataContext.Group.AddAsync(newGroup);
         await _dataContext.SaveChangesAsync();
     }
 
     public async Task<IActionResult> RemoveGroup(GroupDTO groupDto)
     {
-        GroupModel group = _dataContext.Group.Where(i => i.Name == groupDto.Name).FirstOrDefault();
+        GroupModel group = await _dataContext.Group.Where(i => i.Name == groupDto.Name).FirstOrDefaultAsync();
         _dataContext.Group.Remove(group);
         await _dataContext.SaveChangesAsync();
         return new OkObjectResult(new { status = 200, message = "Removed all from group " + groupDto.Name });

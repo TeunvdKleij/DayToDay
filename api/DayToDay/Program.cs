@@ -126,9 +126,4 @@ app.UseCors(MyAllowSpecificOrigins);
 
 app.MapControllers();
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("logs/Acceslog.txt", rollingInterval: RollingInterval.Day)
-    .CreateLogger(); 
-
 app.Run();

@@ -23,10 +23,10 @@ public class TaskService
 
     public async Task<IActionResult> GetTasksForADay(TaskDTO taskDto)
     {
-        var oldTasks = _dataContext.Tasks.Where(i => i.dateAdded < DateTime.Now.Date && !i.Done).ToList();
+        var oldTasks = await _dataContext.Tasks.Where(i => i.dateAdded < DateTime.Now.Date && !i.Done).ToListAsync();
         SetTasksToCurrentDate(oldTasks);
 
-        var groupID = _dataContext.Group.Where(i => i.Name == taskDto.GroupName).Select(i => i.Id).FirstOrDefault();
+        var groupID = await _dataContext.Group.Where(i => i.Name == taskDto.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
         DateTime date = DateTime.Now.AddDays((double)taskDto.ChangedDate);
 
         var taskList = await _dataContext.Tasks.Where(i => i.dateAdded == date.Date && i.GroupId == groupID)
@@ -49,14 +49,14 @@ public class TaskService
 
     public async Task<IActionResult> GetTasksForAGroup(TaskDTO taskDto)
     {
-        var groupID = _dataContext.Group.Where(i => i.Name == taskDto.GroupName).Select(i => i.Id).FirstOrDefault();
-        var tasks = _dataContext.Tasks.Where(i => i.GroupId == groupID).ToList();
+        var groupID = await _dataContext.Group.Where(i => i.Name == taskDto.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
+        var tasks = await _dataContext.Tasks.Where(i => i.GroupId == groupID).ToListAsync();
         return new OkObjectResult(new { tasks = tasks });
     }
 
     public async Task<IActionResult> UpdateTaskDate(TaskDTO updateTask)
     {
-        TaskModel task = _dataContext.Tasks.FirstOrDefault(i => i.TaskId == (updateTask.Id).ToString());
+        TaskModel? task = await _dataContext.Tasks.FirstOrDefaultAsync(i => i.TaskId == (updateTask.Id).ToString());
         if (task == null)
         {
             _logService.ErrorLog(nameof(TaskController), nameof(UpdateTaskDate), "No task found");
@@ -84,7 +84,7 @@ public class TaskService
 
     public async Task<IActionResult> UpdateTaskStatus(TaskDTO updateTask)
     {
-        TaskModel task = _dataContext.Tasks.FirstOrDefault(i => i.TaskId == (updateTask.Id).ToString());
+        TaskModel task = await _dataContext.Tasks.FirstOrDefaultAsync(i => i.TaskId == (updateTask.Id).ToString());
         if (task == null)
         {
             _logService.ErrorLog(nameof(TaskController), nameof(UpdateTaskStatus), "No task found");
@@ -99,7 +99,7 @@ public class TaskService
 
     public async Task<IActionResult> UpdateTaskValue(TaskDTO updateTask)
     {
-        TaskModel task = _dataContext.Tasks.FirstOrDefault(i => i.TaskId == updateTask.Id.ToString());
+        TaskModel task = await _dataContext.Tasks.FirstOrDefaultAsync(i => i.TaskId == updateTask.Id.ToString());
         if (task == null)
         {
             _logService.ErrorLog(nameof(TaskController), nameof(UpdateTaskValue), "No task found");
@@ -120,10 +120,10 @@ public class TaskService
             _logService.ErrorLog(nameof(TaskController), nameof(AddTask), "Date selected before current day");
             return new BadRequestObjectResult("Date selected before current day");
         }
-
+        
         var taskIds = new List<int>();
         int taskId = 0;
-        var tasks = _dataContext.Tasks.OrderBy(i => i.TaskId).ToList();
+        var tasks = await _dataContext.Tasks.OrderBy(i => i.TaskId).ToListAsync();
         if (tasks == null)
         {
             _logService.WarningLog(nameof(TaskController), nameof(AddTask), "No task found, new taskId = 0");
@@ -151,7 +151,7 @@ public class TaskService
             _logService.ErrorLog(nameof(TaskController), nameof(AddTask), "No changedDate provided");
             return new BadRequestObjectResult("No changedDate provided");
         }
-        int groupId = _dataContext.Group.Where(i => i.Name == task.GroupName).Select(i => i.Id).FirstOrDefault();
+        int groupId = await _dataContext.Group.Where(i => i.Name == task.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
         if (groupId == null)
         {
             _logService.ErrorLog(nameof(TaskController), nameof(AddTask), "No groupId found");
@@ -174,13 +174,13 @@ public class TaskService
             dateAdded = DateTime.Now.Date.AddDays((double)task.ChangedDate),
             GroupId = groupId
         };
-        _dataContext.Tasks.Add(newTask);
+        await _dataContext.Tasks.AddAsync(newTask);
         await _dataContext.SaveChangesAsync();
     }
 
     public async Task<IActionResult> RemoveTask(TaskDTO removeTask)
     {
-        TaskModel task = _dataContext.Tasks.FirstOrDefault(i => i.TaskId == removeTask.Id.ToString());
+        TaskModel task = await _dataContext.Tasks.FirstOrDefaultAsync(i => i.TaskId == removeTask.Id.ToString());
         _dataContext.Remove(task);
         await _dataContext.SaveChangesAsync();
         return new OkObjectResult("Task removed succesfully");
@@ -188,13 +188,13 @@ public class TaskService
 
     public async Task<IActionResult> RemoveTasksByGroup(TaskDTO taskDto)
     {
-        int groupID = _dataContext.Group.Where(i => i.Name == taskDto.GroupName).Select(i => i.Id).FirstOrDefault();
+        int groupID = await _dataContext.Group.Where(i => i.Name == taskDto.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
         if (groupID == null)
         {
             _logService.ErrorLog(nameof(TaskController), nameof(RemoveTasksByGroup), "No group found");
             return  new BadRequestObjectResult("No group found");
         }
-        var tasks = _dataContext.Tasks.Where(i => i.GroupId == groupID).ToList();
+        var tasks = await _dataContext.Tasks.Where(i => i.GroupId == groupID).ToListAsync();
         foreach (var item in tasks) _dataContext.Tasks.Remove(item);
         await _dataContext.SaveChangesAsync();
         return new OkObjectResult(new { status = 200, message = "Removed all from group " + taskDto.GroupName });
