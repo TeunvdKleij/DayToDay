@@ -33,6 +33,7 @@ const RemoveGroupModal = ({setShowModal, groupName, prevGroup} : RemoveGroupInte
             description={"Are you sure you want to remove <b class='pl-1'>" + prevGroup + "</b>?"}
             onAccept={async () => removeClick(prevGroup)}
             canAccept={true}
+            maxWidth={500}
         />
     );
 }

@@ -33,7 +33,7 @@ const AddGroupModal = ({setShowModal} : AddGroupInterface) => {
     }
 
     return (
-        <Dialog setShowModal={setShowModal} title={"New group"} description={"Fill in the input to add a new group"}
+        <Dialog setShowModal={setShowModal} title={"New group"} maxWidth={500} description={"Fill in the input to add a new group"}
                 onAccept={addNewGroup} canAccept={input !== ""}>
             <div className="flex justify-between">
                 <p>Name</p>

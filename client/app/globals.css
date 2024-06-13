@@ -49,10 +49,15 @@
   --bg-light-grey: #919191;
   --bg-grey: #515151;
 }
+html{
+  height: 100%;
+}
 
-/* body{
+body{
   font-family: apple-font, sans-serif; 
-} */
+  background-color: var(--bg-dark-mode);
+  height: 100%;
+}
 .invertBg{
   filter: invert()
 }

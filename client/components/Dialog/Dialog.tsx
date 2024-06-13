@@ -12,9 +12,10 @@ interface DialogProps {
     onCancel?: () => void,
     onAccept?: () => void,
     onChange?: (e: any) => void
+    maxWidth: number
 }
 
-const Dialog = ({setShowModal, children, description, title, onCancel, onAccept, canAccept} : DialogProps) => {
+const Dialog = ({setShowModal, children, description, title, onCancel, onAccept, canAccept, maxWidth} : DialogProps) => {
 
     const handleHideModal = (e : any) => {
         if(e.target.classList.contains("fixed")) setShowModal(false);
@@ -34,10 +35,10 @@ const Dialog = ({setShowModal, children, description, title, onCancel, onAccept,
         <div
             className="fixed flex justify-center items-center content-center w-full h-full top-0 left-0 bg-black bg-opacity-40 z-[1000]"
             onClick={(e) => handleHideModal(e)}>
-            <div className="bg-eerie-black rounded-xl flex flex-col gap-3 min-w-[300px] max-w-[500px] m-3">
+            <div className={`bg-eerie-black rounded-xl flex flex-col gap-3 min-w-[300px] max-w-[${maxWidth}px] m-3`}>
                 <div className="w-full flex-col gap-1 pt-5 pr-5 pl-5">
                     <h1 className={"flex text-xl w-full align-middle justify-center"}>{title}</h1>
-                    <p className={"flex w-full align-middle text-sm justify-center text-zinc-300"} dangerouslySetInnerHTML={{__html: '' + description +''}} />
+                    {description && <p className={"flex w-full align-middle text-sm justify-center text-zinc-300"} dangerouslySetInnerHTML={{__html: '' + description +''}} />}
                 </div>
                 {children && (
                     <div className="flex flex-col gap-1 border-b-2 border-t-2 border-[#353535] pt-5 pb-5 pr-5 pl-5">

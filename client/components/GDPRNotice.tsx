@@ -20,6 +20,7 @@ const GDPRNotice = ({setGdpr} : GDPRProps) => {
             description={"On this website, there are functional cookies being used. Do you agree with the use of these cookies and wish to continue to the website"}
             onAccept={() => setGdprMessage(true)}
             onCancel={() => setGdprMessage(false)}
+            maxWidth={500}
             canAccept={true}
         />
     );

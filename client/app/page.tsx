@@ -39,10 +39,10 @@ export default function Home() {
 
   //useEffect to set the header text based on if all tasks are selected or not
   useEffect(() => {
-      if(selectedSortOption && selectedSortOption.value == "All tasks") setHeaderText("Alle taken voor " + groupItem);
-      else if(changedDate == 0) setHeaderText("Vandaag")
-      else if(changedDate == 1) setHeaderText("Morgen")
-      else if(changedDate == -1) setHeaderText("Gisteren")
+      if(selectedSortOption && selectedSortOption.value == "All tasks") setHeaderText("All tasks for " + groupItem);
+      else if(changedDate == 0) setHeaderText("Today")
+      else if(changedDate == 1) setHeaderText("Tomorrow")
+      else if(changedDate == -1) setHeaderText("Yesteday")
       else setHeaderText(getDay(changedDate) + " " + getDayName(changedDate) + " " + getMonth(changedDate))
   }, [selectedSortOption, groupItem, changedDate])
 
@@ -56,15 +56,15 @@ export default function Home() {
   const getDay = (changeDate: number) => {
     var date = new Date();
     date.setDate(date.getDate()+changeDate) 
-    var dutchDayNames = ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'];
+    var dutchDayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     return dutchDayNames[date.getDay()];
   }
 
   const getMonth = (changeDate: number) => {
     var date = new Date();
     date.setDate(date.getDate()+changeDate)
-    var dutchMonthNames = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "october", "november", "december"]
-    return dutchMonthNames[date.getMonth()]
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    return monthNames[date.getMonth()]
   }
 
   const getDayName = (changeDate: number) => {
@@ -77,7 +77,7 @@ export default function Home() {
     <>
         {(gdpr.includes('denied') || gdpr == '') && <GDPRNotice setGdpr={setGdpr}/>}
         {/* <a href="https://192.168.1.241:7267/swagger/index.html">Druk</a> */}
-        <div id="main" className="flex flex-col min-h-screen m-0 mb-14 bg-dark-mode">
+        <div id="main" className="flex flex-col min-h-screen m-0 mb-14">
           <div id="main" className={`flex flex-1 items-center flex-col`}>
             {!loading
               ?
