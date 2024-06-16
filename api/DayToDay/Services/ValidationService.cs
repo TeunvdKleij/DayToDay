@@ -2,14 +2,10 @@ using System.Text.RegularExpressions;
 
 namespace DayToDay.Services;
 
-public class ValidationService
+public static class ValidationService
 {
-    public ValidationService()
-    {
-        
-    }
 
-    public string replaceHTML(string input)
+    public static string ReplaceHTML(string input)
     {
         List<string> htmlElements = [
         "a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdi", "bdo", "blockquote", 

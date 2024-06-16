@@ -12,9 +12,11 @@ import { GroupContext } from "@/providers/GroupProvider";
 interface TaskProps {
     taskName: any; 
     index: any;
+    dateChangedTask: any;
+    setDateChangedTask: any;
 }
 
-const Task: React.FC<TaskProps> = ({taskName, index}) => {
+const Task: React.FC<TaskProps> = ({taskName, index, dateChangedTask, setDateChangedTask}) => {
     const {checkedTasksCount, addNewTask, setCheckedTasksCount, checkedTasks, changedDate, updateTaskStatusInDatabase, updateTaskValueInDatabase, removeTask, tasksId, editTask} = useContext(TaskContext)
     const {replaceHTML} = useContext(MainContext);
     const {groupItem} = useContext(GroupContext);
@@ -60,16 +62,17 @@ const Task: React.FC<TaskProps> = ({taskName, index}) => {
 
     const onChangeDate = (event: any, id: any) => {
         const date = new Date(event.target.value);
-        const currentDate = new Date();
         const formattedDate = date.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'});
-        const currentDateFormatted = currentDate.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'});
+        const currentDateFormatted = new Date().toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'});
         if(formattedDate < currentDateFormatted) {
             toast.error("Date is in the past")
             return null
         }
         toggleVisibilityDatepicker();
+        setDateChangedTask(true);
         editTask(id, formattedDate);
         event.target.value = '';
+        event.target.blur();
     }
 
     const toggleVisibilityDatepicker = () => {

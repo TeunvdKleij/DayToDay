@@ -8,13 +8,17 @@ interface MainContextProps {
     theme: string
     setTheme: (value: string) => void
     replaceHTML: (input: string) => string
+    validateEmail : (input: string) => boolean
+    validatePassword : (input: string) => boolean
 }
 
 export const MainContext = createContext<MainContextProps>({
     screenWidth: 0,
     theme: "dark",
     setTheme: () => {},
-    replaceHTML: () => ""
+    replaceHTML: () => "",
+    validateEmail: () => false,
+    validatePassword: () => false,
 });
 
 export enum ColorEnum {
@@ -45,6 +49,18 @@ const MainProvider: React.FC<MainProps> = ({children}) => {
             setTheme(theme)
         }
       }, []);
+    const validateEmail = (email: string) => {
+        if(email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)){
+            return true;
+        }
+        return false;
+    };
+    const validatePassword = (password: string) => {
+        if(password.match(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%/^&*()\-_=+{};:,<.>]).{12,128}$/)){
+            return true;
+        }
+        return false;
+    }
 
     const replaceHTML = (input: string) => {
         const htmlElements = [
@@ -71,7 +87,9 @@ const MainProvider: React.FC<MainProps> = ({children}) => {
             screenWidth,
             theme,
             setTheme,
-            replaceHTML
+            replaceHTML,
+            validateEmail,
+            validatePassword
         }}>
             {children}
         </MainContext.Provider>

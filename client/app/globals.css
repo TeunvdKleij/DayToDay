@@ -53,8 +53,13 @@ html{
   height: 100%;
 }
 
+.titleLogin{
+  font-size: 30px;
+  font-weight: bold;
+}
+
 body{
-  font-family: apple-font, sans-serif; 
+  font-family: apple-font, sans-serif;
   background-color: var(--bg-dark-mode);
   height: 100%;
 }

@@ -6,6 +6,7 @@ import NoteProvider from "@/providers/NoteProvider";
 import GroupProvider from "@/providers/GroupProvider";
 import { ToastContainer } from "react-toastify";
 import MainProvider from "@/providers/MainProvider";
+import UserProvider from "@/providers/UserProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,18 +27,20 @@ export default function RootLayout({
         <GroupProvider>
           <TaskProvider>
             <NoteProvider>
-              <ToastContainer
-                  position="top-right"
-                  autoClose={3000}
-                  hideProgressBar={false}
-                  newestOnTop={false}
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  draggable
-                  pauseOnHover
-                  theme="colored"/>
-              {children}
+              <UserProvider>
+                <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover
+                theme="colored"/>
+                {children}
+              </UserProvider>
             </NoteProvider>
           </TaskProvider>
         </GroupProvider>

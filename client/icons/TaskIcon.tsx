@@ -1,6 +1,12 @@
-const TaskIcon = () => {
+import Task from "@/components/Task";
+
+interface TaskProps {
+    width?: number
+}
+
+const TaskIcon = ({width} : TaskProps) => {
     return(
-        <svg viewBox="0 0 1024 1024" width={32} className="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#fff">
+        <svg viewBox="0 0 1024 1024" width={width ? width : 32} className="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#fff">
             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
             <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
             <g id="SVGRepo_iconCarrier">

@@ -13,13 +13,11 @@ public class GroupService
 {
     private readonly DataContext _dataContext;
     private readonly LogService _logService;
-    private readonly ValidationService _validationService;
 
-    public GroupService(DataContext dataContext, LogService logService, ValidationService validationService)
+    public GroupService(DataContext dataContext, LogService logService)
     {
         _logService = logService;
         _dataContext = dataContext;
-        _validationService = validationService;
     }
 
     public async Task<IActionResult> GetGroups()
@@ -34,7 +32,7 @@ public class GroupService
     }
     public async Task<IActionResult> GetGroupsAfterAddingGroup(GroupDTO groupDto)
     {
-        string groupName = _validationService.replaceHTML(groupDto.Name);
+        string groupName = ValidationService.ReplaceHTML(groupDto.Name);
         if (string.IsNullOrEmpty(groupName) || groupName.Length > 20) 
             return new BadRequestObjectResult(new{});
         var groups = await _dataContext.Group.Select(i => i.Name).ToListAsync();

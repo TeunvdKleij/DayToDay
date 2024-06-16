@@ -14,6 +14,7 @@ const List = () => {
     const [disabled, setDisabled] = useState<boolean>(false);
     const [toggleOptions, setToggleOptions] = useState<boolean>(false)
     const [isMounted, setIsMounted] = useState(false); // New state to manage mounting
+    const [dateChangedTask, setDateChangedTask] = useState<boolean>(false);
 
     useEffect(() => {
         if(changedDate < 0) setDisabled(true);
@@ -35,7 +36,7 @@ const List = () => {
         <div className="flex flex-col items-start">
             <div id="taskList" className="flex flex-col w-full">
                 {tasks.map((taskName: any, index: any) => {
-                    return <Task index={index} key={index} taskName={taskName}/>
+                    return <Task index={index} key={index} taskName={taskName} dateChangedTask={dateChangedTask} setDateChangedTask={setDateChangedTask}/>
                 })}
             </div>
             <div className="flex gap-3 mt-6 w-full justify-between">

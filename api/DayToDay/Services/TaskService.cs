@@ -12,13 +12,11 @@ public class TaskService
 {
     private readonly DataContext _dataContext;
     private readonly LogService _logService;
-    private readonly ValidationService _validationService;
 
-    public TaskService(DataContext dataContext, LogService logService, ValidationService validationService)
+    public TaskService(DataContext dataContext, LogService logService)
     {
         _dataContext = dataContext;
         _logService = logService;
-        _validationService = validationService;
     }
 
     public async Task<IActionResult> GetTasksForADay(TaskDTO taskDto)
@@ -106,7 +104,7 @@ public class TaskService
             return new BadRequestObjectResult("No task found");
         }
 
-        string taskName = _validationService.replaceHTML((string)updateTask.TaskName);
+        string taskName = ValidationService.ReplaceHTML((string)updateTask.TaskName);
         task.TaskName = taskName;
         _dataContext.Update(task);
         await _dataContext.SaveChangesAsync();
@@ -158,7 +156,7 @@ public class TaskService
             return new BadRequestObjectResult("No groupId found");
         }
 
-        string taskValue = _validationService.replaceHTML(task.TaskName);
+        string taskValue = ValidationService.ReplaceHTML(task.TaskName);
         ProcessAddTask(task, taskValue,taskId,groupId);
         return new OkObjectResult(new { id = taskId });
     }
