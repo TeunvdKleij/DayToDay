@@ -29,7 +29,9 @@ interface TaskContextProps {
     getTasksForAGroup: (group: string) => void;
     taskSortOptions: string[];
     selectedSortOption: any;
-    setSelectedSortOption: (value: any) => void
+    setSelectedSortOption: (value: any) => void,
+    newTaskAdded: boolean;
+    setNewTaskAdded: (value: boolean) => void;
 }
 
 export const TaskContext = createContext<TaskContextProps>({
@@ -54,9 +56,14 @@ export const TaskContext = createContext<TaskContextProps>({
     getTasksForAGroup: () => {},
     taskSortOptions: ["Daily tasks", "All tasks", "Finished tasks",  "Unfinished tasks"],
     selectedSortOption: {},
-    setSelectedSortOption: () => {}
-
+    setSelectedSortOption: () => {},
+    newTaskAdded: false,
+    setNewTaskAdded: () => {},
 });
+
+export const useTasks = () => {
+    return useContext(TaskContext)
+};
 
 const TaskProvider: React.FC<TaskProps> = ({children}) => {
     const [tasksCount, setTasksCount] = useState(0);
@@ -84,12 +91,12 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     useEffect(() => {
-       startUp()
+       startUp();
     }, [])
 
     useEffect(() => {
-        getTasksForADay(changedDate, groupItem);
         getNoteForADay(changedDate, groupItem);
+        getTasks();
     }, [groups, groupItem])
 
 
@@ -108,27 +115,17 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             toast.error("Can't add task to the past")
             return null;
         }
-        setNewTaskAdded(true);
         let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem})
         .then(async res => {
             if(selectedSortOption && selectedSortOption.value != "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
             await getNoteForADay(changedDate, groupItem);
-            setNewTaskAdded(false);
+            setNewTaskAdded(true);
         })
         .catch(err => {
             return err;
         })
     }
-
-
-    useEffect(() => {
-        const lastTask = document.getElementById('taskList')?.children[tasks.length-1];
-        if(lastTask){
-            const id = lastTask?.id.replace("Div", "");
-            document.getElementById(id)?.focus();
-        }
-    }, [newTaskAdded])
 
     const updateTaskValueInDatabase = async (id: string, taskName: string) => {
         await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskValue", {Id: id, TaskName: taskName})
@@ -265,7 +262,9 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             getTasksForAGroup,
             selectedSortOption,
             setSelectedSortOption,
-            taskSortOptions
+            taskSortOptions,
+            newTaskAdded,
+            setNewTaskAdded,
         }}>
             {children}
         </TaskContext.Provider>

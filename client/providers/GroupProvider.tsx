@@ -1,6 +1,6 @@
 'use client'
 import axios from 'axios';
-import React, {createContext, ReactNode, useEffect, useState} from 'react';
+import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import { toast } from 'react-toastify';
 interface GroupProps {
     children: ReactNode,
@@ -34,6 +34,10 @@ export const GroupContext = createContext<GroupContextProps>({
     setLastGroupItem: () => {},
     loading: true,
 });
+
+export const useGroup = () => {
+    return useContext(GroupContext);
+}
 
 const GroupProvider: React.FC<GroupProps> = ({children}) => {
     const [groupItem, setGroupItem] = useState<string>("")

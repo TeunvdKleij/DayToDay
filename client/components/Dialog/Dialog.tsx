@@ -35,7 +35,7 @@ const Dialog = ({setShowModal, children, description, title, onCancel, onAccept,
         <div
             className="fixed flex justify-center items-center content-center w-full h-full top-0 left-0 bg-black bg-opacity-40 z-[1000]"
             onClick={(e) => handleHideModal(e)}>
-            <div className={`bg-eerie-black rounded-xl flex flex-col gap-3 min-w-[300px] max-w-[${maxWidth}px] m-3`}>
+            <div className={`bg-eerie-black rounded-xl flex flex-col gap-3 min-w-[calc(100vw - 20px)] max-w-[400px] max-w-[${maxWidth}px] m-3`}>
                 <div className="w-full flex-col gap-1 pt-5 pr-5 pl-5">
                     <h1 className={"flex text-xl w-full align-middle justify-center"}>{title}</h1>
                     {description && <p className={"flex w-full align-middle text-sm justify-center text-zinc-300"} dangerouslySetInnerHTML={{__html: '' + description +''}} />}

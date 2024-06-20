@@ -12,6 +12,7 @@ const GDPRNotice = ({setGdpr} : GDPRProps) => {
         var date = new Date
         localStorage.setItem("gdpr", `${gdpr ? "accepted at "+date : "denied" }`)
         setGdpr(gdpr ? "accepted at "+date : "denied")
+        setShowModal(false);
     }
     return (
         <Dialog

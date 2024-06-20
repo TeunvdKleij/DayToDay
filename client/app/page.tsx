@@ -9,6 +9,10 @@ import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";
 import { useContext, useEffect, useState } from "react";
+import Navbar from "@/components/Navigation/navbar";
+import Tasks from "@/components/Tasks/tasks";
+import Wrapper from "@/components/Wrapper/wrapper";
+import Menu from "@/components/Tasks/Menu/menu";
 
 export default function Home() {
   const [percentage, setPercentage] = useState<number>(0);
@@ -16,8 +20,9 @@ export default function Home() {
   const {tasksCount, checkedTasksCount, changedDate, selectedSortOption} = useContext(TaskContext);
   const {showNote, setShowNote, getNoteForADay} = useContext(NoteContext);
   const {groupItem, loading} = useContext(GroupContext);
-  const [headerText, setHeaderText] = useState<string>('')
-  const [gdpr, setGdpr] = useState<string>('');
+  const [headerText, setHeaderText] = useState<string>()
+  const [gdpr, setGdpr] = useState<any>();
+  const [gdprDialog, setGdprDialog] = useState<boolean>(false);
 
   useEffect(() => {
     if(checkedTasksCount == 0 && tasksCount == 0) setPercentage(0);
@@ -28,8 +33,14 @@ export default function Home() {
 
   useEffect(() => {
     var gdprMessage = localStorage.getItem('gdpr')
-    if(gdprMessage) setGdpr(gdprMessage);
+    if(!gdprMessage || gdprMessage.includes("denied")) setGdpr(true);
   }, [])
+
+  useEffect(() => {
+    var gdprMessage = localStorage.getItem('gdpr')
+    if(!gdprMessage || gdprMessage.includes("denied")) setGdprDialog(true);
+    else setGdprDialog(false);
+  }, [gdpr]);
 
   //useEffect to set the focus on the note when it becomes visible
   useEffect(() => {
@@ -72,24 +83,33 @@ export default function Home() {
     date.setDate(date.getDate()+changeDate)
     return date.getDate();
   }
+
+  useEffect(() => {
+    console.log(gdprDialog);
+  }, []);
   
   return (
     <>
-        {(gdpr.includes('denied') || gdpr == '') && <GDPRNotice setGdpr={setGdpr}/>}
-        {/* <a href="https://192.168.1.241:7267/swagger/index.html">Druk</a> */}
-        <div id="main" className="flex flex-col min-h-screen m-0 mb-14">
-          <div id="main" className={`flex flex-1 items-center flex-col`}>
-            {!loading
-              ?
-              <MainTasks done={done} headerText={headerText} percentage={percentage}/>
-              :
-              <SkeletonLoader/>
-            }
-            <Note toggleNote={toggleNote}/>
-            <NavBar/>
-            <Footer/>
-          </div>
-        </div>
+        <Navbar />
+        <Wrapper>
+          <Menu />
+          <Tasks/>
+        </Wrapper>
+        {(gdprDialog) && <GDPRNotice setGdpr={setGdpr}/>}
+         {/*<a href="https://10.0.0.86:8091/swagger/index.html">Druk</a>*/}
+        {/*<div id="main" className="flex flex-col min-h-screen m-0 mb-14">*/}
+        {/*  <div id="main" className={`flex flex-1 items-center flex-col`}>*/}
+        {/*    {!loading*/}
+        {/*      ?*/}
+        {/*      <MainTasks done={done} headerText={headerText} percentage={percentage}/>*/}
+        {/*      :*/}
+        {/*      <SkeletonLoader/>*/}
+        {/*    }*/}
+        {/*    <Note toggleNote={toggleNote}/>*/}
+        {/*    /!*<NavBar/>*!/*/}
+        {/*    <Footer/>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
       </>
   );
 }
