@@ -30,6 +30,10 @@ export enum ColorEnum {
     NONE = ""
 }
 
+export const useMain = () => {
+    return React.useContext(MainContext);
+}
+
 const MainProvider: React.FC<MainProps> = ({children}) => {
     const [screenWidth, setScreenWidth] = useState<number | null>(null);
     const [theme, setTheme] = useState<string>("dark");

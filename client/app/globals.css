@@ -49,20 +49,22 @@
   --bg-light-grey: #919191;
   --bg-grey: #515151;
 }
-html{
-  height: 100%;
+* {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu;
 }
 
+body{
+  background-color: #151515;
+  height: auto;
+  min-height: 100vh;
+  max-width: 100vw;
+  width: 100%;
+}
 .titleLogin{
   font-size: 30px;
   font-weight: bold;
 }
 
-body{
-  font-family: apple-font, sans-serif;
-  background-color: var(--bg-dark-mode);
-  height: 100%;
-}
 .invertBg{
   filter: invert()
 }
@@ -214,3 +216,30 @@ body{
   cursor: pointer;
 }
 
+
+.hover-fill-white:hover {
+  fill: white !important;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+}
+
+.shadow-context {
+    box-shadow: 0px 3px 7px -2px rgba(0, 0, 0, 0.75);
+    animation: pop-in-context 0.3s ease-in-out;
+}
+
+@keyframes pop-in-context {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

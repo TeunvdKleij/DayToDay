@@ -22,6 +22,9 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en" id="htmlTag" className="bg-dark-mode">
+      <head>
+            <link rel="manifest" href="/manifest.json"/>
+      </head>
       <body>
       <MainProvider>
         <GroupProvider>

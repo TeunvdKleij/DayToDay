@@ -46,7 +46,6 @@ const Task: React.FC<TaskProps> = ({taskName, index, dateChangedTask, setDateCha
 
     const changeTaskValue = (event: any) => {
         if(taskName !== event.target.innerText || event.target.innerText == ""){
-            console.log(taskName, event.target.innerText);
             if(replaceHTML(event.target.innerText) == "") removeTask(tasksId[index])
             else updateTaskValueInDatabase(tasksId[index], replaceHTML(event.target.innerText));
             setTaskValue(replaceHTML(event.target.innerText));
