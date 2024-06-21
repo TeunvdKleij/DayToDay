@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DayToDay.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240507182849_Identityv3")]
-    partial class Identityv3
+    [Migration("20240620065952_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,7 +30,13 @@ namespace DayToDay.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Group");
                 });
@@ -91,6 +97,10 @@ namespace DayToDay.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ColorCode")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
@@ -101,6 +111,10 @@ namespace DayToDay.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("HasPremium")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
@@ -275,6 +289,17 @@ namespace DayToDay.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DayToDay.Models.GroupModel", b =>
+                {
+                    b.HasOne("DayToDay.Models.UserModel", "User")
+                        .WithMany("Groups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DayToDay.Models.NoteModel", b =>
                 {
                     b.HasOne("DayToDay.Models.GroupModel", "Group")
@@ -353,6 +378,11 @@ namespace DayToDay.Migrations
                     b.Navigation("Notes");
 
                     b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("DayToDay.Models.UserModel", b =>
+                {
+                    b.Navigation("Groups");
                 });
 #pragma warning restore 612, 618
         }

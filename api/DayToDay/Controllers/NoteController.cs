@@ -15,13 +15,9 @@ namespace DayToDay.Controllers;
 [Route("api/[controller]")]
 public class NoteController : ControllerBase
 {
-    private DataContext _dataContext;
-    private readonly LogService _logService;
     private readonly NoteService _noteService;
-    public NoteController(DataContext dataContext, LogService logService, NoteService noteService)
+    public NoteController(NoteService noteService)
     {
-        _dataContext = dataContext;
-        _logService = logService;
         _noteService = noteService;
     }
     

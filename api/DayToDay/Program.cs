@@ -38,7 +38,6 @@ builder.Services.AddCors(options => {
         });
 });
 builder.Services.AddScoped<TaskService>();
-builder.Services.AddScoped<LogService>();
 builder.Services.AddScoped<GroupService>();
 builder.Services.AddScoped<NoteService>();
 builder.Services.AddScoped<UserService>();
@@ -118,8 +117,6 @@ using (var scope = app.Services.CreateScope())
         if (File.Exists(fileToCopy)) File.Copy(fileToCopy, destinationDirectory);
     }
 }
-
-//app.UseHttpsRedirection();
 
 app.UseCors(MyAllowSpecificOrigins);
 

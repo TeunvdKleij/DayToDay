@@ -13,11 +13,9 @@ namespace DayToDay.Controllers;
 [Route("api/[controller]")]
 public class TaskController : ControllerBase
 {
-    private DataContext _dataContext;
     private readonly TaskService _taskService;
-    public TaskController(DataContext dataContext, TaskService taskService)
+    public TaskController(TaskService taskService)
     {
-        _dataContext = dataContext;
         _taskService = taskService;
     }
     

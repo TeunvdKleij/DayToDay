@@ -12,12 +12,10 @@ namespace DayToDay.Services;
 public class NoteService
 {
     private readonly DataContext _dataContext;
-    private readonly LogService _logService;
 
-    public NoteService(DataContext dataContext, LogService logService)
+    public NoteService(DataContext dataContext)
     {
         _dataContext = dataContext;
-        _logService = logService;
     }
 
     public async Task<OkObjectResult> GetNoteForADay(NoteDTO noteDto)
@@ -25,7 +23,7 @@ public class NoteService
         int groupID = await _dataContext.Group.Where(i => i.Name == noteDto.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
         if (groupID == null)
         {
-            _logService.WarningLog(nameof(NoteController), nameof(GetNoteForADay), "No group found");
+            LogService.WarningLog(nameof(NoteController), nameof(GetNoteForADay), "No group found");
             return new OkObjectResult(new {status = 204, groupID = 9999999});
         }
         DateTime date = DateTime.Now.Date.AddDays((double)noteDto.ChangedDate);
@@ -39,7 +37,7 @@ public class NoteService
         int groupID = await _dataContext.Group.Where(i => i.Name == noteDto.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
         if (groupID == null)
         {
-            _logService.ErrorLog(nameof(NoteController), nameof(UpdateNote), "No group found");
+            LogService.ErrorLog(nameof(NoteController), nameof(UpdateNote), "No group found");
             return new BadRequestObjectResult("No group found");
         }
         DateTime date = DateTime.Now.Date.AddDays((double)noteDto.ChangedDate);
@@ -59,16 +57,16 @@ public class NoteService
         int groupID = await _dataContext.Group.Where(i => i.Name == noteDto.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
         if (groupID == null)
         {
-            _logService.ErrorLog(nameof(NoteController), nameof(RemoveNote)+"ByGroup", "No group found");
+            LogService.ErrorLog(nameof(NoteController), nameof(RemoveNote)+"ByGroup", "No group found");
             return new BadRequestObjectResult("No group found");
         }
         var notes = await _dataContext.Notes.Where(i => i.GroupId == groupID).ToListAsync();
-        if (notes.Count == 0) _logService.WarningLog(nameof(NoteController), nameof(RemoveNote)+"ByGroup", "No notes found");
+        if (notes.Count == 0) LogService.WarningLog(nameof(NoteController), nameof(RemoveNote)+"ByGroup", "No notes found");
         
         foreach (var item in notes) _dataContext.Notes.Remove(item);
         await _dataContext.SaveChangesAsync();
         
-        _logService.InformationLog(nameof(NoteController), nameof(RemoveNote)+"ByGroup", "Removed all notes from group");
+        LogService.InformationLog(nameof(NoteController), nameof(RemoveNote)+"ByGroup", "Removed all notes from group");
         return new OkObjectResult(new { status = 200, message = "Removed all from group " + noteDto.GroupName });
     }
     
@@ -84,7 +82,7 @@ public class NoteService
     {
         _dataContext.Notes.Remove(item);
         await _dataContext.SaveChangesAsync();
-        _logService.WarningLog(nameof(NoteController), nameof(UpdateNote), "Note empty");
+        LogService.WarningLog(nameof(NoteController), nameof(UpdateNote), "Note empty");
         return new OkObjectResult(new { status = 204});
     }
     

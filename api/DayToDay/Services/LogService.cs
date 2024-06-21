@@ -3,19 +3,18 @@ using Serilog;
 
 namespace DayToDay.Services;
 
-public class LogService
+public static class LogService
 {
-    public LogService(DataContext dataContext) { }
 
-    public void InformationLog(string controllerName, string methodName, string notice)
+    public static void InformationLog(string controllerName, string methodName, string notice)
     {
         Log.Information("Controller: " + controllerName + " | " + methodName + " | " +notice);
     }
-    public void ErrorLog(string controllerName, string methodName, string notice)
+    public static void ErrorLog(string controllerName, string methodName, string notice)
     {
         Log.Error("Controller: " + controllerName + " | " + methodName + " | " +notice);
     }
-    public void WarningLog(string controllerName, string methodName, string notice)
+    public static void WarningLog(string controllerName, string methodName, string notice)
     {
         Log.Warning("Controller: " + controllerName + " | " + methodName + " | " +notice);
     }

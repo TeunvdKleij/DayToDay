@@ -6,25 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DayToDay.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedIdentity : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "GroupId",
-                table: "Tasks",
-                type: "INTEGER",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "GroupId",
-                table: "Notes",
-                type: "INTEGER",
-                nullable: false,
-                defaultValue: 0);
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -44,6 +30,8 @@ namespace DayToDay.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    ColorCode = table.Column<string>(type: "TEXT", nullable: false),
+                    HasPremium = table.Column<string>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -62,19 +50,6 @@ namespace DayToDay.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Group",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Group", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -183,15 +158,67 @@ namespace DayToDay.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Tasks_GroupId",
-                table: "Tasks",
-                column: "GroupId");
+            migrationBuilder.CreateTable(
+                name: "Group",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Group", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Group_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Notes_GroupId",
-                table: "Notes",
-                column: "GroupId");
+            migrationBuilder.CreateTable(
+                name: "Notes",
+                columns: table => new
+                {
+                    NoteId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    NoteText = table.Column<string>(type: "TEXT", nullable: false),
+                    dateAdded = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    GroupId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notes", x => x.NoteId);
+                    table.ForeignKey(
+                        name: "FK_Notes_Group_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Group",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tasks",
+                columns: table => new
+                {
+                    TaskId = table.Column<string>(type: "TEXT", nullable: false),
+                    TaskName = table.Column<string>(type: "TEXT", nullable: false),
+                    Done = table.Column<bool>(type: "INTEGER", nullable: false),
+                    dateAdded = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    GroupId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tasks", x => x.TaskId);
+                    table.ForeignKey(
+                        name: "FK_Tasks_Group_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Group",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -230,34 +257,25 @@ namespace DayToDay.Migrations
                 column: "NormalizedUserName",
                 unique: true);
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Notes_Group_GroupId",
-                table: "Notes",
-                column: "GroupId",
-                principalTable: "Group",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.CreateIndex(
+                name: "IX_Group_UserId",
+                table: "Group",
+                column: "UserId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Tasks_Group_GroupId",
+            migrationBuilder.CreateIndex(
+                name: "IX_Notes_GroupId",
+                table: "Notes",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_GroupId",
                 table: "Tasks",
-                column: "GroupId",
-                principalTable: "Group",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                column: "GroupId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Notes_Group_GroupId",
-                table: "Notes");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Tasks_Group_GroupId",
-                table: "Tasks");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -274,29 +292,19 @@ namespace DayToDay.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Group");
+                name: "Notes");
+
+            migrationBuilder.DropTable(
+                name: "Tasks");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Group");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Tasks_GroupId",
-                table: "Tasks");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Notes_GroupId",
-                table: "Notes");
-
-            migrationBuilder.DropColumn(
-                name: "GroupId",
-                table: "Tasks");
-
-            migrationBuilder.DropColumn(
-                name: "GroupId",
-                table: "Notes");
         }
     }
 }

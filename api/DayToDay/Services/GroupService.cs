@@ -12,11 +12,9 @@ namespace DayToDay.Services;
 public class GroupService
 {
     private readonly DataContext _dataContext;
-    private readonly LogService _logService;
 
-    public GroupService(DataContext dataContext, LogService logService)
+    public GroupService(DataContext dataContext)
     {
-        _logService = logService;
         _dataContext = dataContext;
     }
 
@@ -25,7 +23,7 @@ public class GroupService
         var res = await _dataContext.Group.Select(i => i.Name).ToListAsync();
         if (res == null)
         {
-            _logService.WarningLog(nameof(GroupController), nameof(GetGroups), "No group found");
+            LogService.WarningLog(nameof(GroupController), nameof(GetGroups), "No group found");
             return new BadRequestObjectResult(new {showAddGroup = true});
         }
         return new OkObjectResult(new { groups = res });

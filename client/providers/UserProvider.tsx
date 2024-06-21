@@ -33,7 +33,7 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
         })
     }
     const register = async (email: string, password: string, repeatPassword: string) =>{
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Register", {Email: email, Password: password, RepeatPassword: repeatPassword})
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Register", {Email: email, Password: password, RepeatedPassword: repeatPassword})
         .then(async res => {
             let accessToken = res.data.token;
             let expiresIn = res.data.expiresIn;
