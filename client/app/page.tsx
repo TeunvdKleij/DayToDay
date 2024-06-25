@@ -83,20 +83,15 @@ export default function Home() {
     date.setDate(date.getDate()+changeDate)
     return date.getDate();
   }
-
-  useEffect(() => {
-    console.log(gdprDialog);
-  }, []);
   
   return (
-    <>
-        <Navbar />
-        <Wrapper>
-          <Menu />
-          <Tasks/>
-        </Wrapper>
-        {(gdprDialog) && <GDPRNotice setGdpr={setGdpr}/>}
-         {/*<a href="https://10.0.0.86:8091/swagger/index.html">Druk</a>*/}
+      <>
+          <Wrapper>
+              <Menu/>
+              <Tasks/>
+          </Wrapper>
+          {(gdprDialog) && <GDPRNotice setGdpr={setGdpr}/>}
+        {/*<a href="https://10.0.0.86:8091/swagger/index.html">Druk</a>*/}
         {/*<div id="main" className="flex flex-col min-h-screen m-0 mb-14">*/}
         {/*  <div id="main" className={`flex flex-1 items-center flex-col`}>*/}
         {/*    {!loading*/}

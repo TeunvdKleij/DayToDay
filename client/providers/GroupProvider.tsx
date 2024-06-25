@@ -1,4 +1,5 @@
 'use client'
+import { getCookie } from '@/hooks/useCookie';
 import axios from 'axios';
 import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import { toast } from 'react-toastify';
@@ -47,7 +48,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     const [loading, setLoading] = useState(true);
 
     const removeGroup = async (name: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/RemoveGroup", { Name: name })
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/RemoveGroup", { Name: name }, { headers: { Authorization: `Bearer ${getCookie("accessToken")}` } })
             .then(res => {
                 getGroups();
             })
@@ -57,7 +58,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     }
 
     const addGroup = async (name: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/AddGroup", { Name: name })
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/AddGroup", { Name: name }, { headers: { Authorization: `Bearer ${getCookie("accessToken")}` } })
             .then(res => {
                 setGroupItem(name);
                 localStorage.setItem('groupSelection', name);
@@ -70,7 +71,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
 
     const getGroups = async () => {
         setLoading(true);
-        await axios.get(process.env.NEXT_PUBLIC_API_URL + "Group/GetGroups")
+        await axios.get(process.env.NEXT_PUBLIC_API_URL + "Group/GetGroups", { headers: { Authorization: `Bearer ${getCookie("accessToken")}` } })
             .then((res) => {
                 setGroups(res.data.groups);
                 let item = localStorage.getItem('groupSelection');

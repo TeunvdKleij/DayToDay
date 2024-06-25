@@ -83,7 +83,7 @@ const MainProvider: React.FC<MainProps> = ({children}) => {
         while (pattern.test(input)) {
             input = input.replace(pattern, '');
         }
-        return input.trimStart();
+        return input.trim();
     }
 
     return (

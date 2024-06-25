@@ -1,11 +1,16 @@
+using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using DayToDay.Controllers;
+using DayToDay.Data;
 using DayToDay.Models;
 using DayToDay.Models.DTO.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using quadconnects.Controllers;
 using Serilog;
 
 namespace DayToDay.Services;
@@ -15,11 +20,13 @@ public class UserService
     private readonly UserManager<UserModel> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
-    public UserService(UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    private readonly DataContext _dataContext;
+    public UserService(UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, DataContext dataContext)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
+        _dataContext = dataContext;
     }
     public async Task<IActionResult> Register(RegisterDTO model)
     {
@@ -77,6 +84,12 @@ public class UserService
         }
         var token = SetToken(authClaims);
 
+        var settings = new
+        {
+            color = "bg-[#c00c00]",
+            addTaskLeft = true,
+            completeTaskLeft = true
+        };
         LogService.InformationLog("User", nameof(Register), "Created user successfully with email: " + model.Email);
         return new OkObjectResult(new
         {
@@ -84,6 +97,7 @@ public class UserService
             Message = "User created successfully!",
             token = new JwtSecurityTokenHandler().WriteToken(token),
             expiration = DateTime.UtcNow.AddHours(3),
+            settings = settings
         });
     }
 
@@ -97,7 +111,7 @@ public class UserService
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
@@ -112,16 +126,38 @@ public class UserService
                 email = user.Email,
             };
             var token = SetToken(authClaims);
+            var settings = await _dataContext.Users.Where(i => i.Id == user.Id)
+                .Select(i => new { i.ColorCode, i.AddTaskLeft, i.CompleteTaskLeft }).FirstOrDefaultAsync();
+            if (settings == null)
+            {
+                LogService.ErrorLog(nameof(UserController), nameof(Login), "No settings found");
+                return new BadRequestObjectResult("No settings found");
+            }
             LogService.InformationLog("User", nameof(Login), "Signed in successfully with: " + model.Email);
             return new OkObjectResult(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
                 expiration = DateTime.UtcNow.AddHours(3),
-                user = userData
+                user = userData,
+                settings = settings
             });
         }
         return new UnauthorizedObjectResult(new {status = 401, message = "unauthorized"});
 
+    }
+    
+    public async Task<IActionResult> GetSettings (string id)
+    {
+        
+        var res = await _dataContext.Users.Where(i => i.Id == id).Select(i => new { color = i.ColorCode, addTaskLeft = i.AddTaskLeft, completeTaskLeft = i.CompleteTaskLeft })
+            .FirstOrDefaultAsync();
+        if(res == null) 
+        {
+            LogService.WarningLog(nameof(UserController), nameof(GetSettings), "No settings or user found");
+            return new BadRequestObjectResult(new {showAddGroup = true});
+        }
+        Log.Information("RES:" + res);
+        return new OkObjectResult(res);
     }
     private JwtSecurityToken SetToken(List<Claim> authClaims) {
         Console.WriteLine("JWT : " + System.Environment.GetEnvironmentVariable("JWT_KEY"));
@@ -141,4 +177,16 @@ public class UserService
         
         return token;
     }
+
+    public async Task<IActionResult> ChangeSettings(string userID, SettingsDTO settings)
+    {
+        var settingsOld = await _dataContext.Users.Where(i => i.Id == userID).FirstOrDefaultAsync();
+        settingsOld.CompleteTaskLeft = settings.CompleteTaskLeft;
+        settingsOld.ColorCode = settings.Color;
+        settingsOld.AddTaskLeft = settings.AddTaskLeft;
+        _dataContext.Users.Update(settingsOld);
+        await _dataContext.SaveChangesAsync();
+        return new OkObjectResult("Successs");
+    }
+    
 }

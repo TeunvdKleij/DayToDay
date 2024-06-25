@@ -5,6 +5,7 @@ using DayToDay.Models.DTO;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using quadconnects.Controllers;
 using Serilog;
 
 namespace DayToDay.Services;
@@ -28,7 +29,7 @@ public class GroupService
         }
         return new OkObjectResult(new { groups = res });
     }
-    public async Task<IActionResult> GetGroupsAfterAddingGroup(GroupDTO groupDto)
+    public async Task<IActionResult> GetGroupsAfterAddingGroup(GroupDTO groupDto, string userId)
     {
         string groupName = ValidationService.ReplaceHTML(groupDto.Name);
         if (string.IsNullOrEmpty(groupName) || groupName.Length > 20) 
@@ -36,16 +37,17 @@ public class GroupService
         var groups = await _dataContext.Group.Select(i => i.Name).ToListAsync();
         if (groups.Contains(groupName)) return new BadRequestObjectResult(new{});
         
-        AddGroup(groupName);
+        AddGroup(groupName, userId);
         
         return await GetGroups();
     }
 
-    public async void AddGroup(string groupName)
+    public async void AddGroup(string groupName, string userId)
     {
         GroupModel newGroup = new GroupModel
         {
-            Name = groupName
+            Name = groupName,
+            UserId = userId
         };
         await _dataContext.Group.AddAsync(newGroup);
         await _dataContext.SaveChangesAsync();

@@ -1,11 +1,12 @@
 'use client'
 
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {useTasks} from "@/providers/TaskProvider";
 import {useGroup} from "@/providers/GroupProvider";
 import Dropdown, {DropdownIconsEnum} from "@/components/Dropdown/Dropdown";
 import AddGroupModal from "@/components/AddGroupModal";
 import RemoveGroupModal from "@/components/RemoveGroupModal";
+import {UserContext} from "@/providers/UserProvider";
 
 const Menu = () => {
     const {tasksCount, checkedTasksCount, changedDate, selectedSortOption, getTasksForADay, getTasksForAGroup, setChangedDate, removeTasksByGroup, taskSortOptions, setSelectedSortOption, setCheckedTasksCount} = useTasks();
@@ -18,6 +19,7 @@ const Menu = () => {
     const [formattedDataDropdown, setFormattedDataDropdown] = useState<any[]>([]);
     const [formattedSelectedGroupDropdown, setFormattedSelectedGroupDropdown] = useState<any>([]);
     const [formattedSelectedTaskOptions, setFormattedSelectedTaskOptions] = useState<any>([]);
+    const {settings} = useContext(UserContext);
 
     const getDay = (changeDate: number) => {
         var date = new Date();
@@ -140,8 +142,8 @@ const Menu = () => {
                 <Dropdown showText={false} showArrow={false} className={"bg-[#555] rounded-[50px] w-[30px] h-[30px] flex justify-center align-middle items-center hover:bg-blue-500"}
                           data={formattedSelectedTaskOptions} icon={DropdownIconsEnum.FILTER} defaultItem={selectedSortOption}>
                 </Dropdown>
-                <Dropdown showText={true} data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown} className={"bg-blue-500 hover:bg-blue-600"}>
-                    <button onClick={(e) => handleItemClick("+ Group")} className="bg-blue-500 p-1 text-sm font-semibold rounded-lg h-[40px]">+ Group</button>
+                <Dropdown showText={true} data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown} style={{backgroundColor: settings?.color}} className={"hover:bg-blue-600"}>
+                    <button onClick={(e) => handleItemClick("+ Group")}  style={{backgroundColor: settings?.color}} className="p-1 text-sm font-semibold rounded-lg h-[40px]">+ Group</button>
                 </Dropdown>
                 {showAddModal && <AddGroupModal setShowModal={setShowAddModal}/>}
                 {showRemoveModal &&

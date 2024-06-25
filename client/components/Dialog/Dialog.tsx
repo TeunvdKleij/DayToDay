@@ -1,7 +1,8 @@
 'use client'
-import React from 'react';
+import React, {useContext} from 'react';
 import Button from '../Button/Button';
 import { ColorEnum } from '@/providers/MainProvider';
+import {UserContext} from "@/providers/UserProvider";
 
 interface DialogProps {
     setShowModal: (show: boolean) => void,
@@ -16,7 +17,7 @@ interface DialogProps {
 }
 
 const Dialog = ({setShowModal, children, description, title, onCancel, onAccept, canAccept, maxWidth} : DialogProps) => {
-
+    const {settings} = useContext(UserContext);
     const handleHideModal = (e : any) => {
         if(e.target.classList.contains("fixed")) setShowModal(false);
     }
@@ -47,7 +48,7 @@ const Dialog = ({setShowModal, children, description, title, onCancel, onAccept,
                 )}
                 <div className="flex flex-row w-full gap-2 mt-3 justify-end pr-5 pb-5 pl-5">
                     <Button text={"Annuleren"} backgroundColor={ColorEnum.LIGHTGREY} onClick={(e) => handleCancelModal(e)}/>
-                    <Button text={"Bevestigen"}  backgroundColor={ColorEnum.BLUE}  onClick={(e: any) => handleAcceptModal(e)} disabled={!canAccept}/>
+                    <Button text={"Bevestigen"}  backgroundColor={settings?.color}  onClick={(e: any) => handleAcceptModal(e)} disabled={!canAccept}/>
                 </div>
             </div>
         </div>

@@ -9,6 +9,7 @@ import Calendar from "@/components/Calendar";
 import TrashCanIcon from "@/icons/Trashcanicon";
 import useMousetrap from "@/hooks/useShortcut";
 import { GroupContext, useGroup } from "@/providers/GroupProvider";
+import {UserContext} from "@/providers/UserProvider";
 
 interface TaskProps {
     taskName: any;
@@ -30,6 +31,7 @@ const Task: React.FC<TaskProps> = ({ taskName, index }) => {
     const [interval, setIntervalTime] = useState<any>();
     const [letEditTask, setLetEditTask] = useState<boolean>(true);
     const {screenWidth} = useMain();
+    const {settings} = useContext(UserContext);
 
     useEffect(() => {
         const today = new Date();
@@ -51,7 +53,7 @@ const Task: React.FC<TaskProps> = ({ taskName, index }) => {
     }
 
     const changeTaskValue = (event: any) => {
-        const newValue = replaceHTML(event.target.value);
+        const newValue = replaceHTML(event.target.innerText);
         if (taskName !== newValue || newValue === "") {
             if (newValue === "") {
                 removeTask(tasksId[index]);
@@ -142,6 +144,10 @@ const Task: React.FC<TaskProps> = ({ taskName, index }) => {
         setMouseDownTimestamp(0);
     };
 
+    const handleTaskValueChange = (e: any) =>{
+        setTaskValue(e.target.value)
+    }
+
     return (
         <div id={"taskDiv" + tasksId[index]}
              onTouchStart={(e: any) => handleMouseDown(e)}
@@ -150,10 +156,11 @@ const Task: React.FC<TaskProps> = ({ taskName, index }) => {
                 ${index === 0 ? 'rounded-tl-[12px] rounded-tr-[12px]' : ''} 
                 ${index === tasksId.length - 1 ? 'rounded-bl-[12px] rounded-br-[12px]' : ''}`}>
             <div id={"name" + tasksId[index]}
-                 className="flex justify-between flex-auto h-full align-middle items-center gap-[20px] md:flex-row-reverse">
-                <input id={"task" + tasksId[index]} onBlur={(e: any) => changeTaskValue(e)} onKeyDown={(e: any) => onKeyDown(e)} value={taskValue} onChange={(e) => setTaskValue(e.target.value)}
+                 className={`flex ${settings && settings.completeTaskLeft ? "flex-row-reverse" : "flex-row"} justify-between flex-auto h-full align-middle items-center gap-[20px] md:flex-row-reverse`}>
+                <p id={"task" + tasksId[index]} onChange={handleTaskValueChange} contentEditable={true} suppressContentEditableWarning={true} onBlur={changeTaskValue} onKeyDown={(e: any) => onKeyDown(e)}
                        className={`resize-none text-[16px] bg-transparent border-none w-full h-full overflow-auto ${taskDone && "line-through opacity-50 z-0"}`}>
-                </input>
+                    {taskValue}
+                </p>
 
                     <button onClick={() => changeTaskState()}
                             className={`md:w-[25px] md:h-[25px] md:rounded-[8px] md:min-w-[25px] md:min-h-[25px] bg-[#555] rounded-[8px] min-w-[30px] min-h-[30px] w-[30px] h-[30px] flex justify-center align-middle items-center hover:bg-blue-500 ${taskDone && "bg-blue-500"}`}>
@@ -190,7 +197,7 @@ const Task: React.FC<TaskProps> = ({ taskName, index }) => {
                             </svg>
                         </div>
                         <div onClick={() => removeTask(tasksId[index - 1])}
-                            className={"h-[50px] w-full bg-[#252525] flex flex-row justify-between align-middle items-center gap-[10px] p-[10px]"}>
+                            className={"h-[32px] w-full bg-[#252525] flex flex-row justify-between align-middle items-center gap-[10px]"}>
                             <p className={"text-[16px] text-red-400"}>Delete</p>
                             <TrashCanIcon
                                 color={"rgb(248 113 113)"}/>

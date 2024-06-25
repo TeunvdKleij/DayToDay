@@ -7,13 +7,14 @@ using DayToDay.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using quadconnects.Controllers;
 using Serilog;
 
 namespace DayToDay.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class NoteController : ControllerBase
+public class NoteController : BaseController
 {
     private readonly NoteService _noteService;
     public NoteController(NoteService noteService)
@@ -24,17 +25,20 @@ public class NoteController : ControllerBase
     [HttpPost("NoteForADay")]
     public async Task<IActionResult> GetNoteForADay([FromBody] NoteDTO noteDto)
     {
+        var userId = GetUserIDFromToken();
         return await _noteService.GetNoteForADay(noteDto);
     }
     
     [HttpPost("UpdateNote")]
     public async Task<IActionResult> UpdateNote([FromBody] NoteDTO noteDto)
     {
+        var userId = GetUserIDFromToken();
         return await _noteService.UpdateNote(noteDto);
     }
     [HttpPost("RemoveNotesByGroup")]
     public async Task<IActionResult> RemoveNotesByGroup([FromBody] NoteDTO noteDto)
     {
+        var userId = GetUserIDFromToken();
         return await _noteService.RemoveNote(noteDto);
     }
     

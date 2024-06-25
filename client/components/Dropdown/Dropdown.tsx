@@ -6,6 +6,7 @@ import DeleteIcon from "@/icons/Dropdown/deleteIcon";
 import ArrowWithoutStickIcon, { directionEnum } from '@/icons/Arrows/ArrowWithoutStickIcon';
 import DotsIcon from "@/icons/DotsIcon";
 import { MainContext } from "@/providers/MainProvider";
+import {UserContext} from "@/providers/UserProvider";
 
 export enum DropdownIconsEnum {
     FOLDER = "folder",
@@ -24,6 +25,7 @@ interface DropdownProps {
     className?: string,
     showArrow?: boolean,
     showText?: boolean,
+    style?: React.CSSProperties,
 }
 
 interface DataProps {
@@ -38,10 +40,11 @@ interface DataActionProps {
     onClick?: () => void,
 }
 
-const Dropdown = ({ children, showText, icon, data, defaultItem, visible, setVisible, className, showArrow }: DropdownProps) => {
+const Dropdown = ({ children, showText, icon, data, defaultItem, visible, setVisible, className, showArrow, style }: DropdownProps) => {
     const [internalVisible, setInternalVisible] = useState<boolean>(false);
     const [animate, setAnimate] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<any>(defaultItem);
+    const {settings} = useContext(UserContext);
 
     visible = visible !== undefined ? visible : internalVisible;
     setVisible = setVisible || setInternalVisible;
@@ -103,8 +106,10 @@ const Dropdown = ({ children, showText, icon, data, defaultItem, visible, setVis
 
     return (
         <div className="relative">
-            <button onClick={handleToggleDropdown}
-                    className={`text-white min-w-[40px] min-h-[40px] w-fit font-semibold text-base flex align-center justify-between items-center pt-1 pb-1 pr-2 pl-2 gap-2 ${showText ? "rounded-lg" : "rounded-[50px]"} ${className}`}>
+            <button
+                style={style}
+                onClick={handleToggleDropdown}
+                    className={`text-white min-w-[40px] min-h-[40px] w-fit font-semibold text-base flex align-center justify-center items-center pt-1 pb-1 pr-2 pl-2 gap-2 ${showText ? "rounded-lg" : "rounded-[50px]"} ${className}`}>
                 {icon === DropdownIconsEnum.FOLDER &&
                     <FolderIcon className="fill-none w-[20px] h-[20px] stroke-white" />}
                 {icon === DropdownIconsEnum.FILTER &&

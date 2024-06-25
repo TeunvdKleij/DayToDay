@@ -6,7 +6,9 @@ import NoteProvider from "@/providers/NoteProvider";
 import GroupProvider from "@/providers/GroupProvider";
 import { ToastContainer } from "react-toastify";
 import MainProvider from "@/providers/MainProvider";
-import UserProvider from "@/providers/UserProvider";
+import UserProvider, {UserContext} from "@/providers/UserProvider";
+import Login from "@/components/Account/Login/Login";
+import Navbar from "@/components/Navigation/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,11 +17,7 @@ export const metadata: Metadata = {
   description: "App to organize daily tasks",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({children,}: Readonly<{children: React.ReactNode; }>) {
   return (
       <html lang="en" id="htmlTag" className="bg-dark-mode">
       <head>
@@ -42,7 +40,8 @@ export default function RootLayout({
                 draggable
                 pauseOnHover
                 theme="colored"/>
-                {children}
+                  <Navbar/>
+                  {children}
               </UserProvider>
             </NoteProvider>
           </TaskProvider>

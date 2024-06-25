@@ -5,13 +5,15 @@ import Task from "@/components/Tasks/Task/task";
 import Button from "@/components/Button/Button";
 import {ColorEnum} from "@/providers/MainProvider";
 import PlusIcon from "@/icons/PlusIcon";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {useGroup} from "@/providers/GroupProvider";
+import {UserContext} from "@/providers/UserProvider";
 
 const Tasks = () => {
     const [disabled, setDisabled] = useState<boolean>(false);
     const {tasks, addNewTask, changedDate, setChangedDate, newTaskAdded} = useTasks();
     const {groupItem} = useGroup();
+    const {settings} = useContext(UserContext);
 
 
     useEffect(() => {
@@ -38,9 +40,10 @@ const Tasks = () => {
             </div>
 
             <button
+                style={{backgroundColor: settings?.color}}
                 disabled={changedDate < 0}
                 onClick={() => addNewTask("", changedDate, groupItem)}
-                className={"md:relative md:mr-auto mt-[10px] mb-[10px] md:bottom-0 md:rounded-[8px] md:max-h-[40px] md:right-0 fixed md:min-w-[100px bg-blue-500 bottom-[50px] right-[25px] hover:bg-blue-600 pt-1 pb-1 pr-2 pl-2 h-[60px] min-w-[60px] rounded-[50px] align-middle justify-center items-center flex gap-2"}
+                className={`md:relative md:mr-auto mt-[10px] mb-[10px] md:bottom-0 md:rounded-[8px] md:max-h-[40px] md:right-0 fixed md:min-w-[100px bg-blue-500 bottom-[50px] ${settings && settings.addTaskLeft ? "left-[25px]" : "right-[25px]"} hover:bg-blue-600 pt-1 pb-1 pr-2 pl-2 h-[60px] min-w-[60px] rounded-[50px] align-middle justify-center items-center flex gap-2`}
             >
                 <div className={"md:hidden flex"}>
                     <PlusIcon lineThickness={"4"} className={"w-[30px] h-[30px]"}/>

@@ -2,10 +2,12 @@
 
 
 import Progressbar from "@/components/Navigation/Progressbar/progressbar";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {useTasks} from "@/providers/TaskProvider";
 import {useMain} from "@/providers/MainProvider";
 import {useGroup} from "@/providers/GroupProvider";
+import {usePathname, useRouter} from "next/navigation";
+import {UserContext} from "@/providers/UserProvider";
 
 const Navbar = () => {
     const [percentage, setPercentage] = useState<number>(0);
@@ -13,6 +15,9 @@ const Navbar = () => {
     const {tasksCount, checkedTasksCount, getTasksForADay, setChangedDate} = useTasks();
     const {groupItem} = useGroup();
     const {screenWidth} = useMain();
+    const router = useRouter();
+    const pathname = usePathname();
+    const {settings} = useContext(UserContext);
 
     useEffect(() => {
         if(checkedTasksCount == 0 && tasksCount == 0) setPercentage(0);
@@ -84,8 +89,9 @@ const Navbar = () => {
                         <input onChange={(e) => changeDateWithDatepicker(e)} type={"date"}
                                className={"position:absolute w-full h-full opacity-0"}/>
                     </button>
-                    <button
-                        className={"bg-[#555] rounded-[50px] w-[40px] h-[40px] flex justify-center align-middle items-center hover:bg-blue-500"}>
+                    <button onClick={() => router.push("/account")}
+                            style={{backgroundColor: pathname === "/account" && settings?.color}}
+                        className={`bg-[#555] rounded-[50px] w-[40px] h-[40px] flex justify-center align-middle items-center`}>
                         <svg className={"w-[20px] h-[20px] fill-[#c5c5c5] hover:hover-fill-white"} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M8 0C9.06087 0 10.0783 0.421427 10.8284 1.17157C11.5786 1.92172 12 2.93913 12 4C12 5.06087 11.5786 6.07828 10.8284 6.82843C10.0783 7.57857 9.06087 8 8 8C6.93913 8 5.92172 7.57857 5.17157 6.82843C4.42143 6.07828 4 5.06087 4 4C4 2.93913 4.42143 1.92172 5.17157 1.17157C5.92172 0.421427 6.93913 0 8 0ZM8 10C12.42 10 16 11.79 16 14V16H0V14C0 11.79 3.58 10 8 10Z"

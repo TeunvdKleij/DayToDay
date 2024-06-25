@@ -11,6 +11,7 @@ import PasswordHide from "@/icons/Password/PasswordHide";
 import PasswordShow from "@/icons/Password/PasswordShow";
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation";
+import {getCookie} from "@/hooks/useCookie";
 
 const Login = () => {
     const {validateEmail, validatePassword, replaceHTML} = useContext(MainContext);
@@ -39,7 +40,7 @@ const Login = () => {
     };
 
     useEffect(() => {
-        var accessToken = Cookies.get("accessToken")
+        var accessToken = getCookie("accessToken");
         if(accessToken) router.push("/")
     }, []);
 
@@ -58,23 +59,21 @@ const Login = () => {
         else setEmailClass("border-red-500");
         if(validatePassword(passwordValue)) setPasswordClass("border-green-500");
         else setPasswordClass("border-red-500");
-        if(validatePassword(repeatPasswordValue) && repeatPasswordValue == passwordValue) setRepeatPasswordClass("border-green-500");
+        if(!loginSelected && validatePassword(repeatPasswordValue) && repeatPasswordValue == passwordValue) setRepeatPasswordClass("border-green-500");
         else setRepeatPasswordClass("border-red-500");
     }
 
     const loginOrRegister = () => {
         validate();
-        if(passwordValue && repeatPasswordValue && passwordValue === repeatPasswordValue) {
-            if(emailClass.includes("border-red-500") || passwordClass.includes("border-red-500") || repeatPasswordClass.includes("border-red-500")) {
-                toast.error("Try to fill in your details again")
-                return null
-            }
-            if(loginSelected) {
-                login(emailValue, passwordValue)
-            }
-            else{
-                register(emailValue, passwordValue, repeatPasswordValue);
-            }
+        if(emailClass.includes("border-red-500") || passwordClass.includes("border-red-500") || (!loginSelected && repeatPasswordClass.includes("border-red-500"))) {
+            toast.error("Try to fill in your details again")
+            return null
+        }
+        if(loginSelected) {
+            login(emailValue, passwordValue)
+        }
+        else if(passwordValue && repeatPasswordValue && (passwordValue === repeatPasswordValue)) {
+            register(emailValue, passwordValue, repeatPasswordValue);
         }
     }
 
@@ -88,7 +87,7 @@ const Login = () => {
     }
 
     return (
-        <div className={`h-full flex justify-center items-center`}>
+        <div className={`top-0 l-0 fixed bg-[#151515] w-full h-[100vh] z-[1000] flex justify-center items-center`}>
             <div className={`flex flex-col items-center gap-4 w-[225px]`}>
                 <p><TaskIcon width={64}/></p>
                 <div className="flex flex-col items-center">
