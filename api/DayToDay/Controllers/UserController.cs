@@ -6,6 +6,7 @@ using DayToDay.Models;
 using DayToDay.Models.DTO;
 using DayToDay.Models.DTO.User;
 using DayToDay.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -43,7 +44,7 @@ public class UserController : BaseController
         if (userID == null)
         {
              LogService.ErrorLog(nameof(UserController), nameof(GetSettings), "No user found");
-             return new BadRequestObjectResult("No user found");
+             return Unauthorized(new {status = 401, message = "Unauthorized get settings"});
         }
         
         return await _userService.GetSettings(userID);
@@ -52,13 +53,13 @@ public class UserController : BaseController
     [HttpPost("Settings/Change")]
     public async Task<IActionResult> ChangeSettings(SettingsDTO settings)
     {
-        Log.Information("COLOR: " + settings.Color);
         var userID = GetUserIDFromToken();
         if (userID == null)
         {
             LogService.ErrorLog(nameof(UserController), nameof(GetSettings), "No user found");
-            return new BadRequestObjectResult("No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized changed settings"});
         }
+        Log.Information("SETTINGS : " + settings.CompleteTaskLeft + " " + settings.Color);
         return await _userService.ChangeSettings(userID, settings);
     }
     

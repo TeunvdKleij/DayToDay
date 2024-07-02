@@ -1,3 +1,5 @@
+import { useEffect } from "react"
+
 interface ToggleInterface{
     text: string
     onChange: () => void

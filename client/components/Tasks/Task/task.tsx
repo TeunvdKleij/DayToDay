@@ -30,6 +30,7 @@ const Task: React.FC<TaskProps> = ({ taskName, index }) => {
     const [timer, setTimer] = useState<any>();
     const [interval, setIntervalTime] = useState<any>();
     const [letEditTask, setLetEditTask] = useState<boolean>(true);
+    const [hoverCheckBox, setHoverCheckBox] = useState<boolean>(false)
     const {screenWidth} = useMain();
     const {settings} = useContext(UserContext);
 
@@ -163,7 +164,12 @@ const Task: React.FC<TaskProps> = ({ taskName, index }) => {
                 </p>
 
                     <button onClick={() => changeTaskState()}
-                            className={`md:w-[25px] md:h-[25px] md:rounded-[8px] md:min-w-[25px] md:min-h-[25px] bg-[#555] rounded-[8px] min-w-[30px] min-h-[30px] w-[30px] h-[30px] flex justify-center align-middle items-center hover:bg-blue-500 ${taskDone && "bg-blue-500"}`}>
+                            className={`md:w-[25px] md:h-[25px] md:rounded-[8px] md:min-w-[25px] md:min-h-[25px] rounded-[8px] min-w-[30px] min-h-[30px] w-[30px] h-[30px] flex justify-center align-middle items-center`}
+                            style={{backgroundColor: hoverCheckBox || taskDone ? settings.color : "#555"}}
+                            onMouseEnter={() => setHoverCheckBox(true)}
+                            onMouseLeave={() => setHoverCheckBox(false)}
+                            > {/*hover:bg-[${settings.color}]*/}
+                            
                         {taskDone && (
                             <svg className={`w-[15px] h-[15px] fill-[#c5c5c5] hover:hover-fill-white`} width="22"
                                  height="17" viewBox="0 0 22 17" fill="none"

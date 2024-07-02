@@ -2,6 +2,7 @@
   "name": "daytoday",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -17,6 +18,7 @@
     "@sindresorhus/is": "^6.3.1",
     "@thednp/color-picker": "^2.0.0-alpha10",
     "axios": "^1.6.8",
+    "browser-cookies": "^1.2.0",
     "js-cookie": "^3.0.5",
     "lint": "^1.1.2",
     "mousetrap": "^1.6.5",

@@ -1,5 +1,3 @@
-import Task from "@/components/Task";
-
 interface TaskProps {
     width?: number
 }

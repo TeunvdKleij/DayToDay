@@ -7,6 +7,8 @@ import Dropdown, {DropdownIconsEnum} from "@/components/Dropdown/Dropdown";
 import AddGroupModal from "@/components/AddGroupModal";
 import RemoveGroupModal from "@/components/RemoveGroupModal";
 import {UserContext} from "@/providers/UserProvider";
+import ArrowLeftIcon from "@/icons/Arrows/ArrowLeftIcon";
+import ArrowRightIcon from "@/icons/Arrows/ArrowRightIcon";
 
 const Menu = () => {
     const {tasksCount, checkedTasksCount, changedDate, selectedSortOption, getTasksForADay, getTasksForAGroup, setChangedDate, removeTasksByGroup, taskSortOptions, setSelectedSortOption, setCheckedTasksCount} = useTasks();
@@ -19,6 +21,7 @@ const Menu = () => {
     const [formattedDataDropdown, setFormattedDataDropdown] = useState<any[]>([]);
     const [formattedSelectedGroupDropdown, setFormattedSelectedGroupDropdown] = useState<any>([]);
     const [formattedSelectedTaskOptions, setFormattedSelectedTaskOptions] = useState<any>([]);
+    const [optionsHover, setOptionsHover] = useState<boolean>(false)
     const {settings} = useContext(UserContext);
 
     const getDay = (changeDate: number) => {
@@ -134,13 +137,22 @@ const Menu = () => {
             setFormattedSelectedTaskOptions(formattedData)
         }
     }, [taskSortOptions]);
-
+    
     return (
         <div className={"w-full mt-[25px] pt-[10px] pb-[10px] max-w-[768px] h-40px flex justify-between align-middle items-center gap-[10px] flex-row"}>
-            <h1 className={"text-2xl font-bold"}>{headerText}</h1>
+            <div className="flex gap-3">
+                <h1 className={"text-2xl font-bold"}>{headerText}</h1>
+                <div className="flex">
+                    <button onClick={() => changeDate(-1)}><ArrowLeftIcon/></button>
+                    <button onClick={() => changeDate(1)}><ArrowRightIcon/></button>
+                </div>
+            </div>
             <div className={"w-auto gap-[10px] flex flex-row justify-end items-center align-middle"}>
-                <Dropdown showText={false} showArrow={false} className={"bg-[#555] rounded-[50px] w-[30px] h-[30px] flex justify-center align-middle items-center hover:bg-blue-500"}
-                          data={formattedSelectedTaskOptions} icon={DropdownIconsEnum.FILTER} defaultItem={selectedSortOption}>
+                <Dropdown showText={false} showArrow={false} className={`bg-[#555] rounded-[50px] w-[30px] h-[30px] flex justify-center align-middle items-center`}
+                    style={{backgroundColor: optionsHover ? settings.color : "#555" }}
+                    onMouseEnter={() => setOptionsHover(true)}
+                    onMouseLeave={() => setOptionsHover(false)}
+                    data={formattedSelectedTaskOptions} icon={DropdownIconsEnum.FILTER} defaultItem={selectedSortOption}>
                 </Dropdown>
                 <Dropdown showText={true} data={formattedDataDropdown} defaultItem={formattedSelectedGroupDropdown} style={{backgroundColor: settings?.color}} className={"hover:bg-blue-600"}>
                     <button onClick={(e) => handleItemClick("+ Group")}  style={{backgroundColor: settings?.color}} className="p-1 text-sm font-semibold rounded-lg h-[40px]">+ Group</button>

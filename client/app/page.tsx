@@ -1,15 +1,9 @@
 'use client'
-import Footer from "@/components/Footer";
 import GDPRNotice from "@/components/GDPRNotice";
-import NavBar from "@/components/Header/NavBar";
-import MainTasks from "@/components/MainTasks";
-import Note from "@/components/Note";
-import SkeletonLoader from "@/components/SkeletonLoader";
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";
 import { useContext, useEffect, useState } from "react";
-import Navbar from "@/components/Navigation/navbar";
 import Tasks from "@/components/Tasks/tasks";
 import Wrapper from "@/components/Wrapper/wrapper";
 import Menu from "@/components/Tasks/Menu/menu";
@@ -91,20 +85,6 @@ export default function Home() {
               <Tasks/>
           </Wrapper>
           {(gdprDialog) && <GDPRNotice setGdpr={setGdpr}/>}
-        {/*<a href="https://10.0.0.86:8091/swagger/index.html">Druk</a>*/}
-        {/*<div id="main" className="flex flex-col min-h-screen m-0 mb-14">*/}
-        {/*  <div id="main" className={`flex flex-1 items-center flex-col`}>*/}
-        {/*    {!loading*/}
-        {/*      ?*/}
-        {/*      <MainTasks done={done} headerText={headerText} percentage={percentage}/>*/}
-        {/*      :*/}
-        {/*      <SkeletonLoader/>*/}
-        {/*    }*/}
-        {/*    <Note toggleNote={toggleNote}/>*/}
-        {/*    /!*<NavBar/>*!/*/}
-        {/*    <Footer/>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
       </>
   );
 }

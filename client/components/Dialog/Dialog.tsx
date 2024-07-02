@@ -1,5 +1,5 @@
 'use client'
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import Button from '../Button/Button';
 import { ColorEnum } from '@/providers/MainProvider';
 import {UserContext} from "@/providers/UserProvider";
@@ -48,7 +48,7 @@ const Dialog = ({setShowModal, children, description, title, onCancel, onAccept,
                 )}
                 <div className="flex flex-row w-full gap-2 mt-3 justify-end pr-5 pb-5 pl-5">
                     <Button text={"Annuleren"} backgroundColor={ColorEnum.LIGHTGREY} onClick={(e) => handleCancelModal(e)}/>
-                    <Button text={"Bevestigen"}  backgroundColor={settings?.color}  onClick={(e: any) => handleAcceptModal(e)} disabled={!canAccept}/>
+                    <Button text={"Bevestigen"}  backgroundColor={settings?.color ? settings?.color : "#3b82f6"}  onClick={(e: any) => handleAcceptModal(e)} disabled={!canAccept}/>
                 </div>
             </div>
         </div>

@@ -26,6 +26,8 @@ interface DropdownProps {
     showArrow?: boolean,
     showText?: boolean,
     style?: React.CSSProperties,
+    onMouseLeave?: () => void,
+    onMouseEnter?: () => void
 }
 
 interface DataProps {
@@ -40,7 +42,7 @@ interface DataActionProps {
     onClick?: () => void,
 }
 
-const Dropdown = ({ children, showText, icon, data, defaultItem, visible, setVisible, className, showArrow, style }: DropdownProps) => {
+const Dropdown = ({ children, showText, icon, data, defaultItem, visible, setVisible, className, showArrow, style, onMouseEnter, onMouseLeave }: DropdownProps) => {
     const [internalVisible, setInternalVisible] = useState<boolean>(false);
     const [animate, setAnimate] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<any>(defaultItem);
@@ -105,7 +107,7 @@ const Dropdown = ({ children, showText, icon, data, defaultItem, visible, setVis
     }, [visible]);
 
     return (
-        <div className="relative">
+        <div className="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
             <button
                 style={style}
                 onClick={handleToggleDropdown}

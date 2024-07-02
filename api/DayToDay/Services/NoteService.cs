@@ -19,9 +19,9 @@ public class NoteService
         _dataContext = dataContext;
     }
 
-    public async Task<OkObjectResult> GetNoteForADay(NoteDTO noteDto)
+    public async Task<OkObjectResult> GetNoteForADay(NoteDTO noteDto, string userId)
     {
-        int groupID = await _dataContext.Group.Where(i => i.Name == noteDto.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
+        int groupID = await _dataContext.Group.Where(i => i.Name == noteDto.GroupName && i.UserId == userId).Select(i => i.Id).FirstOrDefaultAsync();
         if (groupID == null)
         {
             LogService.WarningLog(nameof(NoteController), nameof(GetNoteForADay), "No group found");
@@ -33,9 +33,9 @@ public class NoteService
         return new OkObjectResult(new {status = 204});
     }
 
-    public async Task<IActionResult> UpdateNote(NoteDTO noteDto)
+    public async Task<IActionResult> UpdateNote(NoteDTO noteDto, string userId)
     {
-        int groupID = await _dataContext.Group.Where(i => i.Name == noteDto.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
+        int groupID = await _dataContext.Group.Where(i => i.Name == noteDto.GroupName && i.UserId == userId).Select(i => i.Id).FirstOrDefaultAsync();
         if (groupID == null)
         {
             LogService.ErrorLog(nameof(NoteController), nameof(UpdateNote), "No group found");
@@ -53,9 +53,9 @@ public class NoteService
     }
     
 
-    public async Task<IActionResult> RemoveNote(NoteDTO noteDto)
+    public async Task<IActionResult> RemoveNote(NoteDTO noteDto, string userId)
     {
-        int groupID = await _dataContext.Group.Where(i => i.Name == noteDto.GroupName).Select(i => i.Id).FirstOrDefaultAsync();
+        int groupID = await _dataContext.Group.Where(i => i.Name == noteDto.GroupName && i.UserId == userId).Select(i => i.Id).FirstOrDefaultAsync();
         if (groupID == null)
         {
             LogService.ErrorLog(nameof(NoteController), nameof(RemoveNote)+"ByGroup", "No group found");

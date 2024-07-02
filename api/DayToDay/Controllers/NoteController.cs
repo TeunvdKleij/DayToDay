@@ -26,20 +26,35 @@ public class NoteController : BaseController
     public async Task<IActionResult> GetNoteForADay([FromBody] NoteDTO noteDto)
     {
         var userId = GetUserIDFromToken();
-        return await _noteService.GetNoteForADay(noteDto);
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(GetNoteForADay), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized get note for a day"});
+        }
+        return await _noteService.GetNoteForADay(noteDto, userId);
     }
     
     [HttpPost("UpdateNote")]
     public async Task<IActionResult> UpdateNote([FromBody] NoteDTO noteDto)
     {
         var userId = GetUserIDFromToken();
-        return await _noteService.UpdateNote(noteDto);
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(UpdateNote), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized update note"});
+        }
+        return await _noteService.UpdateNote(noteDto, userId);
     }
     [HttpPost("RemoveNotesByGroup")]
     public async Task<IActionResult> RemoveNotesByGroup([FromBody] NoteDTO noteDto)
     {
         var userId = GetUserIDFromToken();
-        return await _noteService.RemoveNote(noteDto);
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(RemoveNotesByGroup), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized remove notes by group"});
+        }
+        return await _noteService.RemoveNote(noteDto, userId);
     }
     
 }

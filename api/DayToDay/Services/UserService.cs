@@ -53,7 +53,10 @@ public class UserService
             Email = model.Email,
             UserName = model.Email,
             SecurityStamp = Guid.NewGuid().ToString(),
-            ColorCode = "1B91FF"
+            ColorCode = "#1755de",
+            AddTaskLeft = false,
+            CompleteTaskLeft = false
+            
         };
         var result = await _userManager.CreateAsync(user, model.Password);
         if (!result.Succeeded)
@@ -86,9 +89,9 @@ public class UserService
 
         var settings = new
         {
-            color = "bg-[#c00c00]",
-            addTaskLeft = true,
-            completeTaskLeft = true
+            color = "#1755de",
+            addTaskLeft = false,
+            completeTaskLeft = false
         };
         LogService.InformationLog("User", nameof(Register), "Created user successfully with email: " + model.Email);
         return new OkObjectResult(new
@@ -156,16 +159,10 @@ public class UserService
             LogService.WarningLog(nameof(UserController), nameof(GetSettings), "No settings or user found");
             return new BadRequestObjectResult(new {showAddGroup = true});
         }
-        Log.Information("RES:" + res);
         return new OkObjectResult(res);
     }
     private JwtSecurityToken SetToken(List<Claim> authClaims) {
-        Console.WriteLine("JWT : " + System.Environment.GetEnvironmentVariable("JWT_KEY"));
-        
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("3ECD5EEE-DA7F-4B32-B092-F9D8D4F0BDCA"));
-        Console.WriteLine(authSigningKey);
-        Console.WriteLine(_configuration["JWT:ValidIssuer"]);
-        Console.WriteLine(_configuration["JWT:ValidAudience"]);
         
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:ValidIssuer"],
@@ -184,6 +181,8 @@ public class UserService
         settingsOld.CompleteTaskLeft = settings.CompleteTaskLeft;
         settingsOld.ColorCode = settings.Color;
         settingsOld.AddTaskLeft = settings.AddTaskLeft;
+        Console.WriteLine(settingsOld.CompleteTaskLeft);
+        Console.WriteLine(settings.CompleteTaskLeft);
         _dataContext.Users.Update(settingsOld);
         await _dataContext.SaveChangesAsync();
         return new OkObjectResult("Successs");

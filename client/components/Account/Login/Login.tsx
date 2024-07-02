@@ -9,9 +9,8 @@ import {UserContext} from "@/providers/UserProvider";
 import TrashCanIcon from "@/icons/Trashcanicon";
 import PasswordHide from "@/icons/Password/PasswordHide";
 import PasswordShow from "@/icons/Password/PasswordShow";
-import Cookies from "js-cookie"
 import { useRouter } from "next/navigation";
-import {getCookie} from "@/hooks/useCookie";
+import cookies from 'browser-cookies'
 
 const Login = () => {
     const {validateEmail, validatePassword, replaceHTML} = useContext(MainContext);
@@ -24,9 +23,9 @@ const Login = () => {
     const [passwordValue, setPasswordValue] = useState<string>("")
     const [repeatPasswordValue, setRepeatPasswordValue] = useState<string>("")
 
-    const [emailClass, setEmailClass] =  useState<string>("border-none")
-    const [passwordClass, setPasswordClass] = useState<string>("border-none")
-    const [repeatPasswordClass, setRepeatPasswordClass] = useState<string>("border-none")
+    const [emailWrong, setEmailWrong] =  useState<boolean>(false)
+    const [passwordWrong, setPasswordWrong] = useState<boolean>(false)
+    const [repeaetedPasswordWrong, setRepeatPasswordWrong] = useState<boolean>(false)
 
     const router = useRouter();
 
@@ -40,7 +39,7 @@ const Login = () => {
     };
 
     useEffect(() => {
-        var accessToken = getCookie("accessToken");
+        var accessToken = cookies.get("accessToken");
         if(accessToken) router.push("/")
     }, []);
 
@@ -48,32 +47,47 @@ const Login = () => {
         event.target.value = replaceHTML(event.target.value);
         if (event.target.id === "emailInput") {
             setEmailValue(event.target.value);
+            setEmailWrong(false)
         } else if (event.target.id === "passwordInput") {
             setPasswordValue(event.target.value)
+            setPasswordWrong(false)
         } else if (event.target.id === "repeatPasswordInput") {
             setRepeatPasswordValue(event.target.value)
+            setRepeatPasswordWrong(false);
         }
     }
+
+    const setAllWrong = (login: boolean) => {
+        setEmailWrong(true);
+        setPasswordWrong(true)
+        if(!login) setRepeatPasswordWrong(true)
+    }
     const validate = () => {
-        if(validateEmail(emailValue)) setEmailClass("border-green-500");
-        else setEmailClass("border-red-500");
-        if(validatePassword(passwordValue)) setPasswordClass("border-green-500");
-        else setPasswordClass("border-red-500");
-        if(!loginSelected && validatePassword(repeatPasswordValue) && repeatPasswordValue == passwordValue) setRepeatPasswordClass("border-green-500");
-        else setRepeatPasswordClass("border-red-500");
+        setEmailWrong(!(validateEmail(emailValue)));
+        setPasswordWrong(!(validatePassword(passwordValue)))
+        setRepeatPasswordWrong(!(validatePassword(repeatPasswordValue)))
     }
 
     const loginOrRegister = () => {
         validate();
-        if(emailClass.includes("border-red-500") || passwordClass.includes("border-red-500") || (!loginSelected && repeatPasswordClass.includes("border-red-500"))) {
+        if(emailWrong || passwordWrong || (!loginSelected && repeaetedPasswordWrong)) {
             toast.error("Try to fill in your details again")
             return null
         }
         if(loginSelected) {
-            login(emailValue, passwordValue)
+            if(!login(emailValue, passwordValue)){
+                setAllWrong(true);
+            }
         }
         else if(passwordValue && repeatPasswordValue && (passwordValue === repeatPasswordValue)) {
-            register(emailValue, passwordValue, repeatPasswordValue);
+            if(!register(emailValue, passwordValue, repeatPasswordValue)){
+                setAllWrong(false);
+
+            }
+        }
+        else{
+            toast.error("Failed to register, try again")
+            setAllWrong(false);
         }
     }
 
@@ -81,9 +95,9 @@ const Login = () => {
         setPasswordValue("")
         setEmailValue("")
         setRepeatPasswordValue("")
-        setPasswordClass("border-none")
-        setEmailClass("border-none")
-        setRepeatPasswordClass("border-none")
+        setPasswordWrong(false)
+        setEmailWrong(false)
+        setRepeatPasswordWrong(false)
     }
 
     return (
@@ -106,22 +120,22 @@ const Login = () => {
                 </div>
                 <div className={`w-full`}>
                     <p>Email</p>
-                    <input type="email" onChange={handleInputUpdate} value={emailValue} id={"emailInput"} placeholder={"Enter your email"} className={`w-full rounded-lg h-10 text-black p-[5px] box-border border-[3px] ${emailClass}`}/>
+                    <input type="email" onChange={handleInputUpdate} value={emailValue} id={"emailInput"} placeholder={"Enter your email"} className={`w-full rounded-lg h-10 text-black p-[5px] box-border ${emailWrong && "border-[3px] border-red-500" } `}/>
                 </div>
                 <div className="relative w-full">
                     <p>Password</p>
-                    <input type={isPasswordVisible ? 'text' : 'password'} onChange={handleInputUpdate} value={passwordValue} id="passwordInput" placeholder="Enter your password" className={`w-full rounded-lg h-10 text-black p-[5px] box-border border-[3px] ${passwordClass}`}/>
-                    <button type="button" onClick={togglePasswordVisibility} className="absolute inset-y-0 right-2 top-[40%] focus:outline-none">
+                    <input type={isPasswordVisible ? 'text' : 'password'} onChange={handleInputUpdate} value={passwordValue} id="passwordInput" placeholder="Enter your password" className={`w-full rounded-lg h-10 text-black p-[5px] box-border ${passwordWrong && "border-[3px] border-red-500" }`}/>
+                    <span onClick={togglePasswordVisibility} className="absolute inset-y-0 right-2 top-[50%] focus:outline-none hover:cursor-pointer">
                         {isPasswordVisible ? <PasswordShow/> : <PasswordHide/>}
-                    </button>
+                    </span>
                 </div>
                 {!loginSelected &&
                 <div className={`relative w-full`}>
                     <p>Repeat password</p>
-                    <input type={isPasswordVisible ? 'text' : 'password'} onChange={handleInputUpdate} value={repeatPasswordValue} id={"repeatPasswordInput"} placeholder={"Repeat your password"} className={`w-[225px] rounded-lg h-10 text-black p-[5px] box-border border-[3px] ${repeatPasswordClass}`}/>
-                    <button type="button" onClick={togglePasswordVisibility} className="absolute inset-y-0 right-2 top-[40%] focus:outline-none">
+                    <input type={isPasswordVisible ? 'text' : 'password'} onChange={handleInputUpdate} value={repeatPasswordValue} id={"repeatPasswordInput"} placeholder={"Repeat your password"} className={`w-[225px] rounded-lg h-10 text-black p-[5px] box-border ${repeaetedPasswordWrong && "border-[3px] border-red-500" }`}/>
+                    <span onClick={togglePasswordVisibility} className="absolute inset-y-0 right-2 top-[50%] focus:outline-none hover:cursor-pointer">
                         {isPasswordVisible ? <PasswordShow/> : <PasswordHide/>}
-                    </button>
+                    </span>
                 </div>
                 }
                 <Button text={loginSelected ? "Login" : "Register"} onClick={loginOrRegister} backgroundColor={ColorEnum.BLUE} className={`w-full mt-3 text-xl`}/>

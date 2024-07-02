@@ -12,11 +12,7 @@ public class BaseController: ControllerBase
     protected string GetUserIDFromToken()
     {
         var jsonToken = GetJsonToken();
-        if (jsonToken == null)
-        {
-            Log.Error("Controller: BaseController, Method: GetUserIDFromToken, Message: Token not found");
-            return null;
-        }
+        if (jsonToken == null) return null;
 
         var roleClaim = jsonToken.Claims
             .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
@@ -27,11 +23,7 @@ public class BaseController: ControllerBase
     protected string GetRoleFromToken()
     {
         var jsonToken = GetJsonToken();
-        if (jsonToken == null)
-        {
-            Log.Error("Controller: BaseController, Method: GetRoleFromToken, Message: Token not found");
-            return null;
-        }
+        if (jsonToken == null) return null;
         
         var idClaim = jsonToken.Claims
             .FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
@@ -40,12 +32,7 @@ public class BaseController: ControllerBase
     protected string GetUserNameFromToken()
     {
         var jsonToken = GetJsonToken();
-        if (jsonToken == null)
-        {
-            Log.Error("Controller: BaseController, Method: GetUserNameFromToken, Message: Token not found");
-            return null;
-        }
-
+        if (jsonToken == null) return null;
         var nameClaim = jsonToken.Claims
             .FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
         return nameClaim?.Value;
@@ -56,19 +43,19 @@ public class BaseController: ControllerBase
         var expClaim = jsonToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Exp);
         if (expClaim == null)
         {
-            Log.Error("Controller: BaseController, Method: checkForValidToken, Message: ExpClaim is null");
+            Log.Error("Controller: BaseController | Method: checkForValidToken | Message: ExpClaim is null");
             return false;
         }
         if (!long.TryParse(expClaim.Value, out long expUnix))
         {
-            Log.Error("Controller: BaseController, Method: checkForValidToken, Message: Parsing was not successful");
+            Log.Error("Controller: BaseController | Method: checkForValidToken | Message: Parsing was not successful");
             return false;
         }
         var expirationDate = DateTimeOffset.FromUnixTimeSeconds(expUnix).DateTime;
         
         if (expirationDate <= DateTime.UtcNow)
         {
-            Log.Error("Controller: BaseController, Method: checkForValidToken, Message: Token expired");
+            Log.Error("Controller: BaseController | Method: checkForValidToken | Message: Token expired");
             return false;
         }
 
@@ -80,21 +67,16 @@ public class BaseController: ControllerBase
         var handler = new JwtSecurityTokenHandler();
         if (jwtToken.IsNullOrEmpty())
         {
-            Log.Error("Controller: BaseController, Method: GetJsonToken, Message: Token not found");
+            Log.Error("Controller: BaseController | Method: GetJsonToken | Message: Token not found");
             return null;
         }
         var jsonToken = handler.ReadToken(jwtToken) as JwtSecurityToken;
         if (jsonToken == null)
         {
-            Log.Error("Controller: BaseController, Method: GetJsonToken, Message: Token not found");
+            Log.Error("Controller: BaseController | Method: GetJsonToken | Message: Token not read as Security token");
             return null;
         }
-
-        if (!checkForValidToken(jsonToken))
-        {
-            Log.Error("Controller: BaseController, Method: GetJsonToken, Message: Token not valid");
-            return null;
-        }
+        if (!checkForValidToken(jsonToken)) return null;
         return jsonToken;
 
     }

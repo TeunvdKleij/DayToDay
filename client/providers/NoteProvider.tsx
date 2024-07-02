@@ -2,6 +2,8 @@
 import axios from 'axios';
 import React, {createContext, ReactNode, useState} from 'react';
 import { toast } from 'react-toastify';
+import cookies from "browser-cookies"
+import { useRouter } from 'next/navigation';
 interface NoteProps {
     children: ReactNode,
 }
@@ -29,27 +31,35 @@ export const NoteContext = createContext<NoteContextProps>({
 const NoteProvider: React.FC<NoteProps> = ({children}) => {
     const [noteText, setNoteText] = useState<string>("")
     const [showNote, setShowNote] = useState<boolean>(false)
+    const router = useRouter();
 
     
     const getNoteForADay = async (changedDate: number, groupItem: string) => {
-        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/NoteForADay", {ChangedDate: changedDate, GroupName: groupItem})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/NoteForADay", {ChangedDate: changedDate, GroupName: groupItem}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
             .then(res => {
                 if(res.data.status == 200) {if(res.data.note.noteText != null) setNoteText(res.data.note.noteText);}
                 if(res.data.status == 204) setNoteText("");
             })
             .catch(error => {
+                if(error.response.status === 401){
+                    cookies.erase("accessToken")
+                    router.push("/account")
+                }
                 setNoteText("")
-                toast.error("Note not retrieved")
             })
 
     }
 
     const removeNotesByGroup = async (name: string) => {
-        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/RemoveNotesByGroup", {GroupName: name})
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/RemoveNotesByGroup", {GroupName: name}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
         .then(res => {
             return res.data
         })
-        .catch(err => { 
+        .catch(error => { 
+            if(error.response.status === 401){
+                cookies.erase("accessToken")
+                router.push("/account")
+            }
             toast.error("Notes not removed")
         })
         return result
@@ -57,8 +67,12 @@ const NoteProvider: React.FC<NoteProps> = ({children}) => {
 
 
     const updateNote = async (changedDate: number, noteText: string, groupItem: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/UpdateNote", {ChangedDate: changedDate, NoteText: noteText, GroupName: groupItem})
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Note/UpdateNote", {ChangedDate: changedDate, NoteText: noteText, GroupName: groupItem}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
         .catch(error => {
+            if(error.response.status === 401){
+                cookies.erase("accessToken")
+                router.push("/account")
+            }
             toast.error("Note not updated")
         });
     }

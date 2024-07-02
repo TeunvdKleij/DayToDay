@@ -24,26 +24,46 @@ public class TaskController : BaseController
     public async Task<IActionResult> GetTasksForADay([FromBody] TaskDTO taskDto)
     {
         var userId = GetUserIDFromToken();
-        return await _taskService.GetTasksForADay(taskDto);
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(GetTasksForADay), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized get tasks for a day"});
+        }
+        return await _taskService.GetTasksForADay(taskDto, userId);
     }
 
     [HttpPost("TasksForAGroup")]
     public async Task<IActionResult> GetTasksForAGroup([FromBody] TaskDTO taskDto)
     {
         var userId = GetUserIDFromToken();
-        return await _taskService.GetTasksForAGroup(taskDto);
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(GetTasksForAGroup), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized get tasks for a group"});
+        }
+        return await _taskService.GetTasksForAGroup(taskDto, userId);
     }
     
     [HttpPut("UpdateTaskDate")]
     public async Task<IActionResult> UpdateTaskDate([FromBody] TaskDTO updateTask)
     {
         var userId = GetUserIDFromToken();
-        return await _taskService.UpdateTaskDate(updateTask);
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(UpdateTaskDate), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized update task date"});
+        }
+        return await _taskService.UpdateTaskDate(updateTask, userId);
     }
     [HttpPut("UpdateTaskStatus")]
     public async Task<IActionResult> UpdateTaskStatus([FromBody] TaskDTO updateTask)
     {
         var userId = GetUserIDFromToken();
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(UpdateTaskStatus), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized update task status"});
+        }
         return await _taskService.UpdateTaskStatus(updateTask);
     }
     
@@ -51,6 +71,11 @@ public class TaskController : BaseController
     public async Task<IActionResult> UpdateTaskValue([FromBody] TaskDTO updateTask)
     {
         var userId = GetUserIDFromToken();
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(UpdateTaskValue), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized update task value"});
+        }
         return await _taskService.UpdateTaskValue(updateTask);
     }
 
@@ -58,13 +83,23 @@ public class TaskController : BaseController
     public async Task<IActionResult> AddTask([FromBody] TaskDTO task)
     {
         var userId = GetUserIDFromToken();
-        return await _taskService.AddTask(task);
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(AddTask), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized add task"});
+        }
+        return await _taskService.AddTask(task, userId);
     }
     
     [HttpPost("RemoveTask")]
     public async Task<IActionResult> RemoveTask([FromBody] TaskDTO removeTask)
     {
         var userId = GetUserIDFromToken();
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(RemoveTask), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized remove task"});
+        }
         return await _taskService.RemoveTask(removeTask);
     }
 
@@ -72,6 +107,11 @@ public class TaskController : BaseController
     public async Task<IActionResult> RemoveTasksByGroup([FromBody] TaskDTO taskDto)
     {
         var userId = GetUserIDFromToken();
-        return await _taskService.RemoveTasksByGroup(taskDto);
+        if (userId == null)
+        {
+            LogService.ErrorLog(nameof(GroupController), nameof(RemoveTasksByGroup), "No user found");
+            return Unauthorized(new {status = 401, message = "Unauthorized remove tasks by group"});
+        }
+        return await _taskService.RemoveTasksByGroup(taskDto, userId);
     }
 }

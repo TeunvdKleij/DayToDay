@@ -3,7 +3,9 @@ import axios from 'axios';
 import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import {getCookie, setCookie} from "@/hooks/useCookie";
+import cookies from 'browser-cookies'
+import { GroupContext } from './GroupProvider';
+import { TaskContext } from './TaskProvider';
 interface UserProps {
     children: ReactNode,
 }
@@ -13,30 +15,45 @@ export const UserContext = createContext<any>(null);
 
 
 const UserProvider: React.FC<UserProps> = ({children}) => {
-    const [user, setUser] = useState<any>(null);
     const router = useRouter();
-    const [settings, setSettings] = useState<any>({
-        color: "bg-blue-500",
+    const {getGroups, groups} = useContext(GroupContext);
+    const [settings, setSettings] = useState({
+        color: "#3b82f6",
         addTaskLeft: false,
         completeTaskLeft: false
-    })
+      });
 
     useEffect(() => {
-        getSettings();
-    }, [user]);
+        if(cookies.get("accessToken") == null) {
+            router.push("/account");
+        }
+    }, []);  
+
+    useEffect(() => {
+        if(cookies.get("accessToken") != null) getSettings();
+    }, [cookies.get("accessToken")]);
+
+    const changeSettings = (newSettings: any) => {
+        setSettings((prevSettings) => ({
+          ...prevSettings,
+          ...newSettings
+        }));
+      };
 
     const login = async (email: string, password: string) => {
         await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Login", {Email: email, Password: password})
         .then(async res => {
             let accessToken = res.data.token;
             let expiresIn = res.data.expiresIn;
-            setCookie("accessToken", accessToken, expiresIn)
-            setUser("")
+            cookies.set("accessToken", accessToken, {expires: expiresIn})
+            while(cookies.get("accessToken") == null){}
             setSettings(settings);
             router.push("/")
+            getGroups();
         })
         .catch(err => {
-            toast.error("Could not login")
+            toast.error("Could not login properly")
+            return false
         })
     }
 
@@ -45,20 +62,24 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
         .then(async res => {
             let accessToken = res.data.token;
             let expiresIn = res.data.expiresIn;
-            setCookie("accessToken", accessToken, expiresIn)
+            cookies.set("accessToken", accessToken, { expires: expiresIn})
+            while(cookies.get("accessToken") == null){}
             router.push("/")
         })
         .catch(err => {
             toast.error("Could not register")
+            return false
         })
     }
     const getSettings = async () => {
-        await axios.get(process.env.NEXT_PUBLIC_API_URL + "User/Settings", { headers: { Authorization: `Bearer ${getCookie("accessToken")}` } })
+        await axios.get(process.env.NEXT_PUBLIC_API_URL + "User/Settings", { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
             .then(res => {
                 setSettings(res.data);
             })
-            .catch(err => {
-                toast.error("Could not find settings")
+            .catch(error => {
+                if(error.response.status === 401){
+                    cookies.erase("accessToken")
+                }
             })
     }
 
@@ -67,31 +88,24 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
             color: settings?.color,
             addTaskLeft: settings?.addTaskLeft,
             completeTaskLeft: settings?.completeTaskLeft,
-        }, { headers: { Authorization: `Bearer ${getCookie("accessToken")}` } })
+        }, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
             .then(res => {
                 getSettings();
             })
-            .catch(err => {
+            .catch(error => {
+                if(error.response.status === 401){
+                    cookies.erase("accessToken")
+                }
                 toast.error("Could not update settings");
             })
     }
-
-    useEffect(() => {
-        if(getCookie("accessToken") !== null) {
-            setUser(getCookie("accessToken"));
-        } else {
-            router.push("/account");
-        }
-    }, []);
 
     return (
         <UserContext.Provider value={{
             login,
             register,
-            user,
-            setUser,
             settings,
-            setSettings,
+            changeSettings,
             getSettings,
             updateSettings
         }}>

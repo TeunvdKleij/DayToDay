@@ -1,8 +1,9 @@
 'use client'
-import { getCookie } from '@/hooks/useCookie';
 import axios from 'axios';
 import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import { toast } from 'react-toastify';
+import cookies from "browser-cookies"
+import { useRouter } from 'next/navigation';
 interface GroupProps {
     children: ReactNode,
 }
@@ -46,45 +47,57 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     const [toggleDropDown, setToggleDropDown] = useState<boolean>(false)
     const [lastGroupItem, setLastGroupItem] = useState<string>("")
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     const removeGroup = async (name: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/RemoveGroup", { Name: name }, { headers: { Authorization: `Bearer ${getCookie("accessToken")}` } })
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/RemoveGroup", { Name: name }, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
             .then(res => {
                 getGroups();
             })
-            .catch(err => {
+            .catch(error => {
+                if(error.response.status === 401){
+                    cookies.erase("accessToken")
+                    router.push("/account")
+                }
                 toast.error("Group not removed")
             });
     }
 
     const addGroup = async (name: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/AddGroup", { Name: name }, { headers: { Authorization: `Bearer ${getCookie("accessToken")}` } })
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/AddGroup", { Name: name }, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
             .then(res => {
                 setGroupItem(name);
                 localStorage.setItem('groupSelection', name);
                 getGroups();
             })
-            .catch(err => {
+            .catch(error => {
+                if(error.response.status === 401){
+                    cookies.erase("accessToken")
+                    router.push("/account")
+                }
                 toast.error("Group not added")
             });
     }
 
     const getGroups = async () => {
         setLoading(true);
-        await axios.get(process.env.NEXT_PUBLIC_API_URL + "Group/GetGroups", { headers: { Authorization: `Bearer ${getCookie("accessToken")}` } })
+        await axios.get(process.env.NEXT_PUBLIC_API_URL + "Group/GetGroups", { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
             .then((res) => {
                 setGroups(res.data.groups);
                 let item = localStorage.getItem('groupSelection');
                 setGroupItem(item ? item : res.data[0] ? res.data[0] : "");
             })
             .catch(error => {
-                toast.error("Groups not retrieved")
+                if(error.response.status === 401){
+                    cookies.erase("accessToken")
+                    router.push("/account")
+                }
             });
         setLoading(false);
     }
 
     useEffect(() => {
-        getGroups();
+        if(cookies.get("accessToken") != null)  getGroups();
     }, []);
 
     useEffect(() => {
