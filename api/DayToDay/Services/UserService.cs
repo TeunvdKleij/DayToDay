@@ -178,11 +178,10 @@ public class UserService
     public async Task<IActionResult> ChangeSettings(string userID, SettingsDTO settings)
     {
         var settingsOld = await _dataContext.Users.Where(i => i.Id == userID).FirstOrDefaultAsync();
-        settingsOld.CompleteTaskLeft = settings.CompleteTaskLeft;
-        settingsOld.ColorCode = settings.Color;
-        settingsOld.AddTaskLeft = settings.AddTaskLeft;
-        Console.WriteLine(settingsOld.CompleteTaskLeft);
-        Console.WriteLine(settings.CompleteTaskLeft);
+        if (settings.AddTaskLeft != null) settingsOld.AddTaskLeft = (bool)settings.AddTaskLeft;
+        if (settings.Color != null) settingsOld.ColorCode = settings.Color;
+        if (settings.CompleteTaskLeft != null) settingsOld.CompleteTaskLeft = (bool)settings.CompleteTaskLeft;
+
         _dataContext.Users.Update(settingsOld);
         await _dataContext.SaveChangesAsync();
         return new OkObjectResult("Successs");

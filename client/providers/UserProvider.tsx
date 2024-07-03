@@ -35,10 +35,18 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
 
     const changeSettings = (newSettings: any) => {
         setSettings((prevSettings) => ({
-          ...prevSettings,
-          ...newSettings
+            ...prevSettings,
+            ...newSettings
         }));
-      };
+    };
+    
+    useEffect(() => {
+        updateSettings({CompleteTaskLeft: settings.completeTaskLeft})
+    }, [settings.completeTaskLeft])
+
+    useEffect(() => {
+        updateSettings({AddTaskLeft: settings.addTaskLeft})
+    }, [settings.addTaskLeft])
 
     const login = async (email: string, password: string) => {
         await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Login", {Email: email, Password: password})
@@ -52,7 +60,6 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
             getGroups();
         })
         .catch(err => {
-            toast.error("Could not login properly")
             return false
         })
     }
@@ -67,7 +74,6 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
             router.push("/")
         })
         .catch(err => {
-            toast.error("Could not register")
             return false
         })
     }
@@ -83,12 +89,10 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
             })
     }
 
-    const updateSettings = async () => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Settings/Change", {
-            color: settings?.color,
-            addTaskLeft: settings?.addTaskLeft,
-            completeTaskLeft: settings?.completeTaskLeft,
-        }, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+    const updateSettings = async (body: object) => {
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Settings/Change", 
+            body, 
+            { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
             .then(res => {
                 getSettings();
             })
@@ -96,7 +100,6 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
                 if(error.response.status === 401){
                     cookies.erase("accessToken")
                 }
-                toast.error("Could not update settings");
             })
     }
 

@@ -59,7 +59,6 @@ public class UserController : BaseController
             LogService.ErrorLog(nameof(UserController), nameof(GetSettings), "No user found");
             return Unauthorized(new {status = 401, message = "Unauthorized changed settings"});
         }
-        Log.Information("SETTINGS : " + settings.CompleteTaskLeft + " " + settings.Color);
         return await _userService.ChangeSettings(userID, settings);
     }
     

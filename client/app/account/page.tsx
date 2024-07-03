@@ -11,6 +11,7 @@ import cookies, { set } from 'browser-cookies'
 import { getTokenEmail } from "@/hooks/useToken";
 import Dialog from "@/components/Dialog/Dialog";
 import ChangePasswordModal from "@/components/ChangePasswordModal";
+import Toggle from "@/components/Toggle";
 
 const Account = () => {
     const {updateSettings, changeSettings, settings} = useContext(UserContext);
@@ -18,17 +19,28 @@ const Account = () => {
     const [newColor, setNewColor] = useState<any>(null);
     const [pickColor, setPickColor] = useState(false);
     const [leftComplete, setLeftComplete] = useState(settings.completeTaskLeft || false);
+    const [leftAdd, setLeftAdd] = useState(settings.addTaskLeft || false);
     const [passwords, setPasswords] = useState({currentPassword: "", newPassword: "", repeatNewPassword: ""})
 
     useEffect(() => {
         if (settings.completeTaskLeft != null) {
           setLeftComplete(settings.completeTaskLeft);
         }
-      }, [settings.completeTaskLeft]);
+    }, [settings.completeTaskLeft]);
+
+    useEffect(() => {
+        if (settings.addTaskLeft != null) {
+          setLeftAdd(settings.addTaskLeft);
+        }
+    }, [settings.addTaskLeft]);
 
     useEffect(() => {
         changeSettings({ completeTaskLeft: leftComplete });
     }, [leftComplete])
+
+    useEffect(() => {
+        changeSettings({ addTaskLeft: leftAdd });
+    }, [leftAdd])
 
     const handleLogout = () => {
         cookies.erase("accessToken");
@@ -40,15 +52,8 @@ const Account = () => {
     const handleSaveColor = (currentColor: string) => {
         setNewColor(currentColor);
         changeSettings({color: currentColor})
+        updateSettings({Color: currentColor})
     };
-    
-
-    useEffect(() => {
-        if(settings && newColor) {
-            updateSettings();
-        }
-        setNewColor(null)
-    }, [settings]);
 
 
     const handleInputChange = (newSettings: any) => {
@@ -92,11 +97,11 @@ const Account = () => {
                             </div>
                             <div className="flex w-full gap-[10px] flex-row justify-between items-center align-middle">
                                 <p>Complete task direction (Only for mobile)</p>
-                                <label className="inline-flex items-center cursor-pointer">
-                                    <input id="toggleInput" type="checkbox" checked={leftComplete} onChange={() => setLeftComplete(!leftComplete)} value="" className="sr-only peer"/>
-                                    <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>        
-                                    <span className="ms-2 text-xs font-medium text-gray-300 md:ms-3 md:text-sm">{leftComplete ? "Left" : "Right"}</span>
-                                </label>
+                                <Toggle text={leftComplete ? "Left" : "Right"} checked={leftComplete} onChange={() => setLeftComplete(!leftComplete)}/>
+                            </div>
+                            <div className="flex w-full gap-[10px] flex-row justify-between items-center align-middle">
+                                <p>Add task button (Only for mobile)</p>
+                                <Toggle text={leftAdd ? "Left" : "Right"} checked={leftAdd} onChange={() => setLeftAdd(!leftAdd)}/>
                             </div>
                         </div>
                     )}
