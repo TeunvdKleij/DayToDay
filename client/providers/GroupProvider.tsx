@@ -4,6 +4,7 @@ import React, {createContext, ReactNode, useContext, useEffect, useState} from '
 import { toast } from 'react-toastify';
 import cookies from "browser-cookies"
 import { useRouter } from 'next/navigation';
+import Cookies from "js-cookie"
 interface GroupProps {
     children: ReactNode,
 }
@@ -50,13 +51,13 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     const router = useRouter();
 
     const removeGroup = async (name: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/RemoveGroup", { Name: name }, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/RemoveGroup", { Name: name }, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
             .then(res => {
                 getGroups();
             })
             .catch(error => {
                 if(error.response.status === 401){
-                    cookies.erase("accessToken")
+                    Cookies.remove("accessToken")
                     router.push("/account")
                 }
                 toast.error("Group not removed")
@@ -64,7 +65,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     }
 
     const addGroup = async (name: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/AddGroup", { Name: name }, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/AddGroup", { Name: name }, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
             .then(res => {
                 setGroupItem(name);
                 localStorage.setItem('groupSelection', name);
@@ -72,7 +73,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
             })
             .catch(error => {
                 if(error.response.status === 401){
-                    cookies.erase("accessToken")
+                    Cookies.remove("accessToken")
                     router.push("/account")
                 }
                 toast.error("Group not added")
@@ -81,7 +82,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
 
     const getGroups = async () => {
         setLoading(true);
-        await axios.get(process.env.NEXT_PUBLIC_API_URL + "Group/GetGroups", { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        await axios.get(process.env.NEXT_PUBLIC_API_URL + "Group/GetGroups", { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
             .then((res) => {
                 setGroups(res.data.groups);
                 let item = localStorage.getItem('groupSelection');
@@ -89,7 +90,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
             })
             .catch(error => {
                 if(error.response.status === 401){
-                    cookies.erase("accessToken")
+                    Cookies.remove("accessToken")
                     router.push("/account")
                 }
             });
@@ -97,7 +98,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     }
 
     useEffect(() => {
-        if(cookies.get("accessToken") != null)  getGroups();
+        if(Cookies.get("accessToken") != null)  getGroups();
     }, []);
 
     useEffect(() => {

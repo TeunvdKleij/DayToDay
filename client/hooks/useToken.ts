@@ -1,7 +1,8 @@
 import cookies from "browser-cookies";
+import Cookies from "js-cookie"
 
 export const getTokenEmail = () => {
-  const accessToken = cookies.get("accessToken");
+  const accessToken = Cookies.get("accessToken");
   if(accessToken){
     let email = getDataFromToken(accessToken, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
     return email;
@@ -9,7 +10,7 @@ export const getTokenEmail = () => {
   return null;
 }
 export const getTokenId = () => {
-  const accessToken = cookies.get("accessToken");
+  const accessToken = Cookies.get("accessToken");
   let Id;
   if(accessToken){
     Id = getDataFromToken(accessToken, "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");

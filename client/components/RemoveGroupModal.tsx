@@ -30,11 +30,13 @@ const RemoveGroupModal = ({setShowModal, groupName, prevGroup} : RemoveGroupInte
         <Dialog
             setShowModal={setShowModal}
             title={"Remove group"}
-            description={"Are you sure you want to remove <b class='pl-1'>" + prevGroup + "</b>?"}
             onAccept={async () => removeClick(prevGroup)}
             canAccept={true}
             maxWidth={500}
-        />
+            onlyNotice={false}
+        >
+            <p>Are you sure you want to remove <b>{prevGroup}</b>?</p>
+        </Dialog>
     );
 }
 export default RemoveGroupModal

@@ -12,6 +12,7 @@ import { getTokenEmail } from "@/hooks/useToken";
 import Dialog from "@/components/Dialog/Dialog";
 import ChangePasswordModal from "@/components/ChangePasswordModal";
 import Toggle from "@/components/Toggle";
+import Cookies from "js-cookie"
 
 const Account = () => {
     const {updateSettings, changeSettings, settings} = useContext(UserContext);
@@ -43,7 +44,7 @@ const Account = () => {
     }, [leftAdd])
 
     const handleLogout = () => {
-        cookies.erase("accessToken");
+        Cookies.remove("accessToken")
         localStorage.removeItem("groupSelection")
         localStorage.removeItem("gdpr")
         window.location.reload();
@@ -66,7 +67,7 @@ const Account = () => {
     const [showModal, setShowModal] = useState<boolean>(false)
 
     return (
-        cookies.get("accessToken") ? (
+        Cookies.get("accessToken") ? (
             <Wrapper>
                 <div className="flex flex-row gap-[10px] justify-start items-center w-full align-middle pt-[10px] pb-[10px]">
                     <Link href="/" className="flex flex-row gap-[5px] justify-start items-center align-middle"><ArrowLeftIcon /> Back</Link>

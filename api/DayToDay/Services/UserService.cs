@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using quadconnects.Controllers;
+using DayToDay.Controllers;
 using Serilog;
 
 namespace DayToDay.Services;

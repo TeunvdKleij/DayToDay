@@ -7,7 +7,7 @@ using DayToDay.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using quadconnects.Controllers;
+using DayToDay.Controllers;
 using Serilog;
 
 namespace DayToDay.Controllers;

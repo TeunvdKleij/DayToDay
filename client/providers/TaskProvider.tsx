@@ -4,7 +4,7 @@ import React, {createContext, ReactNode, useContext, useEffect, useState} from '
 import { NoteContext } from './NoteProvider';
 import { GroupContext } from './GroupProvider';
 import { toast } from 'react-toastify';
-import cookies from "browser-cookies"
+import Cookies from "js-cookie"
 import { useRouter } from 'next/navigation';
 interface TaskProps {
     children: ReactNode,
@@ -94,17 +94,16 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     useEffect(() => {
-        if(cookies.get("accessToken") != null)  startUp();
+        if(Cookies.get("accessToken") != null)  startUp();
     }, [])
 
     useEffect(() => {
-        while(groupItem == null){}
-        if(cookies.get("accessToken") != null)  getNoteForADay(changedDate, groupItem);
-        if(cookies.get("accessToken") != null)  getTasks();
+        if(Cookies.get("accessToken") != null)  getNoteForADay(changedDate, groupItem);
+        if(Cookies.get("accessToken") != null)  getTasks();
     }, [groups, groupItem])
 
     useEffect(() =>{
-        if(cookies.get("accessToken") != null) getTasks();
+        if(Cookies.get("accessToken") != null) getTasks();
     }, [selectedSortOption])
 
     const getTasks = async () => {
@@ -117,7 +116,7 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
             toast.error("Can't add task to the past")
             return null;
         }
-        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/AddTask", {TaskName: taskName, ChangedDate: changedDate, GroupName: groupItem}, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
         .then(async res => {
             if(selectedSortOption && selectedSortOption.value != "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
@@ -126,28 +125,28 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
         })
         .catch(error => {
             if(error.response.status === 401){
-                cookies.erase("accessToken")
+                Cookies.remove("accessToken")
                 router.push("/account")
             }
         })
     }
 
     const updateTaskValueInDatabase = async (id: string, taskName: string) => {
-        await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskValue", {Id: id, TaskName: taskName}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskValue", {Id: id, TaskName: taskName}, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
         .catch(error => {
             toast.error("Task value not updated")
             if(error.response.status === 401){
-                cookies.erase("accessToken")
+                Cookies.remove("accessToken")
                 router.push("/account")
             }
         });
     }
 
     const updateTaskStatusInDatabase = async (id: string, taskDone: boolean) => {
-        await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskStatus", {Id: id, Done: !taskDone}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskStatus", {Id: id, Done: !taskDone}, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
         .catch(error => {
             if(error.response.status === 401){
-                cookies.erase("accessToken")
+                Cookies.remove("accessToken")
                 router.push("/account")
             }
             toast.error("Task status not updated")
@@ -198,13 +197,13 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     const getTasksForADay = async (changedDate: number, groupItem: string) => {
-        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/TasksForADay", {ChangedDate: changedDate, GroupName: groupItem}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/TasksForADay", {ChangedDate: changedDate, GroupName: groupItem}, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
             .then(res => {
                 return fillTasks(res);
             })
             .catch(error => {
                 if(error.response.status === 401){
-                    cookies.erase("accessToken")
+                    Cookies.remove("accessToken")
                     router.push("/account")
                 }
             })
@@ -212,13 +211,13 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     const getTasksForAGroup = async (groupItem: string) => {
-        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/TasksForAGroup", {GroupName: groupItem}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/TasksForAGroup", {GroupName: groupItem}, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
             .then(res => {
                 return fillTasks(res);
             })
             .catch(error => {
                 if(error.response.status === 401){
-                    cookies.erase("accessToken")
+                    Cookies.remove("accessToken")
                     router.push("/account")
                 }
             })
@@ -226,14 +225,14 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     const removeTasksByGroup = async (name: string) => {
-        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTasksByGroup", {GroupName: name}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        let result = await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTasksByGroup", {GroupName: name}, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
         .then(res => {
             return res.data
         })
         .catch(error => {
             toast.error("Tasks for group not removed")
             if(error.response.status === 401){
-                cookies.erase("accessToken")
+                Cookies.remove("accessToken")
                 router.push("/account")
             }
         })
@@ -241,28 +240,28 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
     }
 
     const removeTask = async (id: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTask", {Id: id}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        await axios.post(process.env.NEXT_PUBLIC_API_URL + "Task/RemoveTask", {Id: id}, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
         .then(async () => {
             if(selectedSortOption && selectedSortOption.value !== "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
         })
         .catch(error => {
             if(error.response.status === 401){
-                cookies.erase("accessToken")
+                Cookies.remove("accessToken")
             }
             toast.error("Task not removed")
         });
     }
     
     const editTask = async (id: string, changeDate: any) => {
-        await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskDate", {Id: id, date: changeDate}, { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        await axios.put(process.env.NEXT_PUBLIC_API_URL + "Task/UpdateTaskDate", {Id: id, date: changeDate}, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
         .then(async res => {
             if(selectedSortOption && selectedSortOption.value !== "All tasks") await getTasksForADay(changedDate, groupItem);
             else await getTasksForAGroup(groupItem);
         })
         .catch(error => {
             if(error.response.status === 401){
-                cookies.erase("accessToken")
+                Cookies.remove("accessToken")
                 router.push("/account")
             }
             toast.error("Task not updated")

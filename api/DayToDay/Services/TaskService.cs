@@ -5,7 +5,7 @@ using DayToDay.Models;
 using DayToDay.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using quadconnects.Controllers;
+using DayToDay.Controllers;
 
 namespace DayToDay.Services;
 

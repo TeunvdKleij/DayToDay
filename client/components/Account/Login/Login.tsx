@@ -11,6 +11,8 @@ import PasswordHide from "@/icons/Password/PasswordHide";
 import PasswordShow from "@/icons/Password/PasswordShow";
 import { useRouter } from "next/navigation";
 import cookies from 'browser-cookies'
+import Cookies from "js-cookie"
+import Dialog from "@/components/Dialog/Dialog";
 
 const Login = () => {
     const {validateEmail, validatePassword, replaceHTML} = useContext(MainContext);
@@ -39,7 +41,7 @@ const Login = () => {
     };
 
     useEffect(() => {
-        var accessToken = cookies.get("accessToken");
+        var accessToken = Cookies.get("accessToken")
         if(accessToken) router.push("/")
     }, []);
 
@@ -138,7 +140,7 @@ const Login = () => {
                     </span>
                 </div>
                 }
-                <Button text={loginSelected ? "Login" : "Register"} onClick={loginOrRegister} backgroundColor={ColorEnum.BLUE} className={`w-full mt-3 text-xl`}/>
+                <button onClick={loginOrRegister} className="w-full mt-3 text-xl md:text-base rounded-lg pt-1 pl-2 pr-2 pb-1 flex items-center justify-center gap-2 hover:cursor-pointer hover:brightness-90 bg-blue-500">{loginSelected ? "Login" : "Register"}</button>
             </div>
         </div>
     );

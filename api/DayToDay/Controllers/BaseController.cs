@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
-namespace quadconnects.Controllers;
+namespace DayToDay.Controllers;
 
 public class BaseController: ControllerBase
 {
@@ -63,9 +63,9 @@ public class BaseController: ControllerBase
     }
     private JwtSecurityToken GetJsonToken()
     {
-        var jwtToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+        string jwtToken = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var handler = new JwtSecurityTokenHandler();
-        if (jwtToken.IsNullOrEmpty())
+        if (jwtToken.IsNullOrEmpty() || jwtToken == "undefined")
         {
             Log.Error("Controller: BaseController | Method: GetJsonToken | Message: Token not found");
             return null;

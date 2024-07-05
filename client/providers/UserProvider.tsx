@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import cookies from 'browser-cookies'
 import { GroupContext } from './GroupProvider';
 import { TaskContext } from './TaskProvider';
+import Cookies from "js-cookie"
 interface UserProps {
     children: ReactNode,
 }
@@ -24,14 +25,14 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
       });
 
     useEffect(() => {
-        if(cookies.get("accessToken") == null) {
+        if(Cookies.get("accessToken") == null) {
             router.push("/account");
         }
     }, []);  
 
     useEffect(() => {
-        if(cookies.get("accessToken") != null) getSettings();
-    }, [cookies.get("accessToken")]);
+        if(Cookies.get("accessToken") != null) getSettings();
+    }, [Cookies.get("accessToken")]);
 
     const changeSettings = (newSettings: any) => {
         setSettings((prevSettings) => ({
@@ -53,8 +54,8 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
         .then(async res => {
             let accessToken = res.data.token;
             let expiresIn = res.data.expiresIn;
-            cookies.set("accessToken", accessToken, {expires: expiresIn})
-            while(cookies.get("accessToken") == null){}
+            Cookies.set("accessToken", accessToken, {expires: expiresIn})
+            while(Cookies.get("accessToken") == null){}
             setSettings(settings);
             router.push("/")
             getGroups();
@@ -69,8 +70,8 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
         .then(async res => {
             let accessToken = res.data.token;
             let expiresIn = res.data.expiresIn;
-            cookies.set("accessToken", accessToken, { expires: expiresIn})
-            while(cookies.get("accessToken") == null){}
+            Cookies.set("accessToken", accessToken, { expires: expiresIn})
+            while(Cookies.get("accessToken") == null){}
             router.push("/")
         })
         .catch(err => {
@@ -78,13 +79,13 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
         })
     }
     const getSettings = async () => {
-        await axios.get(process.env.NEXT_PUBLIC_API_URL + "User/Settings", { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+        await axios.get(process.env.NEXT_PUBLIC_API_URL + "User/Settings", { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
             .then(res => {
                 setSettings(res.data);
             })
             .catch(error => {
                 if(error.response.status === 401){
-                    cookies.erase("accessToken")
+                    Cookies.remove("accessToken")
                 }
             })
     }
@@ -92,13 +93,13 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
     const updateSettings = async (body: object) => {
         await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Settings/Change", 
             body, 
-            { headers: { Authorization: `Bearer ${cookies.get("accessToken")}` } })
+            { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
             .then(res => {
                 getSettings();
             })
             .catch(error => {
                 if(error.response.status === 401){
-                    cookies.erase("accessToken")
+                    Cookies.remove("accessToken")
                 }
             })
     }

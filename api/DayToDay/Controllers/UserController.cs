@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using quadconnects.Controllers;
+using DayToDay.Controllers;
 using Serilog;
 
 namespace DayToDay.Controllers;
@@ -46,7 +46,6 @@ public class UserController : BaseController
              LogService.ErrorLog(nameof(UserController), nameof(GetSettings), "No user found");
              return Unauthorized(new {status = 401, message = "Unauthorized get settings"});
         }
-        
         return await _userService.GetSettings(userID);
     }
     

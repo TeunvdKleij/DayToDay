@@ -7,6 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import Tasks from "@/components/Tasks/tasks";
 import Wrapper from "@/components/Wrapper/wrapper";
 import Menu from "@/components/Tasks/Menu/menu";
+import Dialog from "@/components/Dialog/Dialog";
 
 export default function Home() {
   const [percentage, setPercentage] = useState<number>(0);
@@ -27,7 +28,8 @@ export default function Home() {
 
   useEffect(() => {
     var gdprMessage = localStorage.getItem('gdpr')
-    if(!gdprMessage || gdprMessage.includes("denied")) setGdpr(true);
+    if(gdprMessage && gdprMessage.includes("denied")) setGdprDialog(true);
+    else setGdprDialog(false)
   }, [])
 
   useEffect(() => {
@@ -36,7 +38,6 @@ export default function Home() {
     else setGdprDialog(false);
   }, [gdpr]);
 
-  //useEffect to set the focus on the note when it becomes visible
   useEffect(() => {
     const textarea = document.getElementById('noteTextarea');
     if(textarea != null) textarea.focus();

@@ -3,7 +3,7 @@ using DayToDay.Models;
 using DayToDay.Models.DTO;
 using DayToDay.Services;
 using Microsoft.AspNetCore.Mvc;
-using quadconnects.Controllers;
+using DayToDay.Controllers;
 
 namespace DayToDay.Controllers;
 
