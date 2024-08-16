@@ -33,17 +33,17 @@ const Navbar = () => {
     const changeDateWithDatepicker = (event: any) => {
         const selectedPicked = new Date(event.target.value);
         const today = new Date();
-
-        const todayDate = getDate(today)
+        today.setHours(0, 0, 0, 0);
         const selectedDate = getDate(selectedPicked)
+        selectedDate.setHours(0,0,0,0)
 
         const differenceInTime = selectedDate.getTime() - today.getTime();
         const differenceInDays = (differenceInTime / (1000 * 3600 * 24)).toFixed(0)
-        console.log(differenceInDays);
 
         changeDateToDate(parseInt(differenceInDays));
         event.target.value = ""
     }
+
     const getDate = (date: Date) => {
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0'); 

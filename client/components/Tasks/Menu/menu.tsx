@@ -148,7 +148,7 @@ const Menu = () => {
                 </div>
             </div>
             <div className={"w-auto gap-[10px] flex flex-row justify-end items-center align-middle"}>
-                <Dropdown showText={false} showArrow={false} className={`bg-[#555] rounded-[50px] w-[30px] h-[30px] flex justify-center align-middle items-center`}
+                <Dropdown showText={false} showArrow={false} className={`rounded-[50px] w-[30px] h-[30px] flex justify-center align-middle items-center`}
                     style={{backgroundColor: optionsHover ? settings.color : "#555" }}
                     onMouseEnter={() => setOptionsHover(true)}
                     onMouseLeave={() => setOptionsHover(false)}

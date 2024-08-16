@@ -115,9 +115,9 @@ const Dropdown = ({ children, showText, icon, data, defaultItem, visible, setVis
                 {icon === DropdownIconsEnum.FOLDER &&
                     <FolderIcon className="fill-none w-[20px] h-[20px] stroke-white" />}
                 {icon === DropdownIconsEnum.FILTER &&
-                    <FilterIcon className="fill-none w-[20px] h-[20px] stroke-white" />}
+                    <FilterIcon className="w-[20px] h-[20px] fill-white" />}
                 {icon === DropdownIconsEnum.DOTS &&
-                    <DotsIcon className="fill-none w-[20px] h-[20px] stroke-zinc-300" />}
+                    <DotsIcon className="fill-none w-[20px] h-[20px] stroke-white" />}
                 {showText && (
                     selectedItem ? selectedItem.value : "Select item ..."
                 )}

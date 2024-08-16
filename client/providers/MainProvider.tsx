@@ -1,5 +1,6 @@
 'use client'
 import React, {createContext, ReactNode, useEffect, useState} from 'react';
+import Cookies from "js-cookie"
 interface MainProps {
     children: ReactNode,
 }
@@ -85,6 +86,7 @@ const MainProvider: React.FC<MainProps> = ({children}) => {
         }
         return input.trim();
     }
+
 
     return (
         <MainContext.Provider value={{

@@ -99,7 +99,7 @@ public class UserService
             Status = 200,
             Message = "User created successfully!",
             token = new JwtSecurityTokenHandler().WriteToken(token),
-            expiration = DateTime.UtcNow.AddHours(3),
+            expiration = DateTime.UtcNow.AddDays(3),
             settings = settings
         });
     }
@@ -140,7 +140,7 @@ public class UserService
             return new OkObjectResult(new
             {
                 token = new JwtSecurityTokenHandler().WriteToken(token),
-                expiration = DateTime.UtcNow.AddHours(3),
+                expiration = DateTime.UtcNow.AddDays(3),
                 user = userData,
                 settings = settings
             });
@@ -167,7 +167,7 @@ public class UserService
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:ValidIssuer"],
             audience: _configuration["JWT:ValidAudience"],
-            expires: DateTime.UtcNow.AddHours(3),
+            expires: DateTime.UtcNow.AddDays(3),
             claims: authClaims,
             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
         );
