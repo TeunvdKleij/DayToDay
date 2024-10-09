@@ -1,7 +1,6 @@
 'use client'
 import axios from 'axios';
 import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
-import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import cookies from 'browser-cookies'
 import { GroupContext } from './GroupProvider';
@@ -50,7 +49,7 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
     }, [settings.addTaskLeft])
 
     const login = async (email: string, password: string) => {
-        await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Login", {Email: email, Password: password})
+        let res = await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Login", {Email: email, Password: password})
         .then(async res => {
             let accessToken = res.data.token;
             let expiresIn = res.data.expiresIn;
@@ -61,8 +60,11 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
             getGroups();
         })
         .catch(err => {
-            return false
+            if(err.response.status === 401 || err.response.status == 400){;
+                return false;
+            }
         })
+        return res;
     }
 
     const register = async (email: string, password: string, repeatPassword: string) =>{

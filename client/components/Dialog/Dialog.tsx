@@ -46,7 +46,7 @@ const Dialog = ({setShowModal, children, description, title, onCancel, onAccept,
                 <div className="w-full flex-col gap-1 pt-3 pr-5 pl-5 relative">
                     {onlyNotice && <div className='absolute top-3 right-2 hover:cursor-pointer' onClick={(e) => handleCancelModal(e)}><CrossIcon/></div>}
                     <h1 className={"flex text-xl w-full align-middle justify-center font-bold"}>{title}</h1>
-                    {description && <p>{description}</p>}
+                    {description && <p className='flex align-middle justify-center'>{description}</p>}
                 </div>
                 {children && (
                     <div className={`flex flex-col gap-1 ${!onlyNotice && "border-b-2"} border-t-2 border-[#353535] pt-5 pb-5 pr-5 pl-5`}>

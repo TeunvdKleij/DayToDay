@@ -78,8 +78,8 @@ const Account = () => {
                         {getTokenEmail() && <h1 className="md:text-xl text-base text-white font-bold w-full">{getTokenEmail()}</h1>}
                         <p className="text-zinc-300">This is your e-mail of your account.</p>
                         <div className="flex w-full justify-between align-middle">
-                            <p className="flex align-middle content-center items-center">Reset password</p>
-                            <button className="pl-2 pr-2 pt-1 pb-1 rounded-lg" style={{backgroundColor: settings.color}} onClick={() => setShowModal(true)}>Reset password</button>
+                            <p className="flex align-middle content-center items-center">Change password</p>
+                            <button className="pl-2 pr-2 pt-1 pb-1 rounded-lg" style={{backgroundColor: settings.color}} onClick={() => setShowModal(true)}>Change password</button>
                         </div>
                         {showModal && <ChangePasswordModal setShowModal={setShowModal} passwords={passwords} handleInputChange={handleInputChange}/>}
                     </div>

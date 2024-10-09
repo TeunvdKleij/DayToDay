@@ -1,6 +1,5 @@
 import DatePickerEditIcon from "@/icons/DatePickerEditIcon";
 import DatePickerIcon from "@/icons/DatePickerIcon";
-import { toast } from "react-toastify";
 
 interface CalendarInterface{
     task: boolean

@@ -1,7 +1,6 @@
 'use client'
 import axios from 'axios';
 import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
-import { toast } from 'react-toastify';
 import cookies from "browser-cookies"
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie"
@@ -60,7 +59,6 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
                     Cookies.remove("accessToken")
                     router.push("/account")
                 }
-                toast.error("Group not removed")
             });
     }
 
@@ -76,7 +74,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
                     Cookies.remove("accessToken")
                     router.push("/account")
                 }
-                toast.error("Group not added")
+    
             });
     }
 

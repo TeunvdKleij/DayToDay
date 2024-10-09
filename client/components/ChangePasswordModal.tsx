@@ -9,7 +9,7 @@ interface ChangePasswordModalProps{
 
 const ChangePasswordModal = ({setShowModal, passwords, handleInputChange} : ChangePasswordModalProps) => {
     return (
-        <Dialog setShowModal={setShowModal} title={"New group"} maxWidth={800} description={"Enter details to update your password"}
+        <Dialog setShowModal={setShowModal} title={"Change password"} maxWidth={800} description={"Enter details to change your password"}
                 onAccept={() => alert("hi")} onlyNotice={false}>
             <p>Current password</p>
             <input type="text" id="currentPasswordInput" placeholder={"Enter your current password"} value={passwords.currentPassword} onChange={(e) => handleInputChange({currentPassword: e.target.value})}
