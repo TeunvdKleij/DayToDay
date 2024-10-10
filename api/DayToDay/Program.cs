@@ -1,6 +1,8 @@
 using System.Text;
+using DayToDay.Controllers;
 using DayToDay.Data;
 using DayToDay.Models;
+using DayToDay.Models.DTO.User;
 using DayToDay.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -99,11 +101,16 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
     dbContext.Database.Migrate();
-    if (!dbContext.Group.Any())
+    if (dbContext.Users.Any())
     {
-        dbContext.Group.Add(new GroupModel() { Name = "Home"});
-        dbContext.SaveChanges();
+        if (!dbContext.Group.Any())
+        {
+            Log.Information("2"+dbContext.Group.Count());
+            dbContext.Group.Add(new GroupModel() { Name = "Home" });
+            dbContext.SaveChanges();
+        }
     }
+
     if (File.Exists("./Dbbackups/" + DateTime.Now.ToString("ddMMyyyy") + "app.db"))
     {
         Log.Information("Db backed up already");

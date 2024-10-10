@@ -617,14 +617,19 @@ FodyWeavers.xsd
 *.config
 *.vsidx
 *.suo
-*.db
 *.db-shm
 *.db-wal
 *.DS_store
-Dbbackups/**.db
 
 *.env
 .env
 
+# Ignore all files in the database and dbbackups folders
+/database/*
+/Dbbackups/*
+
+# But don't ignore the keepme files to keep the folders tracked
+!/database/.dummy
+!/Dbbackups/.dummyBackup
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,rider,dotnetcore,aspnetcore
