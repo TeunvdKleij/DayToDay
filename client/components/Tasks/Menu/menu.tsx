@@ -75,7 +75,7 @@ const Menu = () => {
         }
         else{
             setGroupItem(item)
-            localStorage.setItem('groupSelection', item);
+            if (typeof window !== "undefined") localStorage.setItem('groupSelection', item);
             setToggleDropDown(false)
         }
     }

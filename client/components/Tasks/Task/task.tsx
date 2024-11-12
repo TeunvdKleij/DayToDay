@@ -153,16 +153,17 @@ const Task: React.FC<TaskProps> = ({ taskName, index }) => {
         <div id={"taskDiv" + tasksId[index]}
              onTouchStart={(e: any) => handleMouseDown(e)}
              onTouchEnd={() => handleMouseUp()}
-             className={`relative no-select w-full min-h-[60px] max-h-[100px] h-full bg-[#252525] pt-[10px] pb-[10px] pl-[20px] pr-[20px] box-border flex flex-row align-middle items-center justify-between gap-[10px] hover:focus:bg-[#333]
+             className={`relative no-select w-full min-h-[60px] h-full bg-[#252525] pt-[10px] pb-[10px] pl-[20px] pr-[20px] box-border flex flex-row align-top items-start justify-between gap-[10px] hover:focus:bg-[#333]
                 ${index === 0 ? 'rounded-tl-[12px] rounded-tr-[12px]' : ''} 
                 ${index === tasksId.length - 1 ? 'rounded-bl-[12px] rounded-br-[12px]' : ''}`}>
             <div id={"name" + tasksId[index]}
-                 className={`flex ${settings && settings.completeTaskLeft ? "flex-row-reverse" : "flex-row"} justify-between flex-auto h-full align-middle items-center gap-[20px] md:flex-row-reverse`}>
+                 className={`flex ${settings && settings.completeTaskLeft ? "flex-row-reverse" : "flex-row"} justify-between flex-auto h-full align-top items-start gap-[20px] md:flex-row-reverse`}>
                 <p id={"task" + tasksId[index]} onChange={handleTaskValueChange} contentEditable={true} suppressContentEditableWarning={true} onBlur={changeTaskValue} onKeyDown={(e: any) => onKeyDown(e)}
-                       className={`resize-none text-[16px] bg-transparent border-none w-full h-full overflow-auto ${taskDone && "line-through opacity-50 z-0"}`}>
+                        className={`break-words text-[16px] bg-transparent border-none w-full h-full overflow-auto ${taskDone ?? "line-through opacity-50 z-0"}`}
+                        style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
                     {taskValue}
-                </p>
-
+                </p> 
+                {/* word-break: break-word; Breekt lange woorden om op de volgende regel te gaan*/}
                     <button onClick={() => changeTaskState()}
                             className={`md:w-[25px] md:h-[25px] md:rounded-[8px] md:min-w-[25px] md:min-h-[25px] rounded-[8px] min-w-[30px] min-h-[30px] w-[30px] h-[30px] flex justify-center align-middle items-center`}
                             style={{backgroundColor: hoverCheckBox || taskDone ? settings.color : "#555"}}
@@ -181,7 +182,7 @@ const Task: React.FC<TaskProps> = ({ taskName, index }) => {
                         )}
                     </button>
                 </div>
-                <div className={"flex flex-row items-center h-full w-auto justify-center align-middle gap-[10px]"}>
+                <div className={"flex flex-row items-center h-full w-auto justify-center align-top gap-[10px]"}>
                     <Calendar task={true} onChange={() => onChangeDate(event, tasksId[index])}/>
                     <div className="md:flex hidden cursor-pointer" onClick={() => removeTask(tasksId[index])}>
                         <TrashCanIcon

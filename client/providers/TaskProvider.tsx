@@ -88,8 +88,10 @@ const TaskProvider: React.FC<TaskProps> = ({children}) => {
 
     const startUp = async () => {
         await getGroups();
-        const groupName = localStorage.getItem('groupSelection')
-        if(groupName != null) setGroupItem(groupName);
+        if(typeof window !== "undefined"){
+            const groupName = localStorage.getItem('groupSelection')
+            if(groupName != null) setGroupItem(groupName);
+        }
         else {setGroupItem(groups[0])}
     }
 

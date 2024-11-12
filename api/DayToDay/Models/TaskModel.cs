@@ -18,7 +18,9 @@ public class TaskModel
     public string TaskId { get; set; }
     public string TaskName { get; set; }
     public bool Done { get; set; }
-    public DateTime dateAdded { get; set; }
+    public DateTime Date { get; set; }
+    public int AmountOfDaysOpen { get; set; } 
+    public DateTime OriginalDate { get; set; }
     
     public int GroupId { get; set; }
     

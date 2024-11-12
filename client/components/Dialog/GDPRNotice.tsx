@@ -14,7 +14,7 @@ const GDPRNotice = ({setGdpr} : GDPRProps) => {
 
     const setGdprMessage = (gdpr: boolean) => {
         var date = new Date
-        localStorage.setItem("gdpr", `${gdpr ? "accepted at "+date : "denied" }`)
+        if (typeof window !== "undefined") localStorage.setItem("gdpr", `${gdpr ? "accepted at "+date : "denied" }`)
         setGdpr(gdpr ? "accepted at "+ date : "denied")
     }
 
@@ -22,7 +22,7 @@ const GDPRNotice = ({setGdpr} : GDPRProps) => {
 
 
     return (
-        <>
+        <div>
         <Dialog
             setShowModal={setShowModal}
             title={"GDPR notice"}
@@ -35,7 +35,7 @@ const GDPRNotice = ({setGdpr} : GDPRProps) => {
         </Dialog>
         {toggleCookies && <CookieDialog setToggleCookies={setToggleCookies}/>}
         {togglePrivacy && <PrivacyDialog setTogglePrivacy={setTogglePrivacy}/>}
-        </>
+        </div>
     );
 }
 export default GDPRNotice;

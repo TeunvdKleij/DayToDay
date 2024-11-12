@@ -78,7 +78,7 @@ export default function Home() {
               <Menu/>
               <Tasks/>
           </Wrapper>
-          {!gdprSelection && (localStorage != null && (localStorage.getItem('gdpr') == null || localStorage.getItem('gdpr') == "denied")) && <GDPRNotice setGdpr={setGdprChoice}/>}
+          {!gdprSelection && (typeof window !== "undefined" && (localStorage.getItem('gdpr') == null || localStorage.getItem('gdpr') == "denied")) && <GDPRNotice setGdpr={setGdprChoice}/>}
       </>
   );
 }

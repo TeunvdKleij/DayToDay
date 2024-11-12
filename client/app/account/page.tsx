@@ -50,8 +50,10 @@ const Account = () => {
 
     const handleLogout = () => {
         Cookies.remove("accessToken")
-        localStorage.removeItem("groupSelection")
-        localStorage.removeItem("gdpr")
+        if(typeof window !== "undefined"){
+            localStorage.removeItem("groupSelection")
+            localStorage.removeItem("gdpr")
+        }
         window.location.reload();
     }
 

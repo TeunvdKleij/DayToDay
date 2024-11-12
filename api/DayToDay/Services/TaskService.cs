@@ -21,7 +21,7 @@ public class TaskService
         var groupID = await _dataContext.Group.Where(i => i.Name == taskDto.GroupName && i.UserId == userId).Select(i => i.Id).FirstOrDefaultAsync();
         DateTime date = DateTime.Now.AddDays((double)taskDto.ChangedDate);
 
-        var taskList = await _dataContext.Tasks.Where(i => i.dateAdded == date.Date && i.GroupId == groupID)
+        var taskList = await _dataContext.Tasks.Where(i => i.Date == date.Date && i.GroupId == groupID)
             .ToListAsync();
         return new OkObjectResult(new { tasks = taskList });
     }
@@ -32,12 +32,13 @@ public class TaskService
         if (userGroups.Count > 0)
         {
             var oldTasks = await _dataContext.Tasks
-                .Where(i => i.dateAdded < DateTime.Now.Date && !i.Done && userGroups.Contains(i.GroupId)).ToListAsync();
+                .Where(i => i.Date < DateTime.Now.Date && !i.Done && userGroups.Contains(i.GroupId)).ToListAsync();
             if (oldTasks.Count > 0)
             {
                 foreach (TaskModel task in oldTasks)
                 {
-                    task.dateAdded = DateTime.Now.Date;
+                    task.Date = DateTime.Now.Date;
+                    task.AmountOfDaysOpen++;
                     _dataContext.Tasks.Update(task);
                     await _dataContext.SaveChangesAsync();
                 }
@@ -72,10 +73,11 @@ public class TaskService
                 out dateTime))
         {
             string formattedDateTime = dateTime.ToString("yyyy/MM/dd 00:00:00");
-            task.dateAdded = DateTime.Parse(formattedDateTime);
+            task.Date = DateTime.Parse(formattedDateTime);
+            task.AmountOfDaysOpen = 0;
             _dataContext.Update(task);
             await _dataContext.SaveChangesAsync();
-            return new OkObjectResult(new { message = task.dateAdded });
+            return new OkObjectResult(new { message = task.Date });
         }
 
         return new BadRequestObjectResult(new { message = "Bad request" });
@@ -170,8 +172,10 @@ public class TaskService
             TaskId = taskId.ToString(),
             TaskName = taskValue,
             Done = false,
-            dateAdded = DateTime.Now.Date.AddDays((double)task.ChangedDate),
-            GroupId = groupId
+            Date = DateTime.Now.Date.AddDays((double)task.ChangedDate),
+            GroupId = groupId,
+            OriginalDate = DateTime.Now.Date.AddDays((double)task.ChangedDate),
+            AmountOfDaysOpen = 0
         };
         await _dataContext.Tasks.AddAsync(newTask);
         await _dataContext.SaveChangesAsync();

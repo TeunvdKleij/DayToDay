@@ -66,7 +66,7 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
         await axios.post(process.env.NEXT_PUBLIC_API_URL + "Group/AddGroup", { Name: name }, { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
             .then(res => {
                 setGroupItem(name);
-                localStorage.setItem('groupSelection', name);
+                if (typeof window !== "undefined") localStorage.setItem('groupSelection', name);
                 getGroups();
             })
             .catch(error => {
@@ -83,7 +83,10 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
         await axios.get(process.env.NEXT_PUBLIC_API_URL + "Group/GetGroups", { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
             .then((res) => {
                 setGroups(res.data.groups);
-                let item = localStorage.getItem('groupSelection');
+                let item;
+                if (typeof window !== "undefined"){
+                    item = localStorage.getItem('groupSelection');
+                }
                 setGroupItem(item ? item : res.data[0] ? res.data[0] : "");
             })
             .catch(error => {
@@ -102,7 +105,8 @@ const GroupProvider: React.FC<GroupProps> = ({children}) => {
     useEffect(() => {
         if (groups && groups.length > 0) {
             setLoading(false);
-            let item = localStorage.getItem('groupSelection');
+            let item;
+            if(typeof window !== "undefined") item = localStorage.getItem('groupSelection');
             setGroupItem(item ? item : groups[0] ? groups[0] : "");
         }
     }, [groups]);

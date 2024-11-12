@@ -50,7 +50,7 @@ const MainProvider: React.FC<MainProps> = ({children}) => {
           };
           window.addEventListener('resize', updateScreenWidth);
         }
-        if(localStorage.getItem("theme") != null) {
+        if(typeof window !== "undefined" && localStorage.getItem("theme") != null) {
             const theme : string = localStorage.getItem("theme") as string
             setTheme(theme)
         }
