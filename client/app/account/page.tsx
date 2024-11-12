@@ -13,6 +13,8 @@ import Dialog from "@/components/Dialog/Dialog";
 import ChangePasswordModal from "@/components/ChangePasswordModal";
 import Toggle from "@/components/Toggle";
 import Cookies from "js-cookie"
+import CookieDialog from "@/components/Dialog/CookieDialog";
+import PrivacyDialog from "@/components/Dialog/PrivacyDialog";
 
 const Account = () => {
     const {updateSettings, changeSettings, settings} = useContext(UserContext);
@@ -22,6 +24,9 @@ const Account = () => {
     const [leftComplete, setLeftComplete] = useState(settings.completeTaskLeft || false);
     const [leftAdd, setLeftAdd] = useState(settings.addTaskLeft || false);
     const [passwords, setPasswords] = useState({currentPassword: "", newPassword: "", repeatNewPassword: ""})
+
+    const [toggleCookies, setToggleCookies] = useState<boolean>(false)
+    const [togglePrivacy, setTogglePrivacy] = useState<boolean>(false)
 
     useEffect(() => {
         if (settings.completeTaskLeft != null) {
@@ -36,11 +41,11 @@ const Account = () => {
     }, [settings.addTaskLeft]);
 
     useEffect(() => {
-        changeSettings({ completeTaskLeft: leftComplete });
+        if(Cookies.get("accessToken") != undefined) changeSettings({ completeTaskLeft: leftComplete });
     }, [leftComplete])
 
     useEffect(() => {
-        changeSettings({ addTaskLeft: leftAdd });
+        if(Cookies.get("accessToken") != undefined) changeSettings({ addTaskLeft: leftAdd });
     }, [leftAdd])
 
     const handleLogout = () => {
@@ -70,7 +75,7 @@ const Account = () => {
         Cookies.get("accessToken") ? (
             <Wrapper>
                 <div className="flex flex-row gap-[10px] justify-start items-center w-full align-middle pt-[10px] pb-[10px]">
-                    <Link href="/" className="flex flex-row gap-[5px] justify-start items-center align-middle"><ArrowLeftIcon /> Back</Link>
+                    <Link href="/" className="flex flex-row gap-[5px] justify-start items-center align-middle"><ArrowLeftIcon/>Back</Link>
                 </div>
                 <div className="w-full flex flex-col gap-[10px] justify-start items-start">
                     <h1 className="md:text-2xl text-xl text-white font-bold w-full">Account</h1>
@@ -108,11 +113,23 @@ const Account = () => {
                     )}
                 </div>
 
-                <div className="w-full mt-[25px] flex flex-col gap-[10px] justify-start items-start">
+                <div className="w-full mt-[25px] flex flex-col gap-[10px] justify-start items-start m-5">
                     <div className="flex flex-col gap-[10px] justify-center items-center align-middle bg-[#252525] box-border pr-[20px] pl-[20px] pt-[10px] pb-[10px] w-full rounded-xl">
                         <p className="cursor-pointer" style={{ color: "#f15146" }} onClick={handleLogout}>Logout</p>
                     </div>
                 </div>
+
+                <div className="w-full flex flex-col gap-[10px] justify-start items-start">
+                    <h1 className="md:text-2xl text-xl text-white font-bold w-full">Site links</h1>
+                    <div className="flex gap-3 bg-[#252525] box-border pl-[20px] pr-[20px] pt-[10px] pb-[10px] w-full rounded-xl" style={{justifyContent: "space-around"}}>
+                        <button onClick={() => setToggleCookies(true)} className="underline fill-blue-500">Cookies</button>
+                        <button onClick={() => setTogglePrivacy(true)} className="underline fill-blue-500">Privacy policy</button>
+                    </div>
+                </div>
+                {toggleCookies && <CookieDialog setToggleCookies={setToggleCookies}/>}
+                {togglePrivacy && <PrivacyDialog setTogglePrivacy={setTogglePrivacy}/>}
+
+
 
                 <ColorPicker
                     message={"Theme color"}

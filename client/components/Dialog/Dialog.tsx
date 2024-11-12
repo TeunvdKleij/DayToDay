@@ -19,9 +19,10 @@ interface DialogProps {
     minWidth?: number
     onlyNotice: boolean
     onlyAccept?: boolean
+    acceptMessage?: string
 }
 
-const Dialog = ({setShowModal, children, description, title, onCancel, onAccept, canAccept, maxWidth, onlyNotice, minWidth, onlyAccept} : DialogProps) => {
+const Dialog = ({setShowModal, children, description, title, onCancel, onAccept, canAccept, maxWidth, onlyNotice, minWidth, onlyAccept, acceptMessage} : DialogProps) => {
     const {settings} = useContext(UserContext);
     const handleHideModal = (e : any) => {
         if(e.target.classList.contains("fixed")) setShowModal(false);
@@ -34,6 +35,7 @@ const Dialog = ({setShowModal, children, description, title, onCancel, onAccept,
 
     const handleCancelModal = (e: any) => {
         if(onCancel) onCancel();
+        console.log("CANCELED")
         setShowModal(false);
     }
 
@@ -53,12 +55,10 @@ const Dialog = ({setShowModal, children, description, title, onCancel, onAccept,
                         {children}
                     </div>
                 )}
-                {!onlyNotice &&
-                <div className="flex flex-row w-full gap-2 mt-3 justify-end pr-5 pb-5 pl-5">
-                    {(!onlyAccept || onlyAccept == null || onlyAccept == undefined) && <Button text={"Annuleren"} backgroundColor={ColorEnum.LIGHTGREY} onClick={(e) => handleCancelModal(e)}/>}
-                    <Button text={"Bevestigen"}  backgroundColor={settings?.color ? settings?.color : "#3b82f6"}  onClick={(e: any) => handleAcceptModal(e)} disabled={!canAccept}/>
+                <div className={`flex flex-row w-full gap-2 ${!onlyNotice && "mt-3"} justify-end pr-5 pb-5 pl-5`}>
+                    {(!onlyAccept || onlyAccept == null || onlyAccept == undefined) && <Button text={"Cancel"} backgroundColor={ColorEnum.LIGHTGREY} onClick={(e) => handleCancelModal(e)}/>}
+                    <Button text={acceptMessage ? acceptMessage : "Confirm"}  backgroundColor={settings?.color ? settings?.color : "#3b82f6"}  onClick={(e: any) => handleAcceptModal(e)} disabled={!canAccept}/>
                 </div>
-                }
             </div>
         </div>
     )

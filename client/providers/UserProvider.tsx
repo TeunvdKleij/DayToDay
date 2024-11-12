@@ -93,6 +93,7 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
     }
 
     const updateSettings = async (body: object) => {
+        if(Cookies.get("accesstoken")){
         await axios.post(process.env.NEXT_PUBLIC_API_URL + "User/Settings/Change", 
             body, 
             { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } })
@@ -104,6 +105,7 @@ const UserProvider: React.FC<UserProps> = ({children}) => {
                     Cookies.remove("accessToken")
                 }
             })
+        }
     }
 
     return (

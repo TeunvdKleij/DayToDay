@@ -2,17 +2,14 @@
 
 import TaskIcon from "@/icons/TaskIcon";
 import {useContext, useEffect, useState} from "react";
-import Button from "@/components/Button/Button";
-import {ColorEnum, MainContext} from "@/providers/MainProvider";
+import {MainContext} from "@/providers/MainProvider";
 import {UserContext} from "@/providers/UserProvider";
-import TrashCanIcon from "@/icons/Trashcanicon";
 import PasswordHide from "@/icons/Password/PasswordHide";
 import PasswordShow from "@/icons/Password/PasswordShow";
 import { useRouter } from "next/navigation";
-import cookies from 'browser-cookies'
 import Cookies from "js-cookie"
-import Dialog from "@/components/Dialog/Dialog";
 import ResetPasswordModal from "@/components/ResetPasswordMdal";
+import PrivacyDialog from "@/components/Dialog/PrivacyDialog";
 
 const Login = () => {
     const {validateEmail, validatePassword, replaceHTML} = useContext(MainContext);
@@ -29,9 +26,12 @@ const Login = () => {
     const [emailFirst, setEmailFirst] = useState<boolean>(false)
     const [passwordWrong, setPasswordWrong] = useState<boolean>(false)
     const [repeaetedPasswordWrong, setRepeatPasswordWrong] = useState<boolean>(false)
+    const [privacyAccepted, setPrivacyAccepted] = useState<boolean>(false)
 
     const [showResetPasswordModal, setShowResetPasswordModal] = useState<boolean>(false)
     const [email, setEmail] = useState("")
+
+    const [togglePrivacy, setTogglePrivacy] = useState<boolean>(false)
 
     const router = useRouter();
 
@@ -54,6 +54,7 @@ const Login = () => {
 
     const handleInputUpdate = (event: any) => {
         event.target.value = replaceHTML(event.target.value);
+        
         if (event.target.id === "emailInput") {
             setEmailValue(event.target.value);
             //setEmailWrong(false)
@@ -97,13 +98,13 @@ const Login = () => {
         }
         else if(passwordValue && repeatPasswordValue && (passwordValue === repeatPasswordValue)) {
             if(!register(emailValue, passwordValue, repeatPasswordValue)){
-                //setAllWrong(false);
             }
         }
         else{
-            //setAllWrong(false);
+            
         }
     }
+
 
     const resetValues = () => {
         setPasswordValue("")
@@ -148,14 +149,21 @@ const Login = () => {
                     </span>
                 </div>
                 {!loginSelected &&
-                <div className={`relative w-full`}>
-                    <p>Repeat password</p>
-                    <input type={isPasswordVisible ? 'text' : 'password'} onChange={handleInputUpdate} value={repeatPasswordValue} id={"repeatPasswordInput"} placeholder={"Repeat your password"} className={`w-[225px] rounded-lg h-10 text-black p-[5px] box-border outline-none ${repeaetedPasswordWrong && "border-[2px] border-red-500" }`}/>
-                    <span onClick={togglePasswordVisibility} className="absolute inset-y-0 right-2 top-[50%] focus:outline-none hover:cursor-pointer">
-                        {isPasswordVisible ? <PasswordShow/> : <PasswordHide/>}
-                    </span>
-                </div>
+                <>
+                    <div className={`relative w-full`}>
+                        <p>Repeat password</p>
+                        <input type={isPasswordVisible ? 'text' : 'password'} onChange={handleInputUpdate} value={repeatPasswordValue} id={"repeatPasswordInput"} placeholder={"Repeat your password"} className={`w-[225px] rounded-lg h-10 text-black p-[5px] box-border outline-none ${repeaetedPasswordWrong && "border-[2px] border-red-500" }`}/>
+                        <span onClick={togglePasswordVisibility} className="absolute inset-y-0 right-2 top-[50%] focus:outline-none hover:cursor-pointer">
+                            {isPasswordVisible ? <PasswordShow/> : <PasswordHide/>}
+                        </span>
+                    </div>
+                    <div className="relative w-full flex items-baseline gap-2">
+                        <input type="checkbox" onChange={e => setPrivacyAccepted(!privacyAccepted)}></input>
+                        <div>I agree with the <p onClick={() => setTogglePrivacy(true)} className="underline text-blue-500 cursor-pointer">privacy policy</p></div>
+                    </div>
+                </>
                 }
+                {togglePrivacy && <PrivacyDialog setTogglePrivacy={setTogglePrivacy}/>}
                 <div>
                     <span id="errorMessage"></span>
                 </div>

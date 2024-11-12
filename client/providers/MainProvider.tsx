@@ -28,6 +28,7 @@ export enum ColorEnum {
     LIGHTGREY = "bg-light-grey",
     GREY = "bg-grey",
     GREEN = "bg-green-500",
+    WHITE = "bg-white",
     NONE = ""
 }
 

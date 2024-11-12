@@ -1,5 +1,4 @@
 'use client'
-import GDPRNotice from "@/components/GDPRNotice";
 import { GroupContext } from "@/providers/GroupProvider";
 import { NoteContext } from "@/providers/NoteProvider";
 import { TaskContext } from "@/providers/TaskProvider";
@@ -8,6 +7,7 @@ import Tasks from "@/components/Tasks/tasks";
 import Wrapper from "@/components/Wrapper/wrapper";
 import Menu from "@/components/Tasks/Menu/menu";
 import Dialog from "@/components/Dialog/Dialog";
+import GDPRNotice from "@/components/Dialog/GDPRNotice";
 
 export default function Home() {
   const [percentage, setPercentage] = useState<number>(0);
@@ -17,7 +17,7 @@ export default function Home() {
   const {groupItem, loading} = useContext(GroupContext);
   const [headerText, setHeaderText] = useState<string>()
   const [gdpr, setGdpr] = useState<any>();
-  const [gdprDialog, setGdprDialog] = useState<boolean>(false);
+  const [gdprSelection, setGdprSelection] = useState<boolean>(false);
 
   useEffect(() => {
     if(checkedTasksCount == 0 && tasksCount == 0) setPercentage(0);
@@ -25,18 +25,6 @@ export default function Home() {
     if(checkedTasksCount/tasksCount == 1) setDone(true);
     else setDone(false);
   }, [checkedTasksCount, tasksCount])
-
-  useEffect(() => {
-    var gdprMessage = localStorage.getItem('gdpr')
-    if(gdprMessage && gdprMessage.includes("denied")) setGdprDialog(true);
-    else setGdprDialog(false)
-  }, [])
-
-  useEffect(() => {
-    var gdprMessage = localStorage.getItem('gdpr')
-    if(!gdprMessage || gdprMessage.includes("denied")) setGdprDialog(true);
-    else setGdprDialog(false);
-  }, [gdpr]);
 
   useEffect(() => {
     const textarea = document.getElementById('noteTextarea');
@@ -78,6 +66,11 @@ export default function Home() {
     date.setDate(date.getDate()+changeDate)
     return date.getDate();
   }
+
+  const setGdprChoice = (message: string) => {
+    setGdpr(message);
+    setGdprSelection(true);
+  }
   
   return (
       <>
@@ -85,7 +78,7 @@ export default function Home() {
               <Menu/>
               <Tasks/>
           </Wrapper>
-          {(gdprDialog) && <GDPRNotice setGdpr={setGdpr}/>}
+          {!gdprSelection && (localStorage != null && (localStorage.getItem('gdpr') == null || localStorage.getItem('gdpr') == "denied")) && <GDPRNotice setGdpr={setGdprChoice}/>}
       </>
   );
 }
